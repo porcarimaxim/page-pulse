@@ -13,28 +13,72 @@ interface ZoneSelectorProps {
   onZoneSelect: (zone: Zone) => void;
 }
 
+type ResizeHandle =
+  | "nw" | "n" | "ne"
+  | "w"  |       "e"
+  | "sw" | "s" | "se";
+
+type InteractionMode = "idle" | "drawing" | "moving" | "resizing";
+
+const HANDLE_THRESHOLD = 1.5; // % distance to detect edge/corner
+
+function getHandle(coords: { x: number; y: number }, zone: Zone): ResizeHandle | null {
+  const { x, y } = coords;
+  const zr = zone.x + zone.width;
+  const zb = zone.y + zone.height;
+
+  const nearLeft = Math.abs(x - zone.x) < HANDLE_THRESHOLD;
+  const nearRight = Math.abs(x - zr) < HANDLE_THRESHOLD;
+  const nearTop = Math.abs(y - zone.y) < HANDLE_THRESHOLD;
+  const nearBottom = Math.abs(y - zb) < HANDLE_THRESHOLD;
+
+  const withinX = x >= zone.x - HANDLE_THRESHOLD && x <= zr + HANDLE_THRESHOLD;
+  const withinY = y >= zone.y - HANDLE_THRESHOLD && y <= zb + HANDLE_THRESHOLD;
+
+  // Corners first (higher priority)
+  if (nearTop && nearLeft) return "nw";
+  if (nearTop && nearRight) return "ne";
+  if (nearBottom && nearLeft) return "sw";
+  if (nearBottom && nearRight) return "se";
+
+  // Edges
+  if (nearTop && withinX) return "n";
+  if (nearBottom && withinX) return "s";
+  if (nearLeft && withinY) return "w";
+  if (nearRight && withinY) return "e";
+
+  return null;
+}
+
+const HANDLE_CURSORS: Record<ResizeHandle, string> = {
+  nw: "cursor-nw-resize", ne: "cursor-ne-resize",
+  sw: "cursor-sw-resize", se: "cursor-se-resize",
+  n: "cursor-n-resize", s: "cursor-s-resize",
+  w: "cursor-w-resize", e: "cursor-e-resize",
+};
+
 export function ZoneSelector({
   screenshotUrl,
   initialZone,
   onZoneSelect,
 }: ZoneSelectorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
+  const [mode, setMode] = useState<InteractionMode>("idle");
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(null);
   const [currentPoint, setCurrentPoint] = useState<{ x: number; y: number } | null>(null);
-  const [moveOffset, setMoveOffset] = useState<{ x: number; y: number } | null>(null);
   const [zone, setZone] = useState<Zone | null>(initialZone ?? null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [spaceHeld, setSpaceHeld] = useState(false);
+  const [hoveredHandle, setHoveredHandle] = useState<ResizeHandle | null>(null);
 
-  // Use refs so document listeners always see the latest state
-  const isDrawingRef = useRef(false);
-  const isMovingRef = useRef(false);
+  // Refs so document listeners always see the latest state
+  const modeRef = useRef<InteractionMode>("idle");
   const startPointRef = useRef<{ x: number; y: number } | null>(null);
   const currentPointRef = useRef<{ x: number; y: number } | null>(null);
   const moveOffsetRef = useRef<{ x: number; y: number } | null>(null);
   const zoneRef = useRef<Zone | null>(initialZone ?? null);
+  const resizeHandleRef = useRef<ResizeHandle | null>(null);
+  const resizeAnchorRef = useRef<Zone | null>(null); // zone snapshot at resize start
   const onZoneSelectRef = useRef(onZoneSelect);
 
   useEffect(() => {
@@ -80,24 +124,34 @@ export function ZoneSelector({
     };
   }, []);
 
-  // Document-level mouse move/up during drawing or moving
+  const finalizeZone = useCallback((z: Zone) => {
+    const finalZone = {
+      x: Math.round(z.x * 100) / 100,
+      y: Math.round(z.y * 100) / 100,
+      width: Math.round(z.width * 100) / 100,
+      height: Math.round(z.height * 100) / 100,
+    };
+    zoneRef.current = finalZone;
+    setZone(finalZone);
+    onZoneSelectRef.current(finalZone);
+  }, []);
+
+  // Document-level mouse move/up during drawing, moving, or resizing
   useEffect(() => {
-    if (!isDrawing && !isMoving) return;
+    if (mode === "idle") return;
 
     const handleDocMouseMove = (e: MouseEvent) => {
       const coords = getRelativeCoords(e);
 
-      if (isDrawingRef.current) {
+      if (modeRef.current === "drawing") {
         currentPointRef.current = coords;
         setCurrentPoint(coords);
       }
 
-      if (isMovingRef.current && moveOffsetRef.current && zoneRef.current) {
+      if (modeRef.current === "moving" && moveOffsetRef.current && zoneRef.current) {
         const z = zoneRef.current;
         let newX = coords.x - moveOffsetRef.current.x;
         let newY = coords.y - moveOffsetRef.current.y;
-
-        // Clamp within bounds
         newX = Math.max(0, Math.min(100 - z.width, newX));
         newY = Math.max(0, Math.min(100 - z.height, newY));
 
@@ -105,59 +159,68 @@ export function ZoneSelector({
         zoneRef.current = movedZone;
         setZone(movedZone);
       }
+
+      if (modeRef.current === "resizing" && resizeHandleRef.current && resizeAnchorRef.current) {
+        const anchor = resizeAnchorRef.current;
+        const handle = resizeHandleRef.current;
+
+        let x = anchor.x;
+        let y = anchor.y;
+        let r = anchor.x + anchor.width;
+        let b = anchor.y + anchor.height;
+
+        // Move the relevant edges based on handle
+        if (handle.includes("w")) x = Math.min(coords.x, r - 2);
+        if (handle.includes("e")) r = Math.max(coords.x, x + 2);
+        if (handle.includes("n")) y = Math.min(coords.y, b - 2);
+        if (handle.includes("s")) b = Math.max(coords.y, y + 2);
+
+        // Clamp
+        x = Math.max(0, x);
+        y = Math.max(0, y);
+        r = Math.min(100, r);
+        b = Math.min(100, b);
+
+        const resized = { x, y, width: r - x, height: b - y };
+        zoneRef.current = resized;
+        setZone(resized);
+      }
     };
 
     const handleDocMouseUp = () => {
-      if (isDrawingRef.current) {
-        isDrawingRef.current = false;
-        setIsDrawing(false);
-
+      if (modeRef.current === "drawing") {
         const sp = startPointRef.current;
         const cp = currentPointRef.current;
-        if (!sp || !cp) return;
 
-        const x = Math.min(sp.x, cp.x);
-        const y = Math.min(sp.y, cp.y);
-        const width = Math.abs(cp.x - sp.x);
-        const height = Math.abs(cp.y - sp.y);
+        if (sp && cp) {
+          const x = Math.min(sp.x, cp.x);
+          const y = Math.min(sp.y, cp.y);
+          const width = Math.abs(cp.x - sp.x);
+          const height = Math.abs(cp.y - sp.y);
 
-        // Minimum zone size: 2% x 2%
-        if (width < 2 || height < 2) {
-          zoneRef.current = null;
-          setZone(null);
-          return;
-        }
-
-        const newZone = {
-          x: Math.round(x * 100) / 100,
-          y: Math.round(y * 100) / 100,
-          width: Math.round(width * 100) / 100,
-          height: Math.round(height * 100) / 100,
-        };
-
-        zoneRef.current = newZone;
-        setZone(newZone);
-        onZoneSelectRef.current(newZone);
-      }
-
-      if (isMovingRef.current) {
-        isMovingRef.current = false;
-        setIsMoving(false);
-        setMoveOffset(null);
-        moveOffsetRef.current = null;
-
-        if (zoneRef.current) {
-          const finalZone = {
-            x: Math.round(zoneRef.current.x * 100) / 100,
-            y: Math.round(zoneRef.current.y * 100) / 100,
-            width: Math.round(zoneRef.current.width * 100) / 100,
-            height: Math.round(zoneRef.current.height * 100) / 100,
-          };
-          zoneRef.current = finalZone;
-          setZone(finalZone);
-          onZoneSelectRef.current(finalZone);
+          if (width >= 2 && height >= 2) {
+            finalizeZone({ x, y, width, height });
+          } else {
+            zoneRef.current = null;
+            setZone(null);
+          }
         }
       }
+
+      if (modeRef.current === "moving" && zoneRef.current) {
+        finalizeZone(zoneRef.current);
+      }
+
+      if (modeRef.current === "resizing" && zoneRef.current) {
+        finalizeZone(zoneRef.current);
+      }
+
+      // Reset
+      modeRef.current = "idle";
+      setMode("idle");
+      moveOffsetRef.current = null;
+      resizeHandleRef.current = null;
+      resizeAnchorRef.current = null;
     };
 
     document.addEventListener("mousemove", handleDocMouseMove);
@@ -166,7 +229,21 @@ export function ZoneSelector({
       document.removeEventListener("mousemove", handleDocMouseMove);
       document.removeEventListener("mouseup", handleDocMouseUp);
     };
-  }, [isDrawing, isMoving, getRelativeCoords]);
+  }, [mode, getRelativeCoords, finalizeZone]);
+
+  // Track hovered handle for cursor
+  const handleContainerMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (mode !== "idle") return;
+      if (!zoneRef.current || spaceHeld) {
+        setHoveredHandle(null);
+        return;
+      }
+      const coords = getRelativeCoords(e);
+      setHoveredHandle(getHandle(coords, zoneRef.current));
+    },
+    [mode, spaceHeld, getRelativeCoords]
+  );
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
@@ -177,10 +254,21 @@ export function ZoneSelector({
       if (spaceHeld && zoneRef.current) {
         const z = zoneRef.current;
         moveOffsetRef.current = { x: coords.x - z.x, y: coords.y - z.y };
-        setMoveOffset(moveOffsetRef.current);
-        isMovingRef.current = true;
-        setIsMoving(true);
+        modeRef.current = "moving";
+        setMode("moving");
         return;
+      }
+
+      // Check for resize handle on existing zone
+      if (zoneRef.current) {
+        const handle = getHandle(coords, zoneRef.current);
+        if (handle) {
+          resizeHandleRef.current = handle;
+          resizeAnchorRef.current = { ...zoneRef.current };
+          modeRef.current = "resizing";
+          setMode("resizing");
+          return;
+        }
       }
 
       // Normal draw mode
@@ -188,17 +276,17 @@ export function ZoneSelector({
       currentPointRef.current = coords;
       setStartPoint(coords);
       setCurrentPoint(coords);
-      isDrawingRef.current = true;
-      setIsDrawing(true);
       zoneRef.current = null;
       setZone(null);
+      modeRef.current = "drawing";
+      setMode("drawing");
     },
     [getRelativeCoords, spaceHeld]
   );
 
   // Calculate the drawing rectangle
   const drawRect =
-    isDrawing && startPoint && currentPoint
+    mode === "drawing" && startPoint && currentPoint
       ? {
           x: Math.min(startPoint.x, currentPoint.x),
           y: Math.min(startPoint.y, currentPoint.y),
@@ -211,8 +299,10 @@ export function ZoneSelector({
 
   // Cursor logic
   const getCursor = () => {
-    if (isMoving) return "cursor-grabbing";
+    if (mode === "moving") return "cursor-grabbing";
+    if (mode === "resizing" && resizeHandleRef.current) return HANDLE_CURSORS[resizeHandleRef.current];
     if (spaceHeld && zone) return "cursor-grab";
+    if (hoveredHandle && zone) return HANDLE_CURSORS[hoveredHandle];
     return "cursor-crosshair";
   };
 
@@ -223,7 +313,7 @@ export function ZoneSelector({
           {zone
             ? spaceHeld
               ? "Drag to move zone"
-              : "Zone selected — drag to redraw · hold space to move"
+              : "Zone selected — drag edges to resize · hold space to move"
             : "Click and drag to select a zone"}
         </p>
         {zone && (
@@ -231,6 +321,7 @@ export function ZoneSelector({
             onClick={() => {
               zoneRef.current = null;
               setZone(null);
+              setHoveredHandle(null);
             }}
             className="text-xs text-[#dc2626] font-bold uppercase hover:underline"
           >
@@ -243,6 +334,8 @@ export function ZoneSelector({
         ref={containerRef}
         className={`relative border-2 border-[#1a1a1a] ${getCursor()} select-none overflow-hidden`}
         onMouseDown={handleMouseDown}
+        onMouseMove={handleContainerMouseMove}
+        onMouseLeave={() => mode === "idle" && setHoveredHandle(null)}
       >
         <img
           src={screenshotUrl}
@@ -268,11 +361,16 @@ export function ZoneSelector({
                 boxShadow: `0 0 0 9999px rgba(26, 26, 26, 0.4)`,
               }}
             >
-              {/* Corner indicators */}
+              {/* Corner handles */}
               <div className="absolute -top-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
               <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
               <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
+              {/* Edge handles (midpoints) */}
+              <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
+              <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
+              <div className="absolute top-1/2 -left-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
+              <div className="absolute top-1/2 -right-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
             </div>
           </>
         )}
