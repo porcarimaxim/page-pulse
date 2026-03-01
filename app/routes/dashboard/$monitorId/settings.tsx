@@ -45,7 +45,7 @@ function MonitorSettingsPage() {
   );
 
   if (isLoaded && !isSignedIn) {
-    navigate({ to: "/auth/sign-in", search: { redirect_url: `/dashboard/${monitorId}/settings` } });
+    navigate({ to: "/auth/sign-in", search: { redirect_url: `/dashboard/${monitorId}/settings` } as any });
     return null;
   }
   const updateMonitor = useMutation(api.monitors.update);
@@ -146,7 +146,7 @@ function MonitorSettingsPage() {
           onClick={() =>
             navigate({
               to: "/dashboard/$monitorId",
-              params: { monitorId },
+              params: { monitorId } as any,
             })
           }
           className="flex items-center gap-2 text-sm text-[#888] hover:text-[#1a1a1a] font-bold uppercase mb-6 transition-colors"

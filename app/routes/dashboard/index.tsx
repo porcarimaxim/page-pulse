@@ -24,7 +24,7 @@ function DashboardPage() {
   const [tagFilter, setTagFilter] = useState<string | null>(null);
 
   if (isLoaded && !isSignedIn) {
-    navigate({ to: "/auth/sign-in", search: { redirect_url: "/dashboard" } });
+    navigate({ to: "/auth/sign-in", search: { redirect_url: "/dashboard" } as any });
     return null;
   }
 

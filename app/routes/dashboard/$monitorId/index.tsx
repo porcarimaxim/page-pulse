@@ -47,7 +47,7 @@ function MonitorDetailPage() {
   );
 
   if (isLoaded && !isSignedIn) {
-    navigate({ to: "/auth/sign-in", search: { redirect_url: `/dashboard/${monitorId}` } });
+    navigate({ to: "/auth/sign-in", search: { redirect_url: `/dashboard/${monitorId}` } as any });
     return null;
   }
 
@@ -241,7 +241,7 @@ function MonitorDetailPage() {
                 onClick={() =>
                   navigate({
                     to: "/dashboard/$monitorId/settings",
-                    params: { monitorId },
+                    params: { monitorId } as any,
                   })
                 }
               >

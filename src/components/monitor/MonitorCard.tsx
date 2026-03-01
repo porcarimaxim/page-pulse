@@ -33,7 +33,7 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
   return (
     <Link
       to="/dashboard/$monitorId"
-      params={{ monitorId: monitor._id }}
+      params={{ monitorId: monitor._id } as any}
       className="block group"
     >
       <div className="border-2 border-[#1a1a1a] bg-[#f0f0e8] shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] transition-all">

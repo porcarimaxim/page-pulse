@@ -42,7 +42,7 @@ function NewMonitorPage() {
   const createMonitor = useMutation(api.monitors.create);
 
   if (isLoaded && !isSignedIn) {
-    navigate({ to: "/auth/sign-in", search: { redirect_url: "/dashboard/new" } });
+    navigate({ to: "/auth/sign-in", search: { redirect_url: "/dashboard/new" } as any });
     return null;
   }
 
@@ -127,7 +127,7 @@ function NewMonitorPage() {
 
       navigate({
         to: "/dashboard/$monitorId",
-        params: { monitorId },
+        params: { monitorId } as any,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create monitor");
