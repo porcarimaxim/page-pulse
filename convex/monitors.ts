@@ -177,11 +177,8 @@ export const checkNow = mutation({
   args: { monitorId: v.id("monitors") },
   handler: async (ctx, args) => {
     const { monitor } = await requireMonitorAccess(ctx, args.monitorId);
-    if (monitor.status !== "active" && monitor.status !== "paused") {
-      throw new Error("Monitor must be active or paused to check");
-    }
-    // Resume if paused
-    if (monitor.status === "paused") {
+    // Recover from paused or error state
+    if (monitor.status !== "active") {
       const intervalMs = INTERVAL_MS[monitor.interval] ?? INTERVAL_MS.daily;
       await ctx.db.patch(args.monitorId, {
         status: "active",
