@@ -27,6 +27,7 @@ export const captureScreenshot = action({
       block_ads: "true",
       block_cookie_banners: "true",
       delay: "3",
+      cache_ttl: "0",
     });
 
     if (args.selector) {
@@ -71,6 +72,7 @@ export const captureForMonitor = internalAction({
       block_ads: "true",
       block_cookie_banners: "true",
       delay: "3",
+      cache_ttl: "0",
     });
 
     if (args.selector) {
