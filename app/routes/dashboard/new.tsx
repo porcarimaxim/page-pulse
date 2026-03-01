@@ -5,6 +5,7 @@ import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { ZoneSelector, type Zone } from "@/components/zone-selector/ZoneSelector";
+import { ElementPicker } from "@/components/element-picker/ElementPicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,6 +14,8 @@ import {
   Loader2,
   Camera,
   Check,
+  MousePointer,
+  Crop,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/new")({
@@ -20,6 +23,7 @@ export const Route = createFileRoute("/dashboard/new")({
 });
 
 type Step = "url" | "zone" | "configure";
+type SelectionMode = "zone" | "element";
 
 const INTERVALS = [
   { value: "5min", label: "Every 5 min" },
@@ -47,8 +51,11 @@ function NewMonitorPage() {
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
   const [screenshotStorageId, setScreenshotStorageId] = useState<string | null>(null);
   const [zone, setZone] = useState<Zone | null>(null);
+  const [selectionMode, setSelectionMode] = useState<SelectionMode>("zone");
+  const [cssSelector, setCssSelector] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [interval, setInterval] = useState<string>("daily");
+  const [tags, setTags] = useState("");
   const [isCapturing, setIsCapturing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +66,6 @@ function NewMonitorPage() {
     setError(null);
 
     try {
-      // Ensure URL has protocol
       let finalUrl = url;
       if (!finalUrl.startsWith("http://") && !finalUrl.startsWith("https://")) {
         finalUrl = "https://" + finalUrl;
@@ -70,7 +76,6 @@ function NewMonitorPage() {
       setScreenshotStorageId(result.storageId);
       setScreenshotUrl(result.url);
 
-      // Auto-generate name from URL
       if (!name) {
         try {
           const urlObj = new URL(finalUrl);
@@ -88,17 +93,36 @@ function NewMonitorPage() {
     }
   };
 
+  const handleElementSelect = (selector: string) => {
+    setCssSelector(selector);
+  };
+
+  const isZoneStepComplete =
+    selectionMode === "zone" ? !!zone : !!cssSelector;
+
   const handleCreate = async () => {
-    if (!zone || !name || !screenshotStorageId) return;
+    if (!name || !screenshotStorageId) return;
+    if (selectionMode === "zone" && !zone) return;
+    if (selectionMode === "element" && !cssSelector) return;
     setIsCreating(true);
 
     try {
+      const parsedTags = tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+
       const monitorId = await createMonitor({
         url,
         name,
-        zone,
+        zone: selectionMode === "zone" && zone
+          ? zone
+          : { x: 0, y: 0, width: 100, height: 100 },
         interval: interval as any,
         fullScreenshotStorageId: screenshotStorageId as any,
+        cssSelector: selectionMode === "element" ? (cssSelector ?? undefined) : undefined,
+        selectionMode,
+        tags: parsedTags.length > 0 ? parsedTags : undefined,
       });
 
       navigate({
@@ -153,7 +177,7 @@ function NewMonitorPage() {
                   step === s ? "text-[#1a1a1a]" : "text-[#888]"
                 }`}
               >
-                {s === "url" ? "URL" : s === "zone" ? "Zone" : "Configure"}
+                {s === "url" ? "URL" : s === "zone" ? "Select" : "Configure"}
               </span>
               {i < 2 && <div className="w-8 h-0.5 bg-[#ccc]" />}
             </div>
@@ -196,29 +220,67 @@ function NewMonitorPage() {
               </Button>
             </div>
             <p className="text-xs text-[#888] mt-3">
-              We'll take a screenshot of this page so you can select a zone to monitor.
+              We'll take a screenshot of this page so you can select what to monitor.
             </p>
           </div>
         )}
 
-        {/* Step 2: Zone Selection */}
+        {/* Step 2: Selection (Zone or Element) */}
         {step === "zone" && screenshotUrl && (
           <div className="space-y-6">
             <div className="border-2 border-[#1a1a1a] p-6 shadow-[8px_8px_0px_0px_var(--shadow-color)]">
               <h2 className="font-black text-lg uppercase tracking-tighter mb-4">
-                Select Zone to Monitor
+                What to Monitor
               </h2>
-              <ZoneSelector
-                screenshotUrl={screenshotUrl}
-                onZoneSelect={setZone}
-              />
+
+              {/* Mode toggle */}
+              <div className="flex gap-0 mb-6">
+                <button
+                  onClick={() => setSelectionMode("zone")}
+                  className={`flex items-center gap-2 border-2 border-[#1a1a1a] px-4 py-2 text-sm font-bold uppercase transition-all ${
+                    selectionMode === "zone"
+                      ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                      : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                  }`}
+                >
+                  <Crop className="w-4 h-4" />
+                  Draw Zone
+                </button>
+                <button
+                  onClick={() => setSelectionMode("element")}
+                  className={`flex items-center gap-2 border-2 border-[#1a1a1a] border-l-0 px-4 py-2 text-sm font-bold uppercase transition-all ${
+                    selectionMode === "element"
+                      ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                      : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                  }`}
+                >
+                  <MousePointer className="w-4 h-4" />
+                  Pick Element
+                </button>
+              </div>
+
+              {selectionMode === "zone" ? (
+                <ZoneSelector
+                  screenshotUrl={screenshotUrl}
+                  onZoneSelect={setZone}
+                />
+              ) : (
+                <ElementPicker
+                  url={url}
+                  screenshotUrl={screenshotUrl!}
+                  onElementSelect={handleElementSelect}
+                />
+              )}
             </div>
             <div className="flex justify-between">
               <Button variant="outline" onClick={() => setStep("url")}>
                 <ArrowLeft className="w-4 h-4" />
                 Back
               </Button>
-              <Button onClick={() => setStep("configure")} disabled={!zone}>
+              <Button
+                onClick={() => setStep("configure")}
+                disabled={!isZoneStepComplete}
+              >
                 Continue
                 <ArrowRight className="w-4 h-4" />
               </Button>
@@ -264,6 +326,19 @@ function NewMonitorPage() {
                     ))}
                   </div>
                 </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                    Tags (optional)
+                  </label>
+                  <Input
+                    value={tags}
+                    onChange={(e) => setTags(e.target.value)}
+                    placeholder="pricing, competitor, news"
+                  />
+                  <p className="text-xs text-[#888] mt-1">
+                    Comma-separated. Used to organize and filter monitors.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -277,15 +352,26 @@ function NewMonitorPage() {
                   <span className="text-[#888]">URL:</span> {url}
                 </p>
                 <p>
-                  <span className="text-[#888]">Zone:</span>{" "}
-                  {zone
-                    ? `${zone.width.toFixed(0)}% x ${zone.height.toFixed(0)}%`
-                    : "Not set"}
+                  <span className="text-[#888]">Mode:</span>{" "}
+                  {selectionMode === "element" ? (
+                    <span className="font-mono text-[#2d5a2d]">
+                      Element: {cssSelector}
+                    </span>
+                  ) : (
+                    <span>
+                      Zone: {zone ? `${zone.width.toFixed(0)}% x ${zone.height.toFixed(0)}%` : "Not set"}
+                    </span>
+                  )}
                 </p>
                 <p>
                   <span className="text-[#888]">Frequency:</span>{" "}
                   {INTERVALS.find((i) => i.value === interval)?.label}
                 </p>
+                {tags && (
+                  <p>
+                    <span className="text-[#888]">Tags:</span> {tags}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -297,7 +383,7 @@ function NewMonitorPage() {
               <Button
                 variant="primary"
                 onClick={handleCreate}
-                disabled={!name || !zone || isCreating || !isConvexAuthed}
+                disabled={!name || !isZoneStepComplete || isCreating || !isConvexAuthed}
               >
                 {isCreating ? (
                   <>
