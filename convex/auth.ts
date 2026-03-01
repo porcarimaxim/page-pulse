@@ -45,9 +45,14 @@ export async function requireUser(ctx: QueryCtx | MutationCtx) {
 }
 
 export async function getIdentity(ctx: ActionCtx) {
-  const identity = await ctx.auth.getUserIdentity();
+  // Retry once after a short delay to handle Clerk→Convex token sync lag
+  let identity = await ctx.auth.getUserIdentity();
   if (!identity) {
-    throw new Error("Not authenticated");
+    await new Promise((r) => setTimeout(r, 500));
+    identity = await ctx.auth.getUserIdentity();
+  }
+  if (!identity) {
+    throw new Error("Not authenticated. Please try again.");
   }
   return identity;
 }

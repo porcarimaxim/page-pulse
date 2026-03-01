@@ -39,8 +39,9 @@ export const captureScreenshot = action({
 
     const imageBlob = await response.blob();
     const storageId = await ctx.storage.store(imageBlob);
+    const url = await ctx.storage.getUrl(storageId);
 
-    return storageId;
+    return { storageId, url };
   },
 });
 

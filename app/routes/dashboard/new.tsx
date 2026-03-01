@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useAction, useMutation } from "convex/react";
+import { useAction, useMutation, useConvexAuth } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -32,6 +32,7 @@ const INTERVALS = [
 
 function NewMonitorPage() {
   const { isSignedIn, isLoaded } = useAuth();
+  const { isAuthenticated: isConvexAuthed } = useConvexAuth();
   const navigate = useNavigate();
   const captureScreenshot = useAction(api.screenshotActions.captureScreenshot);
   const createMonitor = useMutation(api.monitors.create);
@@ -65,14 +66,9 @@ function NewMonitorPage() {
         setUrl(finalUrl);
       }
 
-      const storageId = await captureScreenshot({ url: finalUrl });
-      setScreenshotStorageId(storageId);
-
-      // Get the URL from Convex storage (we'll use the action result)
-      // For now, we'll derive it from the Convex URL + storageId
-      // The actual URL comes from the Convex storage.getUrl() on the backend
-      // We'll use a query to get the URL after capture
-      setScreenshotUrl(`${import.meta.env.VITE_CONVEX_URL.replace('.cloud', '.site')}/api/storage/${storageId}`);
+      const result = await captureScreenshot({ url: finalUrl });
+      setScreenshotStorageId(result.storageId);
+      setScreenshotUrl(result.url);
 
       // Auto-generate name from URL
       if (!name) {
@@ -185,7 +181,7 @@ function NewMonitorPage() {
                 onKeyDown={(e) => e.key === "Enter" && handleCapture()}
                 className="flex-1"
               />
-              <Button onClick={handleCapture} disabled={!url || isCapturing}>
+              <Button onClick={handleCapture} disabled={!url || isCapturing || !isConvexAuthed}>
                 {isCapturing ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -301,7 +297,7 @@ function NewMonitorPage() {
               <Button
                 variant="primary"
                 onClick={handleCreate}
-                disabled={!name || !zone || isCreating}
+                disabled={!name || !zone || isCreating || !isConvexAuthed}
               >
                 {isCreating ? (
                   <>
