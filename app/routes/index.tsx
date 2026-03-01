@@ -1,3 +1,4 @@
+// v1.1.0
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Eye, Zap, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
