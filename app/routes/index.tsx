@@ -16,6 +16,12 @@ function LandingPage() {
         </Link>
         <div className="flex items-center gap-4">
           <Link
+            to="/features"
+            className="text-sm font-bold uppercase tracking-wider text-[#888] hover:text-[#1a1a1a] transition-colors"
+          >
+            Features
+          </Link>
+          <Link
             to="/auth/sign-in"
             className="text-sm font-bold uppercase tracking-wider text-[#888] hover:text-[#1a1a1a] transition-colors"
           >
