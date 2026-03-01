@@ -19,11 +19,8 @@ export default defineConfig({
         },
       },
       prerender: {
-        enabled: true,
-        autoStaticPathsDiscovery: false,
-        crawlLinks: false,
+        enabled: false,
       },
-      pages: [{ path: "/" }],
     }),
     viteReact(),
   ],
