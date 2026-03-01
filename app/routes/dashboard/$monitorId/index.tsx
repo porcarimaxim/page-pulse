@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useQuery, useMutation, useAction } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -7,6 +7,7 @@ import { ChangeTimeline } from "@/components/monitor/ChangeTimeline";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatRelativeTime, intervalLabel } from "@/lib/utils";
+import { toCSV, toJSON, downloadFile } from "@/lib/export";
 import {
   ArrowLeft,
   Pause,
@@ -18,6 +19,7 @@ import {
   Activity,
   AlertTriangle,
   Loader2,
+  Download,
 } from "lucide-react";
 import { useState } from "react";
 import type { Id } from "@convex/_generated/dataModel";
@@ -39,6 +41,10 @@ function MonitorDetailPage() {
     api.changes.listByMonitor,
     isSignedIn ? { monitorId: monitorId as Id<"monitors"> } : "skip"
   );
+  const exportData = useQuery(
+    api.changes.exportByMonitor,
+    isSignedIn ? { monitorId: monitorId as Id<"monitors"> } : "skip"
+  );
 
   if (isLoaded && !isSignedIn) {
     navigate({ to: "/auth/sign-in", search: { redirect_url: `/dashboard/${monitorId}` } });
@@ -48,9 +54,12 @@ function MonitorDetailPage() {
   const pauseMonitor = useMutation(api.monitors.pause);
   const resumeMonitor = useMutation(api.monitors.resume);
   const removeMonitor = useMutation(api.monitors.remove);
+  const checkNow = useMutation(api.monitors.checkNow);
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+  const [showExport, setShowExport] = useState(false);
 
   if (monitor === undefined) {
     return (
@@ -84,6 +93,17 @@ function MonitorDetailPage() {
   const config = statusConfig[monitor.status];
   const StatusIcon = config.icon;
 
+  const handleCheckNow = async () => {
+    setIsChecking(true);
+    try {
+      await checkNow({ monitorId: monitorId as Id<"monitors"> });
+      // Keep spinning briefly so user sees feedback
+      setTimeout(() => setIsChecking(false), 3000);
+    } catch {
+      setIsChecking(false);
+    }
+  };
+
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -94,6 +114,25 @@ function MonitorDetailPage() {
     } catch {
       setIsDeleting(false);
     }
+  };
+
+  const handleExport = (format: "csv" | "json") => {
+    if (!exportData || exportData.length === 0) return;
+    const monitorName = monitor.name.replace(/[^a-zA-Z0-9]/g, "_");
+    if (format === "csv") {
+      downloadFile(
+        toCSV(exportData, monitor.name),
+        `${monitorName}_changes.csv`,
+        "text/csv"
+      );
+    } else {
+      downloadFile(
+        toJSON(exportData, monitor.name),
+        `${monitorName}_changes.json`,
+        "application/json"
+      );
+    }
+    setShowExport(false);
   };
 
   return (
@@ -122,6 +161,11 @@ function MonitorDetailPage() {
                   <StatusIcon className="w-3 h-3 mr-1" />
                   {config.label}
                 </Badge>
+                {monitor.selectionMode === "element" && monitor.cssSelector && (
+                  <span className="text-[10px] uppercase font-bold text-[#2d5a2d] bg-[#2d5a2d]/10 border border-[#2d5a2d] px-2 py-0.5">
+                    Element
+                  </span>
+                )}
               </div>
               <a
                 href={monitor.url}
@@ -132,10 +176,38 @@ function MonitorDetailPage() {
                 {monitor.url}
                 <ExternalLink className="w-3 h-3" />
               </a>
+              {monitor.cssSelector && (
+                <p className="text-xs font-mono text-[#888] mt-1">
+                  Selector: {monitor.cssSelector}
+                </p>
+              )}
+              {monitor.tags && monitor.tags.length > 0 && (
+                <div className="flex gap-1 mt-2">
+                  {monitor.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[10px] uppercase font-bold text-[#888] bg-[#e8e8e0] border border-[#ccc] px-2 py-0.5"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Actions */}
             <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCheckNow}
+                disabled={isChecking}
+              >
+                <RefreshCw
+                  className={`w-4 h-4 ${isChecking ? "animate-spin" : ""}`}
+                />
+                {isChecking ? "Checking..." : "Check Now"}
+              </Button>
               {monitor.status === "active" ? (
                 <Button
                   variant="outline"
@@ -210,7 +282,9 @@ function MonitorDetailPage() {
           {monitor.screenshotUrl && (
             <div className="mt-4 border-t-2 border-[#ccc] pt-4">
               <p className="text-xs font-bold uppercase text-[#888] mb-2">
-                Monitored Zone
+                {monitor.selectionMode === "element"
+                  ? "Monitored Element"
+                  : "Monitored Zone"}
               </p>
               <div className="relative border-2 border-[#1a1a1a] inline-block">
                 <img
@@ -218,15 +292,17 @@ function MonitorDetailPage() {
                   alt="Page screenshot"
                   className="max-h-48 w-auto"
                 />
-                <div
-                  className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
-                  style={{
-                    left: `${monitor.zone.x}%`,
-                    top: `${monitor.zone.y}%`,
-                    width: `${monitor.zone.width}%`,
-                    height: `${monitor.zone.height}%`,
-                  }}
-                />
+                {monitor.selectionMode !== "element" && (
+                  <div
+                    className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
+                    style={{
+                      left: `${monitor.zone.x}%`,
+                      top: `${monitor.zone.y}%`,
+                      width: `${monitor.zone.width}%`,
+                      height: `${monitor.zone.height}%`,
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}
@@ -234,9 +310,39 @@ function MonitorDetailPage() {
 
         {/* Change history */}
         <div className="mb-8">
-          <h2 className="text-xl font-black uppercase tracking-tighter mb-4">
-            Change History
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-black uppercase tracking-tighter">
+              Change History
+            </h2>
+            {exportData && exportData.length > 0 && (
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowExport(!showExport)}
+                >
+                  <Download className="w-4 h-4" />
+                  Export
+                </Button>
+                {showExport && (
+                  <div className="absolute right-0 top-full mt-1 border-2 border-[#1a1a1a] bg-[#f0f0e8] z-10 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+                    <button
+                      onClick={() => handleExport("csv")}
+                      className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0] border-b border-[#ccc]"
+                    >
+                      CSV
+                    </button>
+                    <button
+                      onClick={() => handleExport("json")}
+                      className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0]"
+                    >
+                      JSON
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           {changes === undefined ? (
             <div className="text-center py-8 text-[#888]">Loading...</div>
           ) : (

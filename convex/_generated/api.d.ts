@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as changes from "../changes.js";
 import type * as comparisonActions from "../comparisonActions.js";
 import type * as crons from "../crons.js";
+import type * as elementDetection from "../elementDetection.js";
 import type * as emailActions from "../emailActions.js";
 import type * as http from "../http.js";
 import type * as monitors from "../monitors.js";
@@ -19,6 +20,7 @@ import type * as scheduler from "../scheduler.js";
 import type * as schedulerHelpers from "../schedulerHelpers.js";
 import type * as screenshotActions from "../screenshotActions.js";
 import type * as snapshots from "../snapshots.js";
+import type * as webhookActions from "../webhookActions.js";
 
 import type {
   ApiFromModules,
@@ -31,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   changes: typeof changes;
   comparisonActions: typeof comparisonActions;
   crons: typeof crons;
+  elementDetection: typeof elementDetection;
   emailActions: typeof emailActions;
   http: typeof http;
   monitors: typeof monitors;
@@ -38,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   schedulerHelpers: typeof schedulerHelpers;
   screenshotActions: typeof screenshotActions;
   snapshots: typeof snapshots;
+  webhookActions: typeof webhookActions;
 }>;
 
 /**

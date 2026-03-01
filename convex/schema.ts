@@ -6,12 +6,18 @@ export default defineSchema({
     userId: v.string(),
     url: v.string(),
     name: v.string(),
+    email: v.optional(v.string()),
     zone: v.object({
       x: v.number(),
       y: v.number(),
       width: v.number(),
       height: v.number(),
     }),
+    // Element picker fields
+    cssSelector: v.optional(v.string()),
+    selectionMode: v.optional(
+      v.union(v.literal("zone"), v.literal("element"))
+    ),
     interval: v.union(
       v.literal("5min"),
       v.literal("15min"),
@@ -32,6 +38,17 @@ export default defineSchema({
     consecutiveErrors: v.number(),
     fullScreenshotStorageId: v.optional(v.id("_storage")),
     sensitivityThreshold: v.optional(v.number()),
+    // Webhook fields
+    webhookUrl: v.optional(v.string()),
+    webhookType: v.optional(
+      v.union(
+        v.literal("generic"),
+        v.literal("slack"),
+        v.literal("discord")
+      )
+    ),
+    // Tags
+    tags: v.optional(v.array(v.string())),
   })
     .index("by_userId", ["userId"])
     .index("by_nextCheckAt", ["nextCheckAt"])

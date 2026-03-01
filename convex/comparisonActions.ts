@@ -50,6 +50,7 @@ export const cropAndCompare = internalAction({
       width: v.number(),
       height: v.number(),
     }),
+    sensitivityThreshold: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     // 1. Fetch the full screenshot
@@ -130,10 +131,91 @@ export const cropAndCompare = internalAction({
     const diffBlob = new Blob([diffBuffer], { type: "image/png" });
     const diffStorageId = await ctx.storage.store(diffBlob);
 
+    const threshold = args.sensitivityThreshold ?? 0.1;
+
     return {
       croppedStorageId,
       fullStorageId: args.fullStorageId,
-      changed: diffPercentage > 0.1,
+      changed: diffPercentage > threshold,
+      diffPercentage: Math.round(diffPercentage * 100) / 100,
+      diffStorageId,
+    };
+  },
+});
+
+// Element mode: compare element screenshots directly (no zone cropping)
+export const compareElementScreenshots = internalAction({
+  args: {
+    monitorId: v.id("monitors"),
+    currentStorageId: v.id("_storage"),
+    previousStorageId: v.optional(v.id("_storage")),
+    sensitivityThreshold: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    // No previous → first run
+    if (!args.previousStorageId) {
+      return {
+        croppedStorageId: args.currentStorageId,
+        fullStorageId: args.currentStorageId,
+        changed: false,
+        diffPercentage: 0,
+        diffStorageId: null,
+      };
+    }
+
+    // Fetch both screenshots
+    const currentUrl = await ctx.storage.getUrl(args.currentStorageId);
+    const prevUrl = await ctx.storage.getUrl(args.previousStorageId);
+    if (!currentUrl || !prevUrl) {
+      return {
+        croppedStorageId: args.currentStorageId,
+        fullStorageId: args.currentStorageId,
+        changed: false,
+        diffPercentage: 0,
+        diffStorageId: null,
+      };
+    }
+
+    const [currentResp, prevResp] = await Promise.all([
+      fetch(currentUrl),
+      fetch(prevUrl),
+    ]);
+
+    const currentPng = PNG.sync.read(
+      Buffer.from(await currentResp.arrayBuffer())
+    );
+    const prevPng = PNG.sync.read(Buffer.from(await prevResp.arrayBuffer()));
+
+    // Resize previous to match current if needed
+    const w = currentPng.width;
+    const h = currentPng.height;
+    const resizedPrev =
+      prevPng.width !== w || prevPng.height !== h
+        ? resizePng(prevPng, w, h)
+        : prevPng;
+
+    // Pixelmatch
+    const diffPng = new PNG({ width: w, height: h });
+    const numDiffPixels = pixelmatch(
+      resizedPrev.data,
+      currentPng.data,
+      diffPng.data,
+      w,
+      h,
+      { threshold: 0.1 }
+    );
+
+    const diffPercentage = (numDiffPixels / (w * h)) * 100;
+    const diffBuffer = PNG.sync.write(diffPng);
+    const diffBlob = new Blob([diffBuffer], { type: "image/png" });
+    const diffStorageId = await ctx.storage.store(diffBlob);
+
+    const threshold = args.sensitivityThreshold ?? 0.1;
+
+    return {
+      croppedStorageId: args.currentStorageId,
+      fullStorageId: args.currentStorageId,
+      changed: diffPercentage > threshold,
       diffPercentage: Math.round(diffPercentage * 100) / 100,
       diffStorageId,
     };

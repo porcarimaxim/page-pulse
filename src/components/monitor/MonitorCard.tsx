@@ -14,6 +14,9 @@ interface MonitorCardProps {
     changeCount: number;
     screenshotUrl: string | null;
     zone: { x: number; y: number; width: number; height: number };
+    selectionMode?: string;
+    cssSelector?: string;
+    tags?: string[];
   };
 }
 
@@ -47,8 +50,8 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
               No screenshot yet
             </div>
           )}
-          {/* Zone overlay */}
-          {monitor.screenshotUrl && (
+          {/* Zone overlay (only for zone mode) */}
+          {monitor.screenshotUrl && monitor.selectionMode !== "element" && (
             <div
               className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
               style={{
@@ -58,6 +61,12 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
                 height: `${monitor.zone.height}%`,
               }}
             />
+          )}
+          {/* Element mode badge */}
+          {monitor.selectionMode === "element" && (
+            <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5">
+              Element
+            </div>
           )}
         </div>
 
@@ -83,6 +92,19 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
               {monitor.changeCount} change{monitor.changeCount !== 1 ? "s" : ""}
             </span>
           </div>
+
+          {monitor.tags && monitor.tags.length > 0 && (
+            <div className="flex gap-1 mt-2 flex-wrap">
+              {monitor.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[9px] uppercase font-bold text-[#888] bg-[#e8e8e0] border border-[#ccc] px-1.5 py-0"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           {monitor.lastCheckedAt && (
             <p className="text-xs text-[#888] mt-1">

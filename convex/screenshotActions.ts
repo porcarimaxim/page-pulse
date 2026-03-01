@@ -8,7 +8,7 @@ import { getIdentity } from "./auth";
 const SCREENSHOTONE_API = "https://api.screenshotone.com/take";
 
 export const captureScreenshot = action({
-  args: { url: v.string() },
+  args: { url: v.string(), selector: v.optional(v.string()) },
   handler: async (ctx, args) => {
     await getIdentity(ctx);
 
@@ -29,6 +29,10 @@ export const captureScreenshot = action({
       delay: "3",
     });
 
+    if (args.selector) {
+      params.set("selector", args.selector);
+    }
+
     const response = await fetch(`${SCREENSHOTONE_API}?${params.toString()}`);
 
     if (!response.ok) {
@@ -46,7 +50,11 @@ export const captureScreenshot = action({
 });
 
 export const captureForMonitor = internalAction({
-  args: { monitorId: v.id("monitors"), url: v.string() },
+  args: {
+    monitorId: v.id("monitors"),
+    url: v.string(),
+    selector: v.optional(v.string()),
+  },
   handler: async (ctx, args) => {
     const apiKey = process.env.SCREENSHOTONE_API_KEY;
     if (!apiKey) {
@@ -64,6 +72,10 @@ export const captureForMonitor = internalAction({
       block_cookie_banners: "true",
       delay: "3",
     });
+
+    if (args.selector) {
+      params.set("selector", args.selector);
+    }
 
     const response = await fetch(`${SCREENSHOTONE_API}?${params.toString()}`);
 

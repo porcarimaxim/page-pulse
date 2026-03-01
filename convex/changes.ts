@@ -48,6 +48,30 @@ export const listByMonitor = query({
   },
 });
 
+export const exportByMonitor = query({
+  args: { monitorId: v.id("monitors") },
+  handler: async (ctx, args) => {
+    const user = await getUser(ctx);
+    if (!user) return [];
+    const monitor = await ctx.db.get(args.monitorId);
+    if (!monitor || monitor.userId !== user.subject) return [];
+
+    const changes = await ctx.db
+      .query("changes")
+      .withIndex("by_monitorId_detectedAt", (q) =>
+        q.eq("monitorId", args.monitorId)
+      )
+      .order("desc")
+      .take(1000);
+
+    return changes.map((change) => ({
+      detectedAt: new Date(change.detectedAt).toISOString(),
+      diffPercentage: change.diffPercentage,
+      notified: change.notified,
+    }));
+  },
+});
+
 export const get = query({
   args: { changeId: v.id("changes") },
   handler: async (ctx, args) => {

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
-import { getUser, requireUser, requireMonitorAccess } from "./auth";
+import { internal } from "./_generated/api";
+import { getUser, requireUser, requireMonitorAccess, identityEmail } from "./auth";
 
 const INTERVAL_MS: Record<string, number> = {
   "5min": 5 * 60 * 1000,
@@ -65,6 +66,11 @@ export const create = mutation({
       v.literal("weekly")
     ),
     fullScreenshotStorageId: v.optional(v.id("_storage")),
+    cssSelector: v.optional(v.string()),
+    selectionMode: v.optional(
+      v.union(v.literal("zone"), v.literal("element"))
+    ),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     const user = await requireUser(ctx);
@@ -75,13 +81,17 @@ export const create = mutation({
       userId: user.subject,
       url: args.url,
       name: args.name,
+      email: identityEmail(user),
       zone: args.zone,
+      cssSelector: args.cssSelector,
+      selectionMode: args.selectionMode ?? "zone",
       interval: args.interval,
       status: "active",
       nextCheckAt: now + intervalMs,
       changeCount: 0,
       consecutiveErrors: 0,
       fullScreenshotStorageId: args.fullScreenshotStorageId,
+      tags: args.tags,
     });
 
     return monitorId;
@@ -111,6 +121,15 @@ export const update = mutation({
       })
     ),
     sensitivityThreshold: v.optional(v.number()),
+    webhookUrl: v.optional(v.string()),
+    webhookType: v.optional(
+      v.union(
+        v.literal("generic"),
+        v.literal("slack"),
+        v.literal("discord")
+      )
+    ),
+    tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
     await requireMonitorAccess(ctx, args.monitorId);
@@ -120,6 +139,9 @@ export const update = mutation({
     if (args.zone !== undefined) updates.zone = args.zone;
     if (args.sensitivityThreshold !== undefined)
       updates.sensitivityThreshold = args.sensitivityThreshold;
+    if (args.webhookUrl !== undefined) updates.webhookUrl = args.webhookUrl;
+    if (args.webhookType !== undefined) updates.webhookType = args.webhookType;
+    if (args.tags !== undefined) updates.tags = args.tags;
     if (args.interval !== undefined) {
       updates.interval = args.interval;
       const intervalMs = INTERVAL_MS[args.interval] ?? INTERVAL_MS.daily;
@@ -148,6 +170,30 @@ export const resume = mutation({
       nextCheckAt: Date.now() + intervalMs,
       consecutiveErrors: 0,
     });
+  },
+});
+
+export const checkNow = mutation({
+  args: { monitorId: v.id("monitors") },
+  handler: async (ctx, args) => {
+    const { monitor } = await requireMonitorAccess(ctx, args.monitorId);
+    if (monitor.status !== "active" && monitor.status !== "paused") {
+      throw new Error("Monitor must be active or paused to check");
+    }
+    // Resume if paused
+    if (monitor.status === "paused") {
+      const intervalMs = INTERVAL_MS[monitor.interval] ?? INTERVAL_MS.daily;
+      await ctx.db.patch(args.monitorId, {
+        status: "active",
+        nextCheckAt: Date.now() + intervalMs,
+        consecutiveErrors: 0,
+      });
+    }
+    await ctx.scheduler.runAfter(
+      0,
+      internal.scheduler.processOneMonitor,
+      { monitorId: args.monitorId }
+    );
   },
 });
 

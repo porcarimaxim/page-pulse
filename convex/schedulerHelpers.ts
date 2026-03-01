@@ -28,6 +28,13 @@ export const getDueMonitors = internalQuery({
   },
 });
 
+export const getMonitor = internalQuery({
+  args: { monitorId: v.id("monitors") },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.monitorId);
+  },
+});
+
 export const getSnapshot = internalQuery({
   args: { snapshotId: v.id("snapshots") },
   handler: async (ctx, args) => {
@@ -123,11 +130,8 @@ export const recordMonitorError = internalMutation({
 export const getMonitorUserEmail = internalQuery({
   args: { monitorId: v.id("monitors") },
   handler: async (ctx, args) => {
-    // In a real app, you'd look up the user's email from Clerk or a users table.
-    // For now, we return null and the email action will skip silently.
-    // TODO: Implement user email lookup
     const monitor = await ctx.db.get(args.monitorId);
     if (!monitor) return null;
-    return null;
+    return monitor.email ?? null;
   },
 });
