@@ -1,252 +1,131 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
-import { DashboardHeader } from "@/components/DashboardHeader";
-import { MonitorCard } from "@/components/monitor/MonitorCard";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Eye, Search, Activity, Pause, AlertTriangle, TrendingUp } from "lucide-react";
-import { useState, useMemo } from "react";
+import { Eye, Zap, CheckCircle } from "lucide-react";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/dashboard/")({
-  component: DashboardPage,
+  component: DashboardOverview,
 });
 
-type StatusFilter = "all" | "active" | "paused" | "error";
-
-function DashboardPage() {
-  const { isSignedIn, isLoaded } = useAuth();
-  const navigate = useNavigate();
+function DashboardOverview() {
+  const { isSignedIn } = useAuth();
   const monitors = useQuery(api.monitors.list, isSignedIn ? {} : "skip");
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [tagFilter, setTagFilter] = useState<string | null>(null);
-
-  if (isLoaded && !isSignedIn) {
-    navigate({ to: "/auth/sign-in", search: { redirect_url: "/dashboard" } as any });
-    return null;
-  }
 
   const stats = useMemo(() => {
-    if (!monitors) return { total: 0, active: 0, changes: 0, errors: 0 };
+    if (!monitors) return { checks: 0, changes: 0, noChanges: 0 };
+    const totalChanges = monitors.reduce((sum, m) => sum + m.changeCount, 0);
+    const totalChecked = monitors.filter((m) => m.lastCheckedAt).length;
     return {
-      total: monitors.length,
-      active: monitors.filter((m) => m.status === "active").length,
-      changes: monitors.reduce((sum, m) => sum + m.changeCount, 0),
-      errors: monitors.filter((m) => m.status === "error").length,
+      checks: totalChecked,
+      changes: totalChanges,
+      noChanges: Math.max(0, totalChecked - totalChanges),
     };
   }, [monitors]);
 
-  const allTags = useMemo(() => {
-    if (!monitors) return [];
-    const tags = new Set<string>();
-    monitors.forEach((m) => m.tags?.forEach((t) => tags.add(t)));
-    return Array.from(tags).sort();
-  }, [monitors]);
-
-  const filteredMonitors = useMemo(() => {
-    if (!monitors) return [];
-    return monitors.filter((m) => {
-      if (statusFilter !== "all" && m.status !== statusFilter) return false;
-      if (tagFilter && !(m.tags ?? []).includes(tagFilter)) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        return (
-          m.name.toLowerCase().includes(q) ||
-          m.url.toLowerCase().includes(q)
-        );
-      }
-      return true;
-    });
-  }, [monitors, search, statusFilter, tagFilter]);
-
   return (
-    <div className="min-h-screen bg-[#f0f0e8]">
-      <DashboardHeader />
+    <main className="px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-black uppercase tracking-tighter">
+          Dashboard
+        </h1>
+        <p className="text-sm text-[#888] mt-1">
+          Overview of your checks and changes
+        </p>
+      </div>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-black uppercase tracking-tighter">
-            Monitors
-          </h1>
-          <Button asChild>
-            <Link to="/dashboard/new">
-              <Plus className="w-4 h-4" />
-              New Monitor
-            </Link>
-          </Button>
+      {/* Stats cards */}
+      <div className="grid grid-cols-3 gap-6 mb-8">
+        <div className="border-2 border-[#1a1a1a] p-6 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 bg-[#2d5a2d] flex items-center justify-center">
+              <Eye className="w-4 h-4 text-[#f0f0e8]" />
+            </div>
+            <span className="text-sm font-bold uppercase text-[#888]">
+              Checks
+            </span>
+          </div>
+          <p className="text-4xl font-black">{stats.checks}</p>
+          <div className="mt-3 h-1 bg-[#2d5a2d]" />
         </div>
 
+        <div className="border-2 border-[#1a1a1a] p-6 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 bg-[#7cb87c] flex items-center justify-center">
+              <Zap className="w-4 h-4 text-[#f0f0e8]" />
+            </div>
+            <span className="text-sm font-bold uppercase text-[#888]">
+              Changes
+            </span>
+          </div>
+          <p className="text-4xl font-black">{stats.changes}</p>
+          <div className="mt-3 h-1 bg-[#7cb87c]" />
+        </div>
+
+        <div className="border-2 border-[#1a1a1a] p-6 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 bg-[#1a1a1a] flex items-center justify-center">
+              <CheckCircle className="w-4 h-4 text-[#f0f0e8]" />
+            </div>
+            <span className="text-sm font-bold uppercase text-[#888]">
+              No Changes
+            </span>
+          </div>
+          <p className="text-4xl font-black">{stats.noChanges}</p>
+          <div className="mt-3 h-1 bg-[#1a1a1a]" />
+        </div>
+      </div>
+
+      {/* Checks and changes trend */}
+      <div className="border-2 border-[#1a1a1a] p-6 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+        <h2 className="text-lg font-black uppercase tracking-tighter mb-4">
+          Checks and Changes Trend
+        </h2>
         {monitors === undefined ? (
-          <div className="text-center py-20 text-[#888]">Loading...</div>
+          <div className="text-center py-12 text-[#888]">Loading...</div>
         ) : monitors.length === 0 ? (
-          <EmptyState />
+          <div className="text-center py-12 text-[#888]">
+            <p className="text-sm">No monitoring data yet.</p>
+            <p className="text-xs mt-1">Create a monitor to start tracking changes.</p>
+          </div>
         ) : (
-          <>
-            {/* Stats strip */}
-            <div className="grid grid-cols-4 gap-4 mb-6">
-              <div className="border-2 border-[#1a1a1a] p-4 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-                <div className="flex items-center gap-2 mb-1">
-                  <Eye className="w-3 h-3 text-[#888]" />
-                  <span className="text-[10px] font-bold uppercase text-[#888]">
-                    Total
-                  </span>
-                </div>
-                <p className="text-2xl font-black">{stats.total}</p>
+          <div className="space-y-3">
+            {/* Simple bar chart representation */}
+            <div className="flex items-center gap-4 text-xs text-[#888]">
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 bg-[#2d5a2d]" />
+                <span>Changes</span>
               </div>
-              <div className="border-2 border-[#1a1a1a] p-4 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-                <div className="flex items-center gap-2 mb-1">
-                  <Activity className="w-3 h-3 text-[#2d5a2d]" />
-                  <span className="text-[10px] font-bold uppercase text-[#888]">
-                    Active
-                  </span>
-                </div>
-                <p className="text-2xl font-black text-[#2d5a2d]">
-                  {stats.active}
-                </p>
-              </div>
-              <div className="border-2 border-[#1a1a1a] p-4 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-                <div className="flex items-center gap-2 mb-1">
-                  <TrendingUp className="w-3 h-3 text-[#888]" />
-                  <span className="text-[10px] font-bold uppercase text-[#888]">
-                    Changes
-                  </span>
-                </div>
-                <p className="text-2xl font-black">{stats.changes}</p>
-              </div>
-              <div className="border-2 border-[#1a1a1a] p-4 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-                <div className="flex items-center gap-2 mb-1">
-                  <AlertTriangle className="w-3 h-3 text-[#dc2626]" />
-                  <span className="text-[10px] font-bold uppercase text-[#888]">
-                    Errors
-                  </span>
-                </div>
-                <p className={`text-2xl font-black ${stats.errors > 0 ? "text-[#dc2626]" : ""}`}>
-                  {stats.errors}
-                </p>
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 bg-[#ccc]" />
+                <span>No changes</span>
               </div>
             </div>
-
-            {/* Search + filters */}
-            <div className="space-y-3 mb-6">
-              <div className="flex gap-3">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#888]" />
-                  <Input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search by name or URL..."
-                    className="pl-10"
-                  />
-                </div>
-                <div className="flex gap-0">
-                  {(
-                    [
-                      { value: "all", label: "All", icon: null },
-                      { value: "active", label: "Active", icon: Activity },
-                      { value: "paused", label: "Paused", icon: Pause },
-                      { value: "error", label: "Error", icon: AlertTriangle },
-                    ] as const
-                  ).map((f) => (
-                    <button
-                      key={f.value}
-                      onClick={() => setStatusFilter(f.value)}
-                      className={`border-2 border-[#1a1a1a] px-3 py-2 text-xs font-bold uppercase transition-all flex items-center gap-1 ${
-                        f.value !== "all" ? "border-l-0" : ""
-                      } ${
-                        statusFilter === f.value
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                      }`}
-                    >
-                      {f.icon && <f.icon className="w-3 h-3" />}
-                      {f.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tag filters */}
-              {allTags.length > 0 && (
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] font-bold uppercase text-[#888]">
-                    Tags:
+            <div className="border-t border-[#ccc] pt-4">
+              {monitors.map((m) => (
+                <div key={m._id} className="flex items-center gap-3 mb-2">
+                  <span className="text-xs font-bold w-32 truncate">{m.name}</span>
+                  <div className="flex-1 h-6 bg-[#e8e8e0] relative overflow-hidden">
+                    {m.changeCount > 0 && (
+                      <div
+                        className="absolute inset-y-0 left-0 bg-[#2d5a2d]"
+                        style={{
+                          width: `${Math.min(100, m.changeCount * 10)}%`,
+                        }}
+                      />
+                    )}
+                  </div>
+                  <span className="text-xs text-[#888] w-8 text-right">
+                    {m.changeCount}
                   </span>
-                  <button
-                    onClick={() => setTagFilter(null)}
-                    className={`text-[10px] font-bold uppercase px-2 py-0.5 border transition-all ${
-                      tagFilter === null
-                        ? "border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8]"
-                        : "border-[#ccc] text-[#888] hover:border-[#1a1a1a]"
-                    }`}
-                  >
-                    All
-                  </button>
-                  {allTags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() =>
-                        setTagFilter(tagFilter === tag ? null : tag)
-                      }
-                      className={`text-[10px] font-bold uppercase px-2 py-0.5 border transition-all ${
-                        tagFilter === tag
-                          ? "border-[#2d5a2d] bg-[#2d5a2d] text-[#f0f0e8]"
-                          : "border-[#ccc] text-[#888] hover:border-[#1a1a1a]"
-                      }`}
-                    >
-                      {tag}
-                    </button>
-                  ))}
                 </div>
-              )}
+              ))}
             </div>
-
-            {/* Results count */}
-            <p className="text-xs text-[#888] mb-4">
-              {filteredMonitors.length} monitor
-              {filteredMonitors.length !== 1 ? "s" : ""}
-              {(search || statusFilter !== "all" || tagFilter) && " matching filters"}
-            </p>
-
-            {/* Monitor Grid */}
-            {filteredMonitors.length === 0 ? (
-              <div className="border-2 border-[#ccc] border-dashed p-8 text-center">
-                <p className="text-sm text-[#888]">
-                  No monitors match your filters.
-                </p>
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredMonitors.map((monitor) => (
-                  <MonitorCard key={monitor._id} monitor={monitor} />
-                ))}
-              </div>
-            )}
-          </>
+          </div>
         )}
-      </main>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="border-2 border-[#1a1a1a] border-dashed p-16 text-center">
-      <Eye className="w-12 h-12 mx-auto mb-4 text-[#888]" />
-      <h2 className="text-xl font-black uppercase tracking-tighter mb-2">
-        No Monitors Yet
-      </h2>
-      <p className="text-sm text-[#888] mb-6 max-w-sm mx-auto">
-        Create your first monitor to start tracking a webpage for changes.
-      </p>
-      <Button asChild>
-        <Link to="/dashboard/new">
-          <Plus className="w-4 h-4" />
-          Create Your First Monitor
-        </Link>
-      </Button>
-    </div>
+      </div>
+    </main>
   );
 }

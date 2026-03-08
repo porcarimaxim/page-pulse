@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useAction, useMutation, useConvexAuth } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
-import { DashboardHeader } from "@/components/DashboardHeader";
 import { ZoneSelector, type Zone } from "@/components/zone-selector/ZoneSelector";
 import { ElementPicker } from "@/components/element-picker/ElementPicker";
 import { Button } from "@/components/ui/button";
@@ -136,13 +135,10 @@ function NewMonitorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f0e8]">
-      <DashboardHeader />
-
-      <main className="max-w-3xl mx-auto px-6 py-8">
+      <main className="max-w-3xl mx-auto px-8 py-8">
         {/* Back link */}
         <button
-          onClick={() => navigate({ to: "/dashboard" })}
+          onClick={() => navigate({ to: "/dashboard/monitors" })}
           className="flex items-center gap-2 text-sm text-[#888] hover:text-[#1a1a1a] font-bold uppercase mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -401,6 +397,5 @@ function NewMonitorPage() {
           </div>
         )}
       </main>
-    </div>
   );
 }

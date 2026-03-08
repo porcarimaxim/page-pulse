@@ -10,9 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as FeaturesRouteImport } from './routes/features'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardNewRouteImport } from './routes/dashboard/new'
+import { Route as DashboardMonitorsRouteImport } from './routes/dashboard/monitors'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as DashboardMonitorIdIndexRouteImport } from './routes/dashboard/$monitorId/index'
@@ -25,20 +28,35 @@ const FeaturesRoute = FeaturesRouteImport.update({
   path: '/features',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardNewRoute = DashboardNewRouteImport.update({
-  id: '/dashboard/new',
-  path: '/dashboard/new',
-  getParentRoute: () => rootRouteImport,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardMonitorsRoute = DashboardMonitorsRouteImport.update({
+  id: '/monitors',
+  path: '/monitors',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/auth/sign-up',
@@ -51,15 +69,15 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardMonitorIdIndexRoute = DashboardMonitorIdIndexRouteImport.update({
-  id: '/dashboard/$monitorId/',
-  path: '/dashboard/$monitorId/',
-  getParentRoute: () => rootRouteImport,
+  id: '/$monitorId/',
+  path: '/$monitorId/',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardMonitorIdSettingsRoute =
   DashboardMonitorIdSettingsRouteImport.update({
-    id: '/dashboard/$monitorId/settings',
-    path: '/dashboard/$monitorId/settings',
-    getParentRoute: () => rootRouteImport,
+    id: '/$monitorId/settings',
+    path: '/$monitorId/settings',
+    getParentRoute: () => DashboardRoute,
   } as any)
 const AuthSignUpSplatRoute = AuthSignUpSplatRouteImport.update({
   id: '/$',
@@ -74,10 +92,13 @@ const AuthSignInSplatRoute = AuthSignInSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/features': typeof FeaturesRoute
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
   '/auth/sign-up/$': typeof AuthSignUpSplatRoute
@@ -89,7 +110,9 @@ export interface FileRoutesByTo {
   '/features': typeof FeaturesRoute
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
   '/auth/sign-up/$': typeof AuthSignUpSplatRoute
@@ -99,10 +122,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/features': typeof FeaturesRoute
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
   '/auth/sign-up/$': typeof AuthSignUpSplatRoute
@@ -113,10 +139,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard'
     | '/features'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/monitors'
     | '/dashboard/new'
+    | '/dashboard/settings'
     | '/dashboard/'
     | '/auth/sign-in/$'
     | '/auth/sign-up/$'
@@ -128,7 +157,9 @@ export interface FileRouteTypes {
     | '/features'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/monitors'
     | '/dashboard/new'
+    | '/dashboard/settings'
     | '/dashboard'
     | '/auth/sign-in/$'
     | '/auth/sign-up/$'
@@ -137,10 +168,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/dashboard'
     | '/features'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/monitors'
     | '/dashboard/new'
+    | '/dashboard/settings'
     | '/dashboard/'
     | '/auth/sign-in/$'
     | '/auth/sign-up/$'
@@ -150,13 +184,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   FeaturesRoute: typeof FeaturesRoute
   AuthSignInRoute: typeof AuthSignInRouteWithChildren
   AuthSignUpRoute: typeof AuthSignUpRouteWithChildren
-  DashboardNewRoute: typeof DashboardNewRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardMonitorIdSettingsRoute: typeof DashboardMonitorIdSettingsRoute
-  DashboardMonitorIdIndexRoute: typeof DashboardMonitorIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -168,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeaturesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -177,17 +215,31 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/': {
       id: '/dashboard/'
-      path: '/dashboard'
+      path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/dashboard/new': {
       id: '/dashboard/new'
-      path: '/dashboard/new'
+      path: '/new'
       fullPath: '/dashboard/new'
       preLoaderRoute: typeof DashboardNewRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/monitors': {
+      id: '/dashboard/monitors'
+      path: '/monitors'
+      fullPath: '/dashboard/monitors'
+      preLoaderRoute: typeof DashboardMonitorsRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/auth/sign-up': {
       id: '/auth/sign-up'
@@ -205,17 +257,17 @@ declare module '@tanstack/react-router' {
     }
     '/dashboard/$monitorId/': {
       id: '/dashboard/$monitorId/'
-      path: '/dashboard/$monitorId'
+      path: '/$monitorId'
       fullPath: '/dashboard/$monitorId/'
       preLoaderRoute: typeof DashboardMonitorIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/dashboard/$monitorId/settings': {
       id: '/dashboard/$monitorId/settings'
-      path: '/dashboard/$monitorId/settings'
+      path: '/$monitorId/settings'
       fullPath: '/dashboard/$monitorId/settings'
       preLoaderRoute: typeof DashboardMonitorIdSettingsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/auth/sign-up/$': {
       id: '/auth/sign-up/$'
@@ -233,6 +285,28 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface DashboardRouteChildren {
+  DashboardMonitorsRoute: typeof DashboardMonitorsRoute
+  DashboardNewRoute: typeof DashboardNewRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardMonitorIdSettingsRoute: typeof DashboardMonitorIdSettingsRoute
+  DashboardMonitorIdIndexRoute: typeof DashboardMonitorIdIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardMonitorsRoute: DashboardMonitorsRoute,
+  DashboardNewRoute: DashboardNewRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardMonitorIdSettingsRoute: DashboardMonitorIdSettingsRoute,
+  DashboardMonitorIdIndexRoute: DashboardMonitorIdIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
 
 interface AuthSignInRouteChildren {
   AuthSignInSplatRoute: typeof AuthSignInSplatRoute
@@ -260,13 +334,10 @@ const AuthSignUpRouteWithChildren = AuthSignUpRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   FeaturesRoute: FeaturesRoute,
   AuthSignInRoute: AuthSignInRouteWithChildren,
   AuthSignUpRoute: AuthSignUpRouteWithChildren,
-  DashboardNewRoute: DashboardNewRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
-  DashboardMonitorIdSettingsRoute: DashboardMonitorIdSettingsRoute,
-  DashboardMonitorIdIndexRoute: DashboardMonitorIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
