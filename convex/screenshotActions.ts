@@ -20,6 +20,7 @@ function getProvider(): ScreenshotProvider {
 async function fetchScreenshot(args: {
   url: string;
   selector?: string;
+  fullPage?: boolean;
 }): Promise<Blob> {
   const provider = getProvider();
 
@@ -32,7 +33,7 @@ async function fetchScreenshot(args: {
     const params = new URLSearchParams({
       access_key: apiKey,
       url: args.url,
-      full_page: "false",
+      full_page: args.fullPage ? "true" : "false",
       viewport_width: "1280",
       viewport_height: "800",
       format: "png",
@@ -66,7 +67,7 @@ async function fetchScreenshot(args: {
   const params = new URLSearchParams({
     access_key: apiKey,
     url: args.url,
-    full_page: "false",
+    full_page: args.fullPage ? "true" : "false",
     viewport_width: "1280",
     viewport_height: "800",
     format: "png",
@@ -92,13 +93,18 @@ async function fetchScreenshot(args: {
 }
 
 export const captureScreenshot = action({
-  args: { url: v.string(), selector: v.optional(v.string()) },
+  args: {
+    url: v.string(),
+    selector: v.optional(v.string()),
+    fullPage: v.optional(v.boolean()),
+  },
   handler: async (ctx, args) => {
     await getIdentity(ctx);
 
     const imageBlob = await fetchScreenshot({
       url: args.url,
       selector: args.selector,
+      fullPage: args.fullPage ?? true,
     });
 
     const storageId = await ctx.storage.store(imageBlob);
@@ -113,11 +119,13 @@ export const captureForMonitor = internalAction({
     monitorId: v.id("monitors"),
     url: v.string(),
     selector: v.optional(v.string()),
+    fullPage: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const imageBlob = await fetchScreenshot({
       url: args.url,
       selector: args.selector,
+      fullPage: args.fullPage ?? true,
     });
 
     const fullStorageId = await ctx.storage.store(imageBlob);

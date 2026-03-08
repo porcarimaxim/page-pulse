@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useAction } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
-import { DashboardHeader } from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Save, Loader2, Send } from "lucide-react";
@@ -75,21 +74,19 @@ function MonitorSettingsPage() {
 
   if (monitor === undefined) {
     return (
-      <div className="min-h-screen bg-[#f0f0e8]">
-        <DashboardHeader />
+      <main className="px-8 py-8">
         <div className="text-center py-20 text-[#888]">Loading...</div>
-      </div>
+      </main>
     );
   }
 
   if (monitor === null) {
     return (
-      <div className="min-h-screen bg-[#f0f0e8]">
-        <DashboardHeader />
+      <main className="px-8 py-8">
         <div className="text-center py-20">
           <h2 className="text-xl font-black uppercase">Monitor Not Found</h2>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -137,10 +134,7 @@ function MonitorSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f0e8]">
-      <DashboardHeader />
-
-      <main className="max-w-2xl mx-auto px-6 py-8">
+      <main className="max-w-2xl mx-auto px-8 py-8">
         {/* Back */}
         <button
           onClick={() =>
@@ -350,6 +344,5 @@ function MonitorSettingsPage() {
           </div>
         </div>
       </main>
-    </div>
   );
 }

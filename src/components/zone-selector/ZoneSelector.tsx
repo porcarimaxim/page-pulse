@@ -314,7 +314,7 @@ export function ZoneSelector({
             ? spaceHeld
               ? "Drag to move zone"
               : "Zone selected — drag edges to resize · hold space to move"
-            : "Click and drag to select a zone"}
+            : "Click and drag to select a zone — scroll to see full page"}
         </p>
         {zone && (
           <button
@@ -330,50 +330,52 @@ export function ZoneSelector({
         )}
       </div>
 
-      <div
-        ref={containerRef}
-        className={`relative border-2 border-[#1a1a1a] ${getCursor()} select-none overflow-hidden`}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleContainerMouseMove}
-        onMouseLeave={() => mode === "idle" && setHoveredHandle(null)}
-      >
-        <img
-          src={screenshotUrl}
-          alt="Page screenshot"
-          className="w-full block"
-          onLoad={() => setImageLoaded(true)}
-          draggable={false}
-        />
+      <div className="max-h-[600px] overflow-y-auto border-2 border-[#1a1a1a]">
+        <div
+          ref={containerRef}
+          className={`relative ${getCursor()} select-none`}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleContainerMouseMove}
+          onMouseLeave={() => mode === "idle" && setHoveredHandle(null)}
+        >
+          <img
+            src={screenshotUrl}
+            alt="Page screenshot"
+            className="w-full block"
+            onLoad={() => setImageLoaded(true)}
+            draggable={false}
+          />
 
-        {/* Dark overlay outside the zone */}
-        {imageLoaded && activeZone && (
-          <>
-            {/* Semi-transparent overlay */}
-            <div className="absolute inset-0 bg-[#1a1a1a]/40 pointer-events-none" />
-            {/* Clear zone cutout */}
-            <div
-              className="absolute pointer-events-none border-2 border-[#2d5a2d] bg-transparent"
-              style={{
-                left: `${activeZone.x}%`,
-                top: `${activeZone.y}%`,
-                width: `${activeZone.width}%`,
-                height: `${activeZone.height}%`,
-                boxShadow: `0 0 0 9999px rgba(26, 26, 26, 0.4)`,
-              }}
-            >
-              {/* Corner handles */}
-              <div className="absolute -top-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
-              <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
-              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
-              {/* Edge handles (midpoints) */}
-              <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
-              <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
-              <div className="absolute top-1/2 -left-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
-              <div className="absolute top-1/2 -right-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
-            </div>
-          </>
-        )}
+          {/* Dark overlay outside the zone */}
+          {imageLoaded && activeZone && (
+            <>
+              {/* Semi-transparent overlay */}
+              <div className="absolute inset-0 bg-[#1a1a1a]/40 pointer-events-none" />
+              {/* Clear zone cutout */}
+              <div
+                className="absolute pointer-events-none border-2 border-[#2d5a2d] bg-transparent"
+                style={{
+                  left: `${activeZone.x}%`,
+                  top: `${activeZone.y}%`,
+                  width: `${activeZone.width}%`,
+                  height: `${activeZone.height}%`,
+                  boxShadow: `0 0 0 9999px rgba(26, 26, 26, 0.4)`,
+                }}
+              >
+                {/* Corner handles */}
+                <div className="absolute -top-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
+                <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
+                {/* Edge handles (midpoints) */}
+                <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
+                <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
+                <div className="absolute top-1/2 -left-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
+                <div className="absolute top-1/2 -right-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
