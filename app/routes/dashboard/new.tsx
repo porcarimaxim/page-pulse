@@ -5,23 +5,20 @@ import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { ZoneSelector, type Zone } from "@/components/zone-selector/ZoneSelector";
 import { ElementPicker } from "@/components/element-picker/ElementPicker";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   ArrowLeft,
-  ArrowRight,
   Loader2,
-  Camera,
   Check,
   MousePointer,
   Crop,
+  Image as ImageIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/new")({
   component: NewMonitorPage,
 });
 
-type Step = "url" | "zone" | "configure";
 type SelectionMode = "zone" | "element";
 
 const INTERVALS = [
@@ -45,7 +42,6 @@ function NewMonitorPage() {
     return null;
   }
 
-  const [step, setStep] = useState<Step>("url");
   const [url, setUrl] = useState("");
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
   const [screenshotStorageId, setScreenshotStorageId] = useState<string | null>(null);
@@ -83,8 +79,6 @@ function NewMonitorPage() {
           setName(finalUrl);
         }
       }
-
-      setStep("zone");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to capture screenshot");
     } finally {
@@ -96,8 +90,10 @@ function NewMonitorPage() {
     setCssSelector(selector);
   };
 
-  const isZoneStepComplete =
+  const isSelectionComplete =
     selectionMode === "zone" ? !!zone : !!cssSelector;
+
+  const canCreate = !!name && !!screenshotStorageId && isSelectionComplete && !isCreating && isConvexAuthed;
 
   const handleCreate = async () => {
     if (!name || !screenshotStorageId) return;
@@ -135,251 +131,191 @@ function NewMonitorPage() {
   };
 
   return (
-      <main className="max-w-3xl mx-auto px-8 py-8">
-        {/* Back link */}
-        <button
-          onClick={() => navigate({ to: "/dashboard/monitors" })}
-          className="flex items-center gap-2 text-sm text-[#888] hover:text-[#1a1a1a] font-bold uppercase mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to monitors
-        </button>
+    <div className="min-h-screen flex flex-col">
+      {/* Top bar — pinned */}
+      <div className="sticky top-0 z-20 bg-[#f0f0e8] border-b-2 border-[#1a1a1a]">
+        <div className="flex items-center gap-4 px-6 py-3">
+          <button
+            onClick={() => navigate({ to: "/dashboard/monitors" })}
+            className="flex items-center gap-1.5 text-xs text-[#888] hover:text-[#1a1a1a] font-bold uppercase transition-colors shrink-0"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </button>
 
-        <h1 className="text-3xl font-black uppercase tracking-tighter mb-2">
-          New Monitor
-        </h1>
-
-        {/* Progress steps */}
-        <div className="flex items-center gap-2 mb-8">
-          {(["url", "zone", "configure"] as Step[]).map((s, i) => (
-            <div key={s} className="flex items-center gap-2">
-              <div
-                className={`w-8 h-8 flex items-center justify-center text-xs font-bold border-2 border-[#1a1a1a] ${
-                  step === s
-                    ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                    : (["url", "zone", "configure"].indexOf(step) > i)
-                      ? "bg-[#2d5a2d] text-[#f0f0e8] border-[#2d5a2d]"
-                      : "bg-transparent text-[#888]"
-                }`}
-              >
-                {["url", "zone", "configure"].indexOf(step) > i ? (
-                  <Check className="w-4 h-4" />
-                ) : (
-                  i + 1
-                )}
-              </div>
-              <span
-                className={`text-xs font-bold uppercase ${
-                  step === s ? "text-[#1a1a1a]" : "text-[#888]"
-                }`}
-              >
-                {s === "url" ? "URL" : s === "zone" ? "Select" : "Configure"}
-              </span>
-              {i < 2 && <div className="w-8 h-0.5 bg-[#ccc]" />}
-            </div>
-          ))}
+          <div className="flex-1 flex gap-3">
+            <Input
+              type="url"
+              placeholder="Enter website URL"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleCapture()}
+              className="flex-1 !border-2 !border-[#1a1a1a] !bg-white"
+            />
+            <button
+              onClick={handleCapture}
+              disabled={!url || isCapturing || !isConvexAuthed}
+              className="px-6 py-2 bg-[#2d5a2d] text-[#f0f0e8] font-bold uppercase text-sm border-2 border-[#2d5a2d] hover:bg-[#3a6a3a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
+            >
+              {isCapturing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Go"
+              )}
+            </button>
+          </div>
         </div>
 
-        {error && (
-          <div className="border-2 border-[#dc2626] bg-[#dc2626]/10 p-4 mb-6">
-            <p className="text-sm text-[#dc2626] font-bold">{error}</p>
-          </div>
-        )}
+        {/* Mode toggles */}
+        <div className="flex items-center gap-4 px-6 py-2 border-t border-[#ccc]">
+          <button
+            onClick={() => setSelectionMode("zone")}
+            className={`flex items-center gap-1.5 text-xs font-bold uppercase transition-colors ${
+              selectionMode === "zone"
+                ? "text-[#2d5a2d]"
+                : "text-[#888] hover:text-[#1a1a1a]"
+            }`}
+          >
+            <Crop className="w-3.5 h-3.5" />
+            Area
+          </button>
+          <button
+            onClick={() => setSelectionMode("element")}
+            className={`flex items-center gap-1.5 text-xs font-bold uppercase transition-colors ${
+              selectionMode === "element"
+                ? "text-[#2d5a2d]"
+                : "text-[#888] hover:text-[#1a1a1a]"
+            }`}
+          >
+            <MousePointer className="w-3.5 h-3.5" />
+            Element
+          </button>
+        </div>
+      </div>
 
-        {/* Step 1: URL */}
-        {step === "url" && (
-          <div className="border-2 border-[#1a1a1a] p-6 shadow-[8px_8px_0px_0px_var(--shadow-color)]">
-            <h2 className="font-black text-lg uppercase tracking-tighter mb-4">
-              Enter URL to Monitor
-            </h2>
-            <div className="flex gap-3">
-              <Input
-                type="url"
-                placeholder="https://example.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleCapture()}
-                className="flex-1"
+      {error && (
+        <div className="mx-6 mt-4 border-2 border-[#dc2626] bg-[#dc2626]/10 p-3">
+          <p className="text-sm text-[#dc2626] font-bold">{error}</p>
+        </div>
+      )}
+
+      {/* Main content: screenshot + sidebar */}
+      <div className="flex flex-1 min-h-0">
+        {/* Left: Screenshot area */}
+        <div className="flex-1 min-w-0">
+          {screenshotUrl ? (
+            selectionMode === "zone" ? (
+              <ZoneSelector
+                screenshotUrl={screenshotUrl}
+                onZoneSelect={setZone}
               />
-              <Button onClick={handleCapture} disabled={!url || isCapturing || !isConvexAuthed}>
-                {isCapturing ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Capturing...
-                  </>
-                ) : (
-                  <>
-                    <Camera className="w-4 h-4" />
-                    Capture
-                  </>
-                )}
-              </Button>
+            ) : (
+              <ElementPicker
+                url={url}
+                screenshotUrl={screenshotUrl}
+                onElementSelect={handleElementSelect}
+              />
+            )
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-[#ccc]">
+              <ImageIcon className="w-20 h-20 mb-4 stroke-1" />
+              <p className="text-sm font-bold uppercase text-[#888]">
+                Enter website URL and click Go
+              </p>
             </div>
-            <p className="text-xs text-[#888] mt-3">
-              We'll take a screenshot of this page so you can select what to monitor.
-            </p>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Step 2: Selection (Zone or Element) */}
-        {step === "zone" && screenshotUrl && (
-          <div className="space-y-6">
-            <div className="border-2 border-[#1a1a1a] p-6 shadow-[8px_8px_0px_0px_var(--shadow-color)]">
-              <h2 className="font-black text-lg uppercase tracking-tighter mb-4">
-                What to Monitor
+        {/* Right: Config sidebar — sticky */}
+        <div className="w-80 shrink-0 border-l-2 border-[#1a1a1a]">
+          <div className="sticky top-[105px] h-[calc(100vh-105px)] overflow-y-auto">
+            <div className="p-6 space-y-6">
+              <h2 className="font-black text-lg uppercase tracking-tighter">
+                Setup
               </h2>
 
-              {/* Mode toggle */}
-              <div className="flex gap-0 mb-6">
-                <button
-                  onClick={() => setSelectionMode("zone")}
-                  className={`flex items-center gap-2 border-2 border-[#1a1a1a] px-4 py-2 text-sm font-bold uppercase transition-all ${
-                    selectionMode === "zone"
-                      ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                      : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                  }`}
-                >
-                  <Crop className="w-4 h-4" />
-                  Draw Zone
-                </button>
-                <button
-                  onClick={() => setSelectionMode("element")}
-                  className={`flex items-center gap-2 border-2 border-[#1a1a1a] border-l-0 px-4 py-2 text-sm font-bold uppercase transition-all ${
-                    selectionMode === "element"
-                      ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                      : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                  }`}
-                >
-                  <MousePointer className="w-4 h-4" />
-                  Pick Element
-                </button>
+              {/* Monitor name */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                  Monitor Name
+                </label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="My Website Monitor"
+                />
               </div>
 
-              {selectionMode === "zone" ? (
-                <ZoneSelector
-                  screenshotUrl={screenshotUrl}
-                  onZoneSelect={setZone}
+              {/* Check frequency */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                  Check Frequency
+                </label>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {INTERVALS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setInterval(opt.value)}
+                      className={`border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all ${
+                        interval === opt.value
+                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                  Tags
+                </label>
+                <Input
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                  placeholder="pricing, competitor"
                 />
-              ) : (
-                <ElementPicker
-                  url={url}
-                  screenshotUrl={screenshotUrl!}
-                  onElementSelect={handleElementSelect}
-                />
+                <p className="text-xs text-[#888] mt-1">
+                  Comma-separated
+                </p>
+              </div>
+
+              {/* Selection info */}
+              {isSelectionComplete && (
+                <div className="border-t-2 border-[#ccc] pt-4">
+                  <p className="text-xs font-bold uppercase text-[#888] mb-1">
+                    Selection
+                  </p>
+                  <p className="text-sm">
+                    {selectionMode === "element" ? (
+                      <span className="font-mono text-[#2d5a2d] text-xs break-all">
+                        {cssSelector}
+                      </span>
+                    ) : (
+                      <span className="text-[#1a1a1a]">
+                        Zone: {zone ? `${zone.width.toFixed(0)}% × ${zone.height.toFixed(0)}%` : "—"}
+                      </span>
+                    )}
+                  </p>
+                </div>
               )}
             </div>
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={() => setStep("url")}>
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </Button>
-              <Button
-                onClick={() => setStep("configure")}
-                disabled={!isZoneStepComplete}
+
+            {/* Bottom actions — pinned to bottom of sidebar */}
+            <div className="sticky bottom-0 bg-[#f0f0e8] border-t-2 border-[#1a1a1a] p-4 flex gap-3">
+              <button
+                onClick={() => navigate({ to: "/dashboard/monitors" })}
+                className="flex-1 border-2 border-[#1a1a1a] px-4 py-2.5 text-sm font-bold uppercase hover:bg-[#e8e8e0] transition-colors"
               >
-                Continue
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Configure */}
-        {step === "configure" && (
-          <div className="space-y-6">
-            <div className="border-2 border-[#1a1a1a] p-6 shadow-[8px_8px_0px_0px_var(--shadow-color)]">
-              <h2 className="font-black text-lg uppercase tracking-tighter mb-4">
-                Configure Monitor
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase text-[#888] mb-2">
-                    Monitor Name
-                  </label>
-                  <Input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="My Website Monitor"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase text-[#888] mb-2">
-                    Check Frequency
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {INTERVALS.map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => setInterval(opt.value)}
-                        className={`border-2 border-[#1a1a1a] px-3 py-2 text-sm font-bold uppercase transition-all ${
-                          interval === opt.value
-                            ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                            : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase text-[#888] mb-2">
-                    Tags (optional)
-                  </label>
-                  <Input
-                    value={tags}
-                    onChange={(e) => setTags(e.target.value)}
-                    placeholder="pricing, competitor, news"
-                  />
-                  <p className="text-xs text-[#888] mt-1">
-                    Comma-separated. Used to organize and filter monitors.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Summary */}
-            <div className="border-2 border-[#1a1a1a] p-4 bg-[#e8e8e0]">
-              <h3 className="text-xs font-bold uppercase text-[#888] mb-2">
-                Summary
-              </h3>
-              <div className="space-y-1 text-sm">
-                <p>
-                  <span className="text-[#888]">URL:</span> {url}
-                </p>
-                <p>
-                  <span className="text-[#888]">Mode:</span>{" "}
-                  {selectionMode === "element" ? (
-                    <span className="font-mono text-[#2d5a2d]">
-                      Element: {cssSelector}
-                    </span>
-                  ) : (
-                    <span>
-                      Zone: {zone ? `${zone.width.toFixed(0)}% x ${zone.height.toFixed(0)}%` : "Not set"}
-                    </span>
-                  )}
-                </p>
-                <p>
-                  <span className="text-[#888]">Frequency:</span>{" "}
-                  {INTERVALS.find((i) => i.value === interval)?.label}
-                </p>
-                {tags && (
-                  <p>
-                    <span className="text-[#888]">Tags:</span> {tags}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex justify-between">
-              <Button variant="outline" onClick={() => setStep("zone")}>
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </Button>
-              <Button
-                variant="primary"
+                Cancel
+              </button>
+              <button
                 onClick={handleCreate}
-                disabled={!name || !isZoneStepComplete || isCreating || !isConvexAuthed}
+                disabled={!canCreate}
+                className="flex-1 bg-[#2d5a2d] text-[#f0f0e8] border-2 border-[#2d5a2d] px-4 py-2.5 text-sm font-bold uppercase hover:bg-[#3a6a3a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
                 {isCreating ? (
                   <>
@@ -392,10 +328,11 @@ function NewMonitorPage() {
                     Start Monitoring
                   </>
                 )}
-              </Button>
+              </button>
             </div>
           </div>
-        )}
-      </main>
+        </div>
+      </div>
+    </div>
   );
 }
