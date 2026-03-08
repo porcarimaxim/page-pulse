@@ -36,6 +36,7 @@ export default defineSchema({
     lastSnapshotId: v.optional(v.id("snapshots")),
     changeCount: v.number(),
     consecutiveErrors: v.number(),
+    isChecking: v.optional(v.boolean()),
     fullScreenshotStorageId: v.optional(v.id("_storage")),
     sensitivityThreshold: v.optional(v.number()),
     // Webhook fields

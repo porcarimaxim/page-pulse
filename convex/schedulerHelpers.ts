@@ -105,6 +105,7 @@ export const updateMonitorAfterCheck = internalMutation({
       nextCheckAt: Date.now() + intervalMs,
       lastSnapshotId: args.snapshotId,
       consecutiveErrors: 0,
+      isChecking: false,
     });
   },
 });
@@ -123,6 +124,7 @@ export const recordMonitorError = internalMutation({
       lastCheckedAt: Date.now(),
       nextCheckAt: Date.now() + intervalMs,
       status: errors >= MAX_CONSECUTIVE_ERRORS ? "error" : "active",
+      isChecking: false,
     });
   },
 });

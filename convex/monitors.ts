@@ -186,6 +186,8 @@ export const checkNow = mutation({
         consecutiveErrors: 0,
       });
     }
+    // Mark as checking — reactive frontend will show "In progress" row
+    await ctx.db.patch(args.monitorId, { isChecking: true });
     await ctx.scheduler.runAfter(
       0,
       internal.scheduler.processOneMonitor,

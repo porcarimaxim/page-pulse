@@ -44,6 +44,10 @@ function MonitorDetailPage() {
     api.changes.exportByMonitor,
     isSignedIn ? { monitorId: monitorId as Id<"monitors"> } : "skip"
   );
+  const checkHistory = useQuery(
+    api.snapshots.getCheckHistory,
+    isSignedIn ? { monitorId: monitorId as Id<"monitors">, limit: 50 } : "skip"
+  );
 
   const pauseMonitor = useMutation(api.monitors.pause);
   const resumeMonitor = useMutation(api.monitors.resume);
@@ -52,7 +56,6 @@ function MonitorDetailPage() {
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [isChecking, setIsChecking] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [activeTab, setActiveTab] = useState<"changes" | "activity">(
     "changes"
@@ -76,13 +79,13 @@ function MonitorDetailPage() {
     );
   }
 
+  const isChecking = monitor?.isChecking === true;
+
   const handleCheckNow = async () => {
-    setIsChecking(true);
     try {
       await checkNow({ monitorId: monitorId as Id<"monitors"> });
-      setTimeout(() => setIsChecking(false), 3000);
-    } catch {
-      setIsChecking(false);
+    } catch (error) {
+      console.error("Check now failed:", error);
     }
   };
 
@@ -286,66 +289,107 @@ function MonitorDetailPage() {
             </div>
           ) : (
             <div>
-              {/* Monitoring activity - show stats */}
-              <div className="space-y-4">
-                <div className="border-2 border-[#1a1a1a] p-4">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-xs font-bold uppercase text-[#888]">
-                        Frequency
-                      </p>
-                      <p className="text-sm font-bold mt-1">
-                        {intervalLabel(monitor.interval)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold uppercase text-[#888]">
-                        Total Changes
-                      </p>
-                      <p className="text-sm font-bold mt-1">
-                        {monitor.changeCount}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold uppercase text-[#888]">
-                        Last Checked
-                      </p>
-                      <p className="text-sm font-bold mt-1">
-                        {monitor.lastCheckedAt
-                          ? formatRelativeTime(monitor.lastCheckedAt)
-                          : "Never"}
-                      </p>
-                    </div>
+              {/* Stats summary */}
+              <div className="border-2 border-[#1a1a1a] p-4 mb-6">
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase text-[#888]">
+                      Frequency
+                    </p>
+                    <p className="text-sm font-bold mt-1">
+                      {intervalLabel(monitor.interval)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase text-[#888]">
+                      Total Changes
+                    </p>
+                    <p className="text-sm font-bold mt-1">
+                      {monitor.changeCount}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase text-[#888]">
+                      Last Checked
+                    </p>
+                    <p className="text-sm font-bold mt-1">
+                      {monitor.lastCheckedAt
+                        ? formatRelativeTime(monitor.lastCheckedAt)
+                        : "Never"}
+                    </p>
                   </div>
                 </div>
+              </div>
 
-                {/* Screenshot preview */}
-                {monitor.screenshotUrl && (
-                  <div className="border-2 border-[#1a1a1a] p-4">
-                    <p className="text-xs font-bold uppercase text-[#888] mb-3">
-                      {monitor.selectionMode === "element"
-                        ? "Monitored Element"
-                        : "Monitored Zone"}
-                    </p>
-                    <div className="relative border-2 border-[#1a1a1a] inline-block">
-                      <img
-                        src={monitor.screenshotUrl}
-                        alt="Page screenshot"
-                        className="max-h-64 w-auto"
-                      />
-                      {monitor.selectionMode !== "element" && (
-                        <div
-                          className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
-                          style={{
-                            left: `${monitor.zone.x}%`,
-                            top: `${monitor.zone.y}%`,
-                            width: `${monitor.zone.width}%`,
-                            height: `${monitor.zone.height}%`,
-                          }}
-                        />
-                      )}
+              {/* Check history table */}
+              <div className="border-2 border-[#1a1a1a]">
+                {/* Table header */}
+                <div className="grid grid-cols-3 gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8]">
+                  <p className="text-xs font-bold uppercase tracking-wider">
+                    Job Name
+                  </p>
+                  <p className="text-xs font-bold uppercase tracking-wider">
+                    Check Date
+                  </p>
+                  <p className="text-xs font-bold uppercase tracking-wider">
+                    Status
+                  </p>
+                </div>
+
+                {/* In-progress row */}
+                {isChecking && (
+                  <div className="grid grid-cols-3 gap-4 px-4 py-3 border-b border-[#ccc] bg-[#e8e8e0]">
+                    <div>
+                      <p className="text-sm font-bold">{monitor.name}</p>
+                      <p className="text-xs text-[#888] font-mono truncate">
+                        {monitor.url}
+                      </p>
+                    </div>
+                    <p className="text-sm text-[#888] self-center">Now</p>
+                    <div className="flex items-center gap-2 self-center">
+                      <Loader2 className="w-3 h-3 animate-spin text-[#ca8a04]" />
+                      <Badge variant="warning">In Progress</Badge>
                     </div>
                   </div>
+                )}
+
+                {/* History rows */}
+                {checkHistory === undefined ? (
+                  <div className="px-4 py-8 text-center text-[#888] text-sm">
+                    Loading...
+                  </div>
+                ) : checkHistory.length === 0 && !isChecking ? (
+                  <div className="px-4 py-8 text-center text-[#888] text-sm">
+                    No checks recorded yet.
+                  </div>
+                ) : (
+                  checkHistory.map((entry) => (
+                    <div
+                      key={entry._id}
+                      className="grid grid-cols-3 gap-4 px-4 py-3 border-b border-[#ccc] last:border-b-0"
+                    >
+                      <div>
+                        <p className="text-sm font-bold">{monitor.name}</p>
+                        <p className="text-xs text-[#888] font-mono truncate">
+                          {monitor.url}
+                        </p>
+                      </div>
+                      <p className="text-sm text-[#888] self-center">
+                        {new Date(entry.capturedAt).toLocaleString()}
+                      </p>
+                      <div className="self-center">
+                        {entry.status === "changed" ? (
+                          <Badge variant="destructive">
+                            {entry.diffPercentage?.toFixed(1)}% changed
+                          </Badge>
+                        ) : (
+                          <span className="text-sm font-bold text-[#2d5a2d]">
+                            No change
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))
                 )}
               </div>
             </div>
