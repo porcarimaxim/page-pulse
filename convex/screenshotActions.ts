@@ -7,15 +7,27 @@ import { getIdentity } from "./auth";
 
 const SCREENSHOTONE_API = "https://api.screenshotone.com/take";
 
-export const captureScreenshot = action({
-  args: { url: v.string(), selector: v.optional(v.string()) },
-  handler: async (ctx, args) => {
-    await getIdentity(ctx);
+type ScreenshotProvider = "pagess" | "screenshotone";
 
-    const apiKey = process.env.SCREENSHOTONE_API_KEY;
-    if (!apiKey) {
-      throw new Error("Missing SCREENSHOTONE_API_KEY");
-    }
+function getProvider(): ScreenshotProvider {
+  const provider = process.env.SCREENSHOT_PROVIDER ?? "screenshotone";
+  if (provider !== "screenshotone" && provider !== "pagess") {
+    throw new Error(`Invalid SCREENSHOT_PROVIDER: ${provider}`);
+  }
+  return provider;
+}
+
+async function fetchScreenshot(args: {
+  url: string;
+  selector?: string;
+}): Promise<Blob> {
+  const provider = getProvider();
+
+  if (provider === "pagess") {
+    const baseUrl = process.env.PAGESS_URL;
+    const apiKey = process.env.PAGESS_API_KEY;
+    if (!baseUrl) throw new Error("Missing PAGESS_URL");
+    if (!apiKey) throw new Error("Missing PAGESS_API_KEY");
 
     const params = new URLSearchParams({
       access_key: apiKey,
@@ -33,15 +45,62 @@ export const captureScreenshot = action({
       params.set("selector", args.selector);
     }
 
-    const response = await fetch(`${SCREENSHOTONE_API}?${params.toString()}`);
+    const response = await fetch(`${baseUrl}/take?${params.toString()}`);
 
     if (!response.ok) {
+      const errorBody = await response.text();
       throw new Error(
-        `Screenshot failed: ${response.status} ${response.statusText}`
+        `Screenshot failed: ${response.status} ${response.statusText} — ${errorBody}`
       );
     }
 
-    const imageBlob = await response.blob();
+    return await response.blob();
+  }
+
+  // Default: ScreenshotOne
+  const apiKey = process.env.SCREENSHOTONE_API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing SCREENSHOTONE_API_KEY");
+  }
+
+  const params = new URLSearchParams({
+    access_key: apiKey,
+    url: args.url,
+    full_page: "false",
+    viewport_width: "1280",
+    viewport_height: "800",
+    format: "png",
+    block_ads: "true",
+    block_cookie_banners: "true",
+    delay: "3",
+  });
+
+  if (args.selector) {
+    params.set("selector", args.selector);
+  }
+
+  const response = await fetch(`${SCREENSHOTONE_API}?${params.toString()}`);
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(
+      `Screenshot failed: ${response.status} ${response.statusText} — ${errorBody}`
+    );
+  }
+
+  return await response.blob();
+}
+
+export const captureScreenshot = action({
+  args: { url: v.string(), selector: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    await getIdentity(ctx);
+
+    const imageBlob = await fetchScreenshot({
+      url: args.url,
+      selector: args.selector,
+    });
+
     const storageId = await ctx.storage.store(imageBlob);
     const url = await ctx.storage.getUrl(storageId);
 
@@ -56,36 +115,11 @@ export const captureForMonitor = internalAction({
     selector: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const apiKey = process.env.SCREENSHOTONE_API_KEY;
-    if (!apiKey) {
-      throw new Error("Missing SCREENSHOTONE_API_KEY");
-    }
-
-    const params = new URLSearchParams({
-      access_key: apiKey,
+    const imageBlob = await fetchScreenshot({
       url: args.url,
-      full_page: "false",
-      viewport_width: "1280",
-      viewport_height: "800",
-      format: "png",
-      block_ads: "true",
-      block_cookie_banners: "true",
-      delay: "3",
+      selector: args.selector,
     });
 
-    if (args.selector) {
-      params.set("selector", args.selector);
-    }
-
-    const response = await fetch(`${SCREENSHOTONE_API}?${params.toString()}`);
-
-    if (!response.ok) {
-      throw new Error(
-        `Screenshot failed: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const imageBlob = await response.blob();
     const fullStorageId = await ctx.storage.store(imageBlob);
 
     return fullStorageId;
