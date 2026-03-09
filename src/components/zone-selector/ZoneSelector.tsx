@@ -69,7 +69,6 @@ export function ZoneSelector({
   const [zone, setZone] = useState<Zone | null>(initialZone ?? null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [spaceHeld, setSpaceHeld] = useState(false);
-  const [hoveredHandle, setHoveredHandle] = useState<ResizeHandle | null>(null);
 
   // Refs so document listeners always see the latest state
   const modeRef = useRef<InteractionMode>("idle");
@@ -136,11 +135,27 @@ export function ZoneSelector({
     onZoneSelectRef.current(finalZone);
   }, []);
 
+  // Prevent scrolling on the scrollable parent while interacting
+  useEffect(() => {
+    if (mode === "idle") return;
+    const scrollParent = containerRef.current?.closest(".overflow-y-auto");
+    if (scrollParent) {
+      const prevent = (e: Event) => e.preventDefault();
+      scrollParent.addEventListener("wheel", prevent, { passive: false });
+      scrollParent.addEventListener("touchmove", prevent, { passive: false });
+      return () => {
+        scrollParent.removeEventListener("wheel", prevent);
+        scrollParent.removeEventListener("touchmove", prevent);
+      };
+    }
+  }, [mode]);
+
   // Document-level mouse move/up during drawing, moving, or resizing
   useEffect(() => {
     if (mode === "idle") return;
 
     const handleDocMouseMove = (e: MouseEvent) => {
+      e.preventDefault();
       const coords = getRelativeCoords(e);
 
       if (modeRef.current === "drawing") {
@@ -198,7 +213,7 @@ export function ZoneSelector({
           const width = Math.abs(cp.x - sp.x);
           const height = Math.abs(cp.y - sp.y);
 
-          if (width >= 2 && height >= 2) {
+          if (width >= 0.5 && height >= 0.5) {
             finalizeZone({ x, y, width, height });
           } else {
             zoneRef.current = null;
@@ -231,23 +246,10 @@ export function ZoneSelector({
     };
   }, [mode, getRelativeCoords, finalizeZone]);
 
-  // Track hovered handle for cursor
-  const handleContainerMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (mode !== "idle") return;
-      if (!zoneRef.current || spaceHeld) {
-        setHoveredHandle(null);
-        return;
-      }
-      const coords = getRelativeCoords(e);
-      setHoveredHandle(getHandle(coords, zoneRef.current));
-    },
-    [mode, spaceHeld, getRelativeCoords]
-  );
-
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
+      e.stopPropagation();
       const coords = getRelativeCoords(e);
 
       // Space + existing zone = move mode
@@ -259,19 +261,7 @@ export function ZoneSelector({
         return;
       }
 
-      // Check for resize handle on existing zone
-      if (zoneRef.current) {
-        const handle = getHandle(coords, zoneRef.current);
-        if (handle) {
-          resizeHandleRef.current = handle;
-          resizeAnchorRef.current = { ...zoneRef.current };
-          modeRef.current = "resizing";
-          setMode("resizing");
-          return;
-        }
-      }
-
-      // Normal draw mode
+      // Always draw a new zone (handles initiate resize via their own onMouseDown)
       startPointRef.current = coords;
       currentPointRef.current = coords;
       setStartPoint(coords);
@@ -282,6 +272,19 @@ export function ZoneSelector({
       setMode("drawing");
     },
     [getRelativeCoords, spaceHeld]
+  );
+
+  const handleHandleMouseDown = useCallback(
+    (e: React.MouseEvent, handle: ResizeHandle) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!zoneRef.current) return;
+      resizeHandleRef.current = handle;
+      resizeAnchorRef.current = { ...zoneRef.current };
+      modeRef.current = "resizing";
+      setMode("resizing");
+    },
+    []
   );
 
   // Calculate the drawing rectangle
@@ -302,7 +305,6 @@ export function ZoneSelector({
     if (mode === "moving") return "cursor-grabbing";
     if (mode === "resizing" && resizeHandleRef.current) return HANDLE_CURSORS[resizeHandleRef.current];
     if (spaceHeld && zone) return "cursor-grab";
-    if (hoveredHandle && zone) return HANDLE_CURSORS[hoveredHandle];
     return "cursor-crosshair";
   };
 
@@ -310,46 +312,41 @@ export function ZoneSelector({
     <div
       ref={containerRef}
       className={`relative ${getCursor()} select-none`}
+      style={{ touchAction: "none" }}
       onMouseDown={handleMouseDown}
-      onMouseMove={handleContainerMouseMove}
-      onMouseLeave={() => mode === "idle" && setHoveredHandle(null)}
+      onDragStart={(e) => e.preventDefault()}
     >
       <img
         src={screenshotUrl}
         alt="Page screenshot"
-        className="w-full block"
+        className="w-full block pointer-events-none"
         onLoad={() => setImageLoaded(true)}
         draggable={false}
       />
 
-      {/* Dark overlay outside the zone */}
+      {/* Dark overlay outside the zone (single layer via box-shadow) */}
       {imageLoaded && activeZone && (
-        <>
-          {/* Semi-transparent overlay */}
-          <div className="absolute inset-0 bg-[#1a1a1a]/40 pointer-events-none" />
-          {/* Clear zone cutout */}
-          <div
-            className="absolute pointer-events-none border-2 border-[#2d5a2d] bg-transparent"
-            style={{
-              left: `${activeZone.x}%`,
-              top: `${activeZone.y}%`,
-              width: `${activeZone.width}%`,
-              height: `${activeZone.height}%`,
-              boxShadow: `0 0 0 9999px rgba(26, 26, 26, 0.4)`,
-            }}
-          >
-            {/* Corner handles */}
-            <div className="absolute -top-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
-            <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-[#2d5a2d]" />
-            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-[#2d5a2d]" />
-            {/* Edge handles (midpoints) */}
-            <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
-            <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-1 bg-[#2d5a2d]" />
-            <div className="absolute top-1/2 -left-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
-            <div className="absolute top-1/2 -right-0.5 -translate-y-1/2 w-1 h-4 bg-[#2d5a2d]" />
-          </div>
-        </>
+        <div
+          className="absolute pointer-events-none border-2 border-[#2d5a2d]"
+          style={{
+            left: `${activeZone.x}%`,
+            top: `${activeZone.y}%`,
+            width: `${activeZone.width}%`,
+            height: `${activeZone.height}%`,
+            boxShadow: `0 0 0 9999px rgba(26, 26, 26, 0.5)`,
+          }}
+        >
+          {/* Corner handles — interactive for resize */}
+          <div className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-nw-resize" onMouseDown={(e) => handleHandleMouseDown(e, "nw")} />
+          <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-ne-resize" onMouseDown={(e) => handleHandleMouseDown(e, "ne")} />
+          <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-sw-resize" onMouseDown={(e) => handleHandleMouseDown(e, "sw")} />
+          <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-se-resize" onMouseDown={(e) => handleHandleMouseDown(e, "se")} />
+          {/* Edge handles — interactive for resize */}
+          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-6 h-2 bg-[#2d5a2d] pointer-events-auto cursor-n-resize" onMouseDown={(e) => handleHandleMouseDown(e, "n")} />
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-2 bg-[#2d5a2d] pointer-events-auto cursor-s-resize" onMouseDown={(e) => handleHandleMouseDown(e, "s")} />
+          <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-6 bg-[#2d5a2d] pointer-events-auto cursor-w-resize" onMouseDown={(e) => handleHandleMouseDown(e, "w")} />
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-6 bg-[#2d5a2d] pointer-events-auto cursor-e-resize" onMouseDown={(e) => handleHandleMouseDown(e, "e")} />
+        </div>
       )}
     </div>
   );

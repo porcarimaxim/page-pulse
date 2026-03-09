@@ -202,28 +202,30 @@ function NewMonitorPage() {
       {/* Main content: screenshot + sidebar */}
       <div className="flex flex-1 min-h-0">
         {/* Left: Screenshot area */}
-        <div className="flex-1 min-w-0">
-          {screenshotUrl ? (
-            selectionMode === "zone" ? (
-              <ZoneSelector
-                screenshotUrl={screenshotUrl}
-                onZoneSelect={setZone}
-              />
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div className="overflow-y-auto h-[calc(100vh-105px)]">
+            {screenshotUrl ? (
+              selectionMode === "zone" ? (
+                <ZoneSelector
+                  screenshotUrl={screenshotUrl}
+                  onZoneSelect={setZone}
+                />
+              ) : (
+                <ElementPicker
+                  url={url}
+                  screenshotUrl={screenshotUrl}
+                  onElementSelect={handleElementSelect}
+                />
+              )
             ) : (
-              <ElementPicker
-                url={url}
-                screenshotUrl={screenshotUrl}
-                onElementSelect={handleElementSelect}
-              />
-            )
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-[#ccc]">
-              <ImageIcon className="w-20 h-20 mb-4 stroke-1" />
-              <p className="text-sm font-bold uppercase text-[#888]">
-                Enter website URL and click Go
-              </p>
-            </div>
-          )}
+              <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-[#ccc]">
+                <ImageIcon className="w-20 h-20 mb-4 stroke-1" />
+                <p className="text-sm font-bold uppercase text-[#888]">
+                  Enter website URL and click Go
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Right: Config sidebar — sticky */}
