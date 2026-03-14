@@ -21,8 +21,18 @@ async function fetchScreenshot(args: {
   url: string;
   selector?: string;
   fullPage?: boolean;
+  viewportWidth?: number;
+  viewportHeight?: number;
+  blockAds?: boolean;
+  delay?: number;
 }): Promise<Blob> {
   const provider = getProvider();
+  // When a selector is provided, fullPage must be false (APIs treat them as mutually exclusive)
+  const useFullPage = args.selector ? false : (args.fullPage ?? true);
+  const vw = String(args.viewportWidth ?? 1280);
+  const vh = String(args.viewportHeight ?? 800);
+  const shouldBlockAds = (args.blockAds ?? true) ? "true" : "false";
+  const delaySeconds = String(args.delay ?? 3);
 
   if (provider === "pagess") {
     const baseUrl = process.env.PAGESS_URL;
@@ -33,13 +43,13 @@ async function fetchScreenshot(args: {
     const params = new URLSearchParams({
       access_key: apiKey,
       url: args.url,
-      full_page: args.fullPage ? "true" : "false",
-      viewport_width: "1280",
-      viewport_height: "800",
+      full_page: useFullPage ? "true" : "false",
+      viewport_width: vw,
+      viewport_height: vh,
       format: "png",
-      block_ads: "true",
+      block_ads: shouldBlockAds,
       block_cookie_banners: "true",
-      delay: "3",
+      delay: delaySeconds,
     });
 
     if (args.selector) {
@@ -67,13 +77,13 @@ async function fetchScreenshot(args: {
   const params = new URLSearchParams({
     access_key: apiKey,
     url: args.url,
-    full_page: args.fullPage ? "true" : "false",
-    viewport_width: "1280",
-    viewport_height: "800",
+    full_page: useFullPage ? "true" : "false",
+    viewport_width: vw,
+    viewport_height: vh,
     format: "png",
-    block_ads: "true",
+    block_ads: shouldBlockAds,
     block_cookie_banners: "true",
-    delay: "3",
+    delay: delaySeconds,
   });
 
   if (args.selector) {
@@ -120,12 +130,19 @@ export const captureForMonitor = internalAction({
     url: v.string(),
     selector: v.optional(v.string()),
     fullPage: v.optional(v.boolean()),
+    mobileViewport: v.optional(v.boolean()),
+    blockAds: v.optional(v.boolean()),
+    delay: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const imageBlob = await fetchScreenshot({
       url: args.url,
       selector: args.selector,
       fullPage: args.fullPage ?? true,
+      viewportWidth: args.mobileViewport ? 375 : 1280,
+      viewportHeight: args.mobileViewport ? 812 : 800,
+      blockAds: args.blockAds,
+      delay: args.delay,
     });
 
     const fullStorageId = await ctx.storage.store(imageBlob);

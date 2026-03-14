@@ -42,6 +42,8 @@ export const listByMonitor = query({
           diffUrl,
           beforeUrl,
           afterUrl,
+          beforeTextContent: beforeSnapshot?.textContent ?? null,
+          afterTextContent: afterSnapshot?.textContent ?? null,
         };
       })
     );
@@ -97,6 +99,8 @@ export const get = query({
       diffUrl,
       beforeUrl,
       afterUrl,
+      beforeTextContent: beforeSnapshot?.textContent ?? null,
+      afterTextContent: afterSnapshot?.textContent ?? null,
     };
   },
 });

@@ -5,38 +5,12 @@ import { Loader2, MousePointer } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const VIEWPORT_WIDTH = 1280;
-const VIEWPORT_HEIGHT = 800;
-const SKIP_TAGS = new Set([
-  "html",
-  "head",
-  "body",
-  "script",
-  "style",
-  "link",
-  "meta",
-  "br",
-  "hr",
-  "noscript",
-  "title",
-  "base",
-]);
-
-interface ElementCoord {
-  selector: string;
-  tag: string;
-  depth: number;
-  rect: { top: number; left: number; width: number; height: number };
-  text: string;
-}
-
 interface ElementPickerProps {
   url: string;
-  screenshotUrl: string;
   onElementSelect: (selector: string) => void;
 }
 
-/** Generate a CSS selector for a DOM element (runs in the iframe's document context). */
+/** Generate a CSS selector for a DOM element (runs against the iframe's document). */
 function generateCssSelector(el: Element, doc: Document): string {
   const tag = el.tagName.toLowerCase();
 
@@ -81,19 +55,8 @@ function generateCssSelector(el: Element, doc: Document): string {
 
   // Semantic tags
   const semanticTags = [
-    "header",
-    "nav",
-    "main",
-    "article",
-    "section",
-    "aside",
-    "footer",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "form",
-    "table",
+    "header", "nav", "main", "article", "section", "aside", "footer",
+    "h1", "h2", "h3", "h4", "form", "table",
   ];
   if (semanticTags.includes(tag)) {
     try {
@@ -103,66 +66,55 @@ function generateCssSelector(el: Element, doc: Document): string {
     }
   }
 
-  // Fallback: tag + first class (even if not unique)
+  // Fallback: tag + first class
   if (classes.length > 0) {
     return `${tag}.${CSS.escape(classes[0])}`;
   }
   return tag;
 }
 
-function getDepth(el: Element): number {
-  let depth = 0;
-  let current: Element | null = el;
-  while (current) {
-    depth++;
-    current = current.parentElement;
-  }
-  return depth;
-}
+const SKIP_TAGS = new Set([
+  "html", "head", "body", "script", "style", "link", "meta",
+  "br", "hr", "noscript", "title", "base",
+]);
 
-export function ElementPicker({
-  url,
-  screenshotUrl,
-  onElementSelect,
-}: ElementPickerProps) {
+const HIGHLIGHT_CLASS = "__pp-highlight";
+const SELECTED_CLASS = "__pp-selected";
+
+const INJECTED_STYLES = `
+  .__pp-highlight {
+    outline: 2px solid #7cb87c !important;
+    outline-offset: -1px;
+    background-color: rgba(124, 184, 124, 0.15) !important;
+    cursor: pointer !important;
+  }
+  .__pp-selected {
+    outline: 2px solid #2d5a2d !important;
+    outline-offset: -1px;
+    background-color: rgba(45, 90, 45, 0.15) !important;
+  }
+  * {
+    cursor: default;
+  }
+`;
+
+export function ElementPicker({ url, onElementSelect }: ElementPickerProps) {
   const fetchPageHtml = useAction(api.elementDetection.fetchPageHtml);
 
-  const [elements, setElements] = useState<ElementCoord[]>([]);
   const [pageHtml, setPageHtml] = useState<string | null>(null);
   const [selectedSelector, setSelectedSelector] = useState<string | null>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [selectedText, setSelectedText] = useState<string | null>(null);
+  const [hoveredSelector, setHoveredSelector] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [customSelector, setCustomSelector] = useState("");
-  const [imgDimensions, setImgDimensions] = useState({ width: 0, height: 0 });
+  const [iframeReady, setIframeReady] = useState(false);
 
-  const imgRef = useRef<HTMLImageElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const prevHighlightRef = useRef<Element | null>(null);
+  const selectedElementRef = useRef<Element | null>(null);
 
-  // Track image dimensions for coordinate scaling
-  useEffect(() => {
-    const img = imgRef.current;
-    if (!img) return;
-
-    const updateDimensions = () => {
-      if (img.offsetWidth > 0 && img.offsetHeight > 0) {
-        setImgDimensions({ width: img.offsetWidth, height: img.offsetHeight });
-      }
-    };
-
-    if (img.complete) updateDimensions();
-    img.addEventListener("load", updateDimensions);
-
-    const observer = new ResizeObserver(updateDimensions);
-    observer.observe(img);
-
-    return () => {
-      img.removeEventListener("load", updateDimensions);
-      observer.disconnect();
-    };
-  }, [screenshotUrl]);
-
-  // Fetch page HTML on mount
+  // Fetch page HTML
   useEffect(() => {
     let cancelled = false;
 
@@ -196,275 +148,228 @@ export function ElementPicker({
     }
   }, [pageHtml]);
 
-  // Extract element coordinates from the iframe DOM
-  const extractElements = useCallback((doc: Document) => {
-    const allElements = doc.querySelectorAll("*");
-    const extracted: ElementCoord[] = [];
-    const seenKeys = new Set<string>();
+  // Find the closest meaningful element (skip tiny inline elements)
+  const findTargetElement = useCallback((el: Element): Element | null => {
+    let current: Element | null = el;
+    while (current) {
+      const tag = current.tagName.toLowerCase();
+      if (SKIP_TAGS.has(tag)) return null;
 
-    allElements.forEach((el) => {
-      const tag = el.tagName.toLowerCase();
-      if (SKIP_TAGS.has(tag)) return;
+      // Don't select very large wrapper elements
+      const rect = current.getBoundingClientRect();
+      if (rect.width * rect.height > 1280 * 800 * 0.9) return null;
 
-      const rect = el.getBoundingClientRect();
-
-      // Skip tiny elements
-      if (rect.width < 20 || rect.height < 10) return;
-      // Skip elements outside viewport
-      if (rect.top >= VIEWPORT_HEIGHT || rect.left >= VIEWPORT_WIDTH) return;
-      if (rect.top + rect.height < 0 || rect.left + rect.width < 0) return;
-      // Skip elements covering >90% of viewport (body wrappers)
-      if (rect.width * rect.height > VIEWPORT_WIDTH * VIEWPORT_HEIGHT * 0.9)
-        return;
-
-      const selector = generateCssSelector(el, doc);
-      const depth = getDepth(el);
-
-      // Deduplicate by selector + approximate position
-      const key = `${selector}:${Math.round(rect.top)}:${Math.round(rect.left)}:${Math.round(rect.width)}`;
-      if (seenKeys.has(key)) return;
-      seenKeys.add(key);
-
-      extracted.push({
-        selector,
-        tag,
-        depth,
-        rect: {
-          top: Math.max(0, rect.top),
-          left: Math.max(0, rect.left),
-          width: Math.min(rect.width, VIEWPORT_WIDTH - Math.max(0, rect.left)),
-          height: Math.min(
-            rect.height,
-            VIEWPORT_HEIGHT - Math.max(0, rect.top)
-          ),
-        },
-        text: (el.textContent?.trim() || "").substring(0, 60),
-      });
-    });
-
-    // Sort by depth ascending (deeper = higher z-index = on top)
-    extracted.sort((a, b) => a.depth - b.depth);
-
-    setElements(extracted.slice(0, 300));
-    setIsLoading(false);
+      return current;
+    }
+    return null;
   }, []);
 
-  // Iframe load handler
+  // Attach interactive listeners to iframe
   const handleIframeLoad = useCallback(() => {
-    // Small delay to let CSS apply
     setTimeout(() => {
-      const doc = iframeRef.current?.contentDocument;
-      if (doc) {
-        extractElements(doc);
-      } else {
+      const iframe = iframeRef.current;
+      if (!iframe) return;
+
+      const doc = iframe.contentDocument;
+      if (!doc) {
+        setError("Could not access page content.");
         setIsLoading(false);
-        setError("Could not access page content for element detection.");
+        return;
       }
-    }, 300);
-  }, [extractElements]);
 
-  // Fallback timeout if iframe load is slow
-  useEffect(() => {
-    if (!isLoading || !pageHtml) return;
-    const timeout = setTimeout(() => {
-      if (isLoading && iframeRef.current?.contentDocument) {
-        extractElements(iframeRef.current.contentDocument);
-      }
-    }, 10_000);
-    return () => clearTimeout(timeout);
-  }, [isLoading, pageHtml, extractElements]);
+      // Inject highlight styles
+      const style = doc.createElement("style");
+      style.textContent = INJECTED_STYLES;
+      doc.head.appendChild(style);
 
-  const handleSelect = (el: ElementCoord) => {
-    if (selectedSelector === el.selector) {
-      // Deselect
-      setSelectedSelector(null);
-      return;
-    }
-    setSelectedSelector(el.selector);
-    onElementSelect(el.selector);
-  };
+      // Prevent all links and form submissions
+      doc.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, true);
+
+      // Mouseover: highlight element
+      doc.addEventListener("mouseover", (e) => {
+        const target = e.target as Element;
+        const el = findTargetElement(target);
+        if (!el) return;
+
+        // Remove previous highlight
+        if (prevHighlightRef.current && prevHighlightRef.current !== el) {
+          prevHighlightRef.current.classList.remove(HIGHLIGHT_CLASS);
+        }
+
+        // Don't highlight if it's the selected element
+        if (el !== selectedElementRef.current) {
+          el.classList.add(HIGHLIGHT_CLASS);
+        }
+        prevHighlightRef.current = el;
+
+        // Update hovered selector
+        const selector = generateCssSelector(el, doc);
+        setHoveredSelector(selector);
+      }, true);
+
+      // Mouseout: remove highlight
+      doc.addEventListener("mouseout", (e) => {
+        const target = e.target as Element;
+        if (target !== selectedElementRef.current) {
+          target.classList.remove(HIGHLIGHT_CLASS);
+        }
+        setHoveredSelector(null);
+      }, true);
+
+      // Click: select element
+      doc.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.target as Element;
+        const el = findTargetElement(target);
+        if (!el) return;
+
+        // Deselect previous
+        if (selectedElementRef.current) {
+          selectedElementRef.current.classList.remove(SELECTED_CLASS);
+        }
+
+        const selector = generateCssSelector(el, doc);
+        const text = (el.textContent?.trim() || "").substring(0, 100);
+
+        // If clicking the same element, deselect
+        if (selectedElementRef.current === el) {
+          selectedElementRef.current = null;
+          setSelectedSelector(null);
+          setSelectedText(null);
+          return;
+        }
+
+        el.classList.add(SELECTED_CLASS);
+        el.classList.remove(HIGHLIGHT_CLASS);
+        selectedElementRef.current = el;
+
+        setSelectedSelector(selector);
+        setSelectedText(text);
+        onElementSelect(selector);
+      }, true);
+
+      setIframeReady(true);
+      setIsLoading(false);
+    }, 500); // Wait for CSS to load
+  }, [findTargetElement, onElementSelect]);
 
   const handleCustomSubmit = () => {
     const sel = customSelector.trim();
-    if (sel) {
-      setSelectedSelector(sel);
-      onElementSelect(sel);
+    if (!sel) return;
+
+    // Try to highlight custom selector in iframe
+    const doc = iframeRef.current?.contentDocument;
+    if (doc) {
+      // Deselect previous
+      if (selectedElementRef.current) {
+        selectedElementRef.current.classList.remove(SELECTED_CLASS);
+      }
+
+      try {
+        const el = doc.querySelector(sel);
+        if (el) {
+          el.classList.add(SELECTED_CLASS);
+          selectedElementRef.current = el;
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      } catch {
+        /* invalid selector */
+      }
     }
+
+    setSelectedSelector(sel);
+    setSelectedText(null);
+    onElementSelect(sel);
   };
 
-  // Scale factors: displayed image size / viewport size
-  const scaleX = imgDimensions.width > 0 ? imgDimensions.width / VIEWPORT_WIDTH : 0;
-  const scaleY = imgDimensions.height > 0 ? imgDimensions.height / VIEWPORT_HEIGHT : 0;
-
-  const hoveredElement = hoveredIndex !== null ? elements[hoveredIndex] : null;
-
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col h-full">
       {/* Loading state */}
       {isLoading && (
-        <div className="flex items-center justify-center py-4 gap-2 text-[#888]">
+        <div className="flex items-center justify-center py-8 gap-2 text-[#888]">
           <Loader2 className="w-4 h-4 animate-spin" />
-          <span className="text-sm font-bold">Scanning page elements...</span>
+          <span className="text-sm font-bold">Loading page...</span>
         </div>
       )}
 
       {error && (
-        <div className="border-2 border-[#dc2626] bg-[#dc2626]/10 p-3">
+        <div className="mx-4 mt-4 border-2 border-[#dc2626] bg-[#dc2626]/10 p-3">
           <p className="text-xs text-[#dc2626] font-bold">{error}</p>
         </div>
       )}
 
-      {/* Screenshot with element overlay */}
-      <div className="relative select-none">
-        <img
-          ref={imgRef}
-          src={screenshotUrl}
-          alt="Page screenshot"
-          className="w-full border-2 border-[#1a1a1a]"
-          draggable={false}
-        />
-
-        {/* Overlay container - exact same size as the displayed image */}
-        {!isLoading && scaleX > 0 && elements.length > 0 && (
-          <div
-            className="absolute overflow-hidden"
-            style={{
-              top: 2,
-              left: 2,
-              width: imgDimensions.width,
-              height: imgDimensions.height,
-            }}
-          >
-            {elements.map((el, i) => (
-              <div
-                key={i}
-                className={`absolute cursor-pointer border-2 transition-all duration-150 ${
-                  selectedSelector === el.selector
-                    ? "bg-[#2d5a2d]/30 border-[#2d5a2d]"
-                    : hoveredIndex === i
-                      ? "bg-[#7cb87c]/40 border-[#7cb87c]"
-                      : "border-transparent"
-                }`}
-                style={{
-                  top: el.rect.top * scaleY,
-                  left: el.rect.left * scaleX,
-                  width: el.rect.width * scaleX,
-                  height: el.rect.height * scaleY,
-                  zIndex: el.depth,
-                }}
-                onMouseEnter={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                onClick={() => handleSelect(el)}
-              />
-            ))}
-
-            {/* Hover tooltip showing CSS selector */}
-            {hoveredElement && (
-              <div
-                className="absolute bg-[#1a1a1a] text-[#f0f0e8] px-2 py-1 text-xs font-mono pointer-events-none whitespace-nowrap max-w-[80%] truncate"
-                style={{
-                  top: Math.max(
-                    0,
-                    Math.min(
-                      hoveredElement.rect.top * scaleY - 26,
-                      imgDimensions.height - 26
-                    )
-                  ),
-                  left: Math.max(
-                    0,
-                    Math.min(
-                      hoveredElement.rect.left * scaleX,
-                      imgDimensions.width - 120
-                    )
-                  ),
-                  zIndex: 9999,
-                }}
-              >
-                {hoveredElement.selector}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Element count badge */}
-        {!isLoading && elements.length > 0 && (
-          <div className="absolute top-4 right-4 bg-[#1a1a1a] text-[#f0f0e8] px-2 py-1 text-xs font-bold z-[9999]">
-            {elements.length} elements
-          </div>
-        )}
-
-        {/* No elements detected message */}
-        {!isLoading && elements.length === 0 && !error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#1a1a1a]/50">
-            <div className="bg-[#f0f0e8] border-2 border-[#1a1a1a] p-4 text-center max-w-sm">
-              <p className="text-sm font-bold mb-1">No elements detected</p>
-              <p className="text-xs text-[#888]">
-                This page may require JavaScript to render. Use the CSS selector
-                input below instead.
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Selected element info */}
-      {selectedSelector && (
-        <div className="border-2 border-[#2d5a2d] bg-[#2d5a2d]/10 p-3">
-          <p className="text-xs font-bold uppercase text-[#888] mb-1">
-            Selected Element
-          </p>
-          <p className="text-sm font-mono text-[#2d5a2d] font-bold">
-            {selectedSelector}
-          </p>
-          {hoveredElement?.text && (
-            <p className="text-xs text-[#888] mt-1 truncate">
-              {hoveredElement.text}
-            </p>
-          )}
+      {/* Hovered selector tooltip */}
+      {hoveredSelector && iframeReady && (
+        <div className="sticky top-0 z-10 bg-[#1a1a1a] text-[#f0f0e8] px-3 py-1.5 text-xs font-mono truncate">
+          {hoveredSelector}
         </div>
       )}
 
-      {/* Custom selector input */}
-      <div>
-        <p className="text-xs font-bold uppercase text-[#888] mb-2">
-          Or enter CSS selector manually
-        </p>
-        <div className="flex gap-2">
-          <Input
-            value={customSelector}
-            onChange={(e) => setCustomSelector(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleCustomSubmit()}
-            placeholder="#price, .product-title, h1"
-            className="flex-1 font-mono text-sm"
-          />
-          <Button
-            variant="outline"
-            onClick={handleCustomSubmit}
-            disabled={!customSelector.trim()}
-          >
-            <MousePointer className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Hidden iframe for element coordinate extraction */}
+      {/* Live iframe */}
       {pageHtml && (
-        <iframe
-          ref={iframeRef}
-          sandbox="allow-same-origin"
-          onLoad={handleIframeLoad}
-          title="Element detection"
-          style={{
-            position: "fixed",
-            left: -9999,
-            top: -9999,
-            width: VIEWPORT_WIDTH,
-            height: VIEWPORT_HEIGHT,
-            border: "none",
-            opacity: 0,
-            pointerEvents: "none",
-          }}
-        />
+        <div className="flex-1 relative">
+          <iframe
+            ref={iframeRef}
+            sandbox="allow-same-origin"
+            onLoad={handleIframeLoad}
+            title="Element picker"
+            style={{
+              width: "100%",
+              height: "calc(100vh - 160px)",
+              border: "none",
+              display: isLoading ? "none" : "block",
+              background: "#fff",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Selected element info + custom input */}
+      {iframeReady && (
+        <div className="border-t-2 border-[#ccc] p-3 space-y-3 bg-[#f0f0e8]">
+          {selectedSelector && (
+            <div className="border-2 border-[#2d5a2d] bg-[#2d5a2d]/10 p-2">
+              <p className="text-xs font-bold uppercase text-[#888] mb-0.5">
+                Selected
+              </p>
+              <p className="text-sm font-mono text-[#2d5a2d] font-bold break-all">
+                {selectedSelector}
+              </p>
+              {selectedText && (
+                <p className="text-xs text-[#888] mt-1 truncate">
+                  {selectedText}
+                </p>
+              )}
+            </div>
+          )}
+
+          <div>
+            <p className="text-xs font-bold uppercase text-[#888] mb-1.5">
+              Or enter CSS selector
+            </p>
+            <div className="flex gap-2">
+              <Input
+                value={customSelector}
+                onChange={(e) => setCustomSelector(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleCustomSubmit()}
+                placeholder="#price, .product-title, h1"
+                className="flex-1 font-mono text-sm"
+              />
+              <Button
+                variant="outline"
+                onClick={handleCustomSubmit}
+                disabled={!customSelector.trim()}
+              >
+                <MousePointer className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

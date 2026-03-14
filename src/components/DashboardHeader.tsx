@@ -19,7 +19,7 @@ export function DashboardHeader() {
       </div>
       <UserButton
         appearance={{
-          elements: {
+          elemenats: {
             avatarBox: "border-2 border-[#1a1a1a]",
           },
         }}

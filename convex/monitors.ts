@@ -2,15 +2,7 @@ import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { getUser, requireUser, requireMonitorAccess, identityEmail } from "./auth";
-
-const INTERVAL_MS: Record<string, number> = {
-  "5min": 5 * 60 * 1000,
-  "15min": 15 * 60 * 1000,
-  "30min": 30 * 60 * 1000,
-  hourly: 60 * 60 * 1000,
-  daily: 24 * 60 * 60 * 1000,
-  weekly: 7 * 24 * 60 * 60 * 1000,
-};
+import { INTERVAL_MS } from "./intervals";
 
 export const list = query({
   args: {},
@@ -62,8 +54,14 @@ export const create = mutation({
       v.literal("15min"),
       v.literal("30min"),
       v.literal("hourly"),
+      v.literal("3hour"),
+      v.literal("6hour"),
+      v.literal("12hour"),
       v.literal("daily"),
-      v.literal("weekly")
+      v.literal("2day"),
+      v.literal("weekly"),
+      v.literal("2week"),
+      v.literal("monthly")
     ),
     fullScreenshotStorageId: v.optional(v.id("_storage")),
     cssSelector: v.optional(v.string()),
@@ -71,6 +69,19 @@ export const create = mutation({
       v.union(v.literal("zone"), v.literal("element"))
     ),
     tags: v.optional(v.array(v.string())),
+    sensitivityThreshold: v.optional(v.number()),
+    compareType: v.optional(
+      v.union(v.literal("all"), v.literal("visual"), v.literal("text"))
+    ),
+    keywords: v.optional(v.array(v.string())),
+    keywordMode: v.optional(
+      v.union(v.literal("added"), v.literal("deleted"), v.literal("any"))
+    ),
+    activeDays: v.optional(v.array(v.number())),
+    delay: v.optional(v.number()),
+    mobileViewport: v.optional(v.boolean()),
+    blockAds: v.optional(v.boolean()),
+    alertOnError: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const user = await requireUser(ctx);
@@ -92,6 +103,15 @@ export const create = mutation({
       consecutiveErrors: 0,
       fullScreenshotStorageId: args.fullScreenshotStorageId,
       tags: args.tags,
+      sensitivityThreshold: args.sensitivityThreshold,
+      compareType: args.compareType,
+      keywords: args.keywords,
+      keywordMode: args.keywordMode,
+      activeDays: args.activeDays,
+      delay: args.delay,
+      mobileViewport: args.mobileViewport,
+      blockAds: args.blockAds,
+      alertOnError: args.alertOnError,
     });
 
     return monitorId;
@@ -108,8 +128,14 @@ export const update = mutation({
         v.literal("15min"),
         v.literal("30min"),
         v.literal("hourly"),
+        v.literal("3hour"),
+        v.literal("6hour"),
+        v.literal("12hour"),
         v.literal("daily"),
-        v.literal("weekly")
+        v.literal("2day"),
+        v.literal("weekly"),
+        v.literal("2week"),
+        v.literal("monthly")
       )
     ),
     zone: v.optional(
@@ -130,9 +156,26 @@ export const update = mutation({
       )
     ),
     tags: v.optional(v.array(v.string())),
+    cssSelector: v.optional(v.string()),
+    selectionMode: v.optional(
+      v.union(v.literal("zone"), v.literal("element"))
+    ),
+    fullScreenshotStorageId: v.optional(v.id("_storage")),
+    compareType: v.optional(
+      v.union(v.literal("all"), v.literal("visual"), v.literal("text"))
+    ),
+    keywords: v.optional(v.array(v.string())),
+    keywordMode: v.optional(
+      v.union(v.literal("added"), v.literal("deleted"), v.literal("any"))
+    ),
+    activeDays: v.optional(v.array(v.number())),
+    delay: v.optional(v.number()),
+    mobileViewport: v.optional(v.boolean()),
+    blockAds: v.optional(v.boolean()),
+    alertOnError: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await requireMonitorAccess(ctx, args.monitorId);
+    const { monitor } = await requireMonitorAccess(ctx, args.monitorId);
 
     const updates: Record<string, unknown> = {};
     if (args.name !== undefined) updates.name = args.name;
@@ -142,10 +185,38 @@ export const update = mutation({
     if (args.webhookUrl !== undefined) updates.webhookUrl = args.webhookUrl;
     if (args.webhookType !== undefined) updates.webhookType = args.webhookType;
     if (args.tags !== undefined) updates.tags = args.tags;
+    if (args.cssSelector !== undefined) updates.cssSelector = args.cssSelector;
+    if (args.selectionMode !== undefined) updates.selectionMode = args.selectionMode;
+    if (args.fullScreenshotStorageId !== undefined)
+      updates.fullScreenshotStorageId = args.fullScreenshotStorageId;
+    if (args.compareType !== undefined) updates.compareType = args.compareType;
+    if (args.keywords !== undefined) updates.keywords = args.keywords;
+    if (args.keywordMode !== undefined) updates.keywordMode = args.keywordMode;
+    if (args.activeDays !== undefined) updates.activeDays = args.activeDays;
+    if (args.delay !== undefined) updates.delay = args.delay;
+    if (args.mobileViewport !== undefined) updates.mobileViewport = args.mobileViewport;
+    if (args.blockAds !== undefined) updates.blockAds = args.blockAds;
+    if (args.alertOnError !== undefined) updates.alertOnError = args.alertOnError;
     if (args.interval !== undefined) {
       updates.interval = args.interval;
       const intervalMs = INTERVAL_MS[args.interval] ?? INTERVAL_MS.daily;
       updates.nextCheckAt = Date.now() + intervalMs;
+    }
+
+    // When the monitored region changes, clear the last snapshot so the next
+    // check establishes a fresh baseline instead of comparing against the old zone.
+    const zoneChanged =
+      args.zone !== undefined &&
+      JSON.stringify(args.zone) !== JSON.stringify(monitor.zone);
+    const selectorChanged =
+      args.cssSelector !== undefined &&
+      args.cssSelector !== monitor.cssSelector;
+    const modeChanged =
+      args.selectionMode !== undefined &&
+      args.selectionMode !== monitor.selectionMode;
+
+    if (zoneChanged || selectorChanged || modeChanged) {
+      updates.lastSnapshotId = undefined;
     }
 
     await ctx.db.patch(args.monitorId, updates);

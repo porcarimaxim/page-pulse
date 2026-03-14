@@ -23,8 +23,14 @@ export default defineSchema({
       v.literal("15min"),
       v.literal("30min"),
       v.literal("hourly"),
+      v.literal("3hour"),
+      v.literal("6hour"),
+      v.literal("12hour"),
       v.literal("daily"),
-      v.literal("weekly")
+      v.literal("2day"),
+      v.literal("weekly"),
+      v.literal("2week"),
+      v.literal("monthly")
     ),
     status: v.union(
       v.literal("active"),
@@ -50,6 +56,23 @@ export default defineSchema({
     ),
     // Tags
     tags: v.optional(v.array(v.string())),
+    // Keyword alert
+    keywords: v.optional(v.array(v.string())),
+    keywordMode: v.optional(
+      v.union(v.literal("added"), v.literal("deleted"), v.literal("any"))
+    ),
+    // Compare type
+    compareType: v.optional(
+      v.union(v.literal("all"), v.literal("visual"), v.literal("text"))
+    ),
+    // Advanced scheduling
+    activeDays: v.optional(v.array(v.number())),
+    // Screenshot settings
+    delay: v.optional(v.number()),
+    mobileViewport: v.optional(v.boolean()),
+    blockAds: v.optional(v.boolean()),
+    // Alert on error
+    alertOnError: v.optional(v.boolean()),
   })
     .index("by_userId", ["userId"])
     .index("by_nextCheckAt", ["nextCheckAt"])
@@ -60,6 +83,7 @@ export default defineSchema({
     storageId: v.id("_storage"),
     fullStorageId: v.id("_storage"),
     capturedAt: v.number(),
+    textContent: v.optional(v.string()),
   })
     .index("by_monitorId", ["monitorId"])
     .index("by_monitorId_capturedAt", ["monitorId", "capturedAt"]),
@@ -72,6 +96,7 @@ export default defineSchema({
     diffPercentage: v.number(),
     detectedAt: v.number(),
     notified: v.boolean(),
+    textDiff: v.optional(v.string()),
   })
     .index("by_monitorId", ["monitorId"])
     .index("by_monitorId_detectedAt", ["monitorId", "detectedAt"]),

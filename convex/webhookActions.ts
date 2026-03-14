@@ -110,6 +110,97 @@ export const sendWebhook = internalAction({
   },
 });
 
+export const sendErrorWebhook = internalAction({
+  args: {
+    monitorId: v.id("monitors"),
+    monitorName: v.string(),
+    monitorUrl: v.string(),
+    webhookUrl: v.string(),
+    webhookType: v.string(),
+    errorMessage: v.string(),
+    dashboardUrl: v.string(),
+  },
+  handler: async (_ctx, args) => {
+    let body: string;
+
+    if (args.webhookType === "slack") {
+      body = JSON.stringify({
+        blocks: [
+          {
+            type: "header",
+            text: {
+              type: "plain_text",
+              text: `Error: ${args.monitorName}`,
+            },
+          },
+          {
+            type: "section",
+            fields: [
+              { type: "mrkdwn", text: `*URL:*\n${args.monitorUrl}` },
+              { type: "mrkdwn", text: `*Error:*\n${args.errorMessage}` },
+            ],
+          },
+          {
+            type: "actions",
+            elements: [
+              {
+                type: "button",
+                text: { type: "plain_text", text: "View in Dashboard" },
+                url: args.dashboardUrl,
+              },
+            ],
+          },
+        ],
+      });
+    } else if (args.webhookType === "discord") {
+      body = JSON.stringify({
+        embeds: [
+          {
+            title: `Error: ${args.monitorName}`,
+            url: args.dashboardUrl,
+            color: 0xdc2626,
+            fields: [
+              { name: "URL", value: args.monitorUrl, inline: true },
+              { name: "Error", value: args.errorMessage, inline: false },
+            ],
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      });
+    } else {
+      body = JSON.stringify({
+        event: "monitor_error",
+        monitor: {
+          id: args.monitorId,
+          name: args.monitorName,
+          url: args.monitorUrl,
+        },
+        error: {
+          message: args.errorMessage,
+          dashboardUrl: args.dashboardUrl,
+          detectedAt: new Date().toISOString(),
+        },
+      });
+    }
+
+    try {
+      const response = await fetch(args.webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+      });
+
+      if (!response.ok) {
+        console.error(
+          `Error webhook failed for monitor ${args.monitorId}: ${response.status}`
+        );
+      }
+    } catch (error) {
+      console.error(`Error webhook error for monitor ${args.monitorId}:`, error);
+    }
+  },
+});
+
 export const testWebhook = action({
   args: {
     webhookUrl: v.string(),

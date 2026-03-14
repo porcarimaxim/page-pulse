@@ -1,14 +1,6 @@
 import { v } from "convex/values";
 import { internalQuery, internalMutation } from "./_generated/server";
-
-const INTERVAL_MS: Record<string, number> = {
-  "5min": 5 * 60 * 1000,
-  "15min": 15 * 60 * 1000,
-  "30min": 30 * 60 * 1000,
-  hourly: 60 * 60 * 1000,
-  daily: 24 * 60 * 60 * 1000,
-  weekly: 7 * 24 * 60 * 60 * 1000,
-};
+import { INTERVAL_MS } from "./intervals";
 
 const MAX_CONSECUTIVE_ERRORS = 5;
 const BATCH_SIZE = 10;
@@ -47,6 +39,7 @@ export const recordSnapshot = internalMutation({
     monitorId: v.id("monitors"),
     storageId: v.id("_storage"),
     fullStorageId: v.id("_storage"),
+    textContent: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const snapshotId = await ctx.db.insert("snapshots", {
@@ -54,6 +47,7 @@ export const recordSnapshot = internalMutation({
       storageId: args.storageId,
       fullStorageId: args.fullStorageId,
       capturedAt: Date.now(),
+      textContent: args.textContent,
     });
     return snapshotId;
   },
@@ -66,6 +60,7 @@ export const recordChange = internalMutation({
     afterSnapshotId: v.id("snapshots"),
     diffStorageId: v.id("_storage"),
     diffPercentage: v.number(),
+    textDiff: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("changes", {
@@ -76,6 +71,7 @@ export const recordChange = internalMutation({
       diffPercentage: args.diffPercentage,
       detectedAt: Date.now(),
       notified: true,
+      textDiff: args.textDiff,
     });
 
     // Increment change count
@@ -124,6 +120,22 @@ export const recordMonitorError = internalMutation({
       lastCheckedAt: Date.now(),
       nextCheckAt: Date.now() + intervalMs,
       status: errors >= MAX_CONSECUTIVE_ERRORS ? "error" : "active",
+      isChecking: false,
+    });
+  },
+});
+
+export const rescheduleMonitor = internalMutation({
+  args: { monitorId: v.id("monitors") },
+  handler: async (ctx, args) => {
+    const monitor = await ctx.db.get(args.monitorId);
+    if (!monitor) return;
+
+    const intervalMs = INTERVAL_MS[monitor.interval] ?? INTERVAL_MS.daily;
+
+    await ctx.db.patch(args.monitorId, {
+      lastCheckedAt: Date.now(),
+      nextCheckAt: Date.now() + intervalMs,
       isChecking: false,
     });
   },

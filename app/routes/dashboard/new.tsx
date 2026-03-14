@@ -14,21 +14,17 @@ import {
   Crop,
   Image as ImageIcon,
 } from "lucide-react";
+import {
+  INTERVALS,
+  SENSITIVITY_PRESETS,
+  COMPARE_TYPES,
+} from "@/lib/monitor-constants";
 
 export const Route = createFileRoute("/dashboard/new")({
   component: NewMonitorPage,
 });
 
 type SelectionMode = "zone" | "element";
-
-const INTERVALS = [
-  { value: "5min", label: "Every 5 min" },
-  { value: "15min", label: "Every 15 min" },
-  { value: "30min", label: "Every 30 min" },
-  { value: "hourly", label: "Every hour" },
-  { value: "daily", label: "Every day" },
-  { value: "weekly", label: "Every week" },
-] as const;
 
 function NewMonitorPage() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -51,6 +47,8 @@ function NewMonitorPage() {
   const [name, setName] = useState("");
   const [interval, setInterval] = useState<string>("daily");
   const [tags, setTags] = useState("");
+  const [sensitivityThreshold, setSensitivityThreshold] = useState(0);
+  const [compareType, setCompareType] = useState<"all" | "visual" | "text">("all");
   const [isCapturing, setIsCapturing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -118,6 +116,8 @@ function NewMonitorPage() {
         cssSelector: selectionMode === "element" ? (cssSelector ?? undefined) : undefined,
         selectionMode,
         tags: parsedTags.length > 0 ? parsedTags : undefined,
+        sensitivityThreshold,
+        compareType,
       });
 
       navigate({
@@ -213,7 +213,6 @@ function NewMonitorPage() {
               ) : (
                 <ElementPicker
                   url={url}
-                  screenshotUrl={screenshotUrl}
                   onElementSelect={handleElementSelect}
                 />
               )
@@ -253,7 +252,7 @@ function NewMonitorPage() {
                 <label className="block text-xs font-bold uppercase text-[#888] mb-2">
                   Check Frequency
                 </label>
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-3 gap-1.5">
                   {INTERVALS.map((opt) => (
                     <button
                       key={opt.value}
@@ -265,6 +264,64 @@ function NewMonitorPage() {
                       }`}
                     >
                       {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sensitivity */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                  Sensitivity
+                </label>
+                <div className="space-y-1.5">
+                  {SENSITIVITY_PRESETS.map((preset) => (
+                    <button
+                      key={preset.value}
+                      onClick={() => setSensitivityThreshold(preset.value)}
+                      className={`w-full border-2 border-[#1a1a1a] px-2 py-1.5 text-left transition-all ${
+                        sensitivityThreshold === preset.value
+                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                      }`}
+                    >
+                      <span className="text-xs font-bold uppercase">
+                        {preset.label}
+                      </span>
+                      <span className={`text-[10px] ml-2 ${
+                        sensitivityThreshold === preset.value
+                          ? "text-[#ccc]"
+                          : "text-[#888]"
+                      }`}>
+                        {preset.description}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Compare Type */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                  Compare Type
+                </label>
+                <div className="flex gap-0">
+                  {COMPARE_TYPES.map((t, i) => (
+                    <button
+                      key={t.value}
+                      onClick={() => setCompareType(t.value as typeof compareType)}
+                      className={`flex-1 border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all ${
+                        i > 0 ? "border-l-0" : ""
+                      } ${
+                        compareType === t.value
+                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                      }`}
+                    >
+                      <div>{t.label}</div>
+                      <div className={`text-[10px] font-normal ${
+                        compareType === t.value ? "text-[#ccc]" : "text-[#888]"
+                      }`}>{t.description}</div>
                     </button>
                   ))}
                 </div>

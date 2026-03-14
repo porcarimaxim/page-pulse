@@ -15,11 +15,13 @@ import type * as crons from "../crons.js";
 import type * as elementDetection from "../elementDetection.js";
 import type * as emailActions from "../emailActions.js";
 import type * as http from "../http.js";
+import type * as intervals from "../intervals.js";
 import type * as monitors from "../monitors.js";
 import type * as scheduler from "../scheduler.js";
 import type * as schedulerHelpers from "../schedulerHelpers.js";
 import type * as screenshotActions from "../screenshotActions.js";
 import type * as snapshots from "../snapshots.js";
+import type * as textExtraction from "../textExtraction.js";
 import type * as webhookActions from "../webhookActions.js";
 
 import type {
@@ -36,11 +38,13 @@ declare const fullApi: ApiFromModules<{
   elementDetection: typeof elementDetection;
   emailActions: typeof emailActions;
   http: typeof http;
+  intervals: typeof intervals;
   monitors: typeof monitors;
   scheduler: typeof scheduler;
   schedulerHelpers: typeof schedulerHelpers;
   screenshotActions: typeof screenshotActions;
   snapshots: typeof snapshots;
+  textExtraction: typeof textExtraction;
   webhookActions: typeof webhookActions;
 }>;
 

@@ -1,14 +1,24 @@
 import { useState } from "react";
+import { TextDiffView } from "./TextDiffView";
 
 interface DiffViewerProps {
   beforeUrl: string | null;
   afterUrl: string | null;
   diffUrl: string | null;
+  beforeTextContent?: string | null;
+  afterTextContent?: string | null;
 }
 
-type ViewMode = "side-by-side" | "diff" | "before" | "after";
+type ViewMode = "side-by-side" | "diff" | "before" | "after" | "text-diff";
 
-export function DiffViewer({ beforeUrl, afterUrl, diffUrl }: DiffViewerProps) {
+export function DiffViewer({
+  beforeUrl,
+  afterUrl,
+  diffUrl,
+  beforeTextContent,
+  afterTextContent,
+}: DiffViewerProps) {
+  const hasTextData = !!(beforeTextContent || afterTextContent);
   const [mode, setMode] = useState<ViewMode>("side-by-side");
 
   const modes: { value: ViewMode; label: string }[] = [
@@ -16,6 +26,9 @@ export function DiffViewer({ beforeUrl, afterUrl, diffUrl }: DiffViewerProps) {
     { value: "diff", label: "Diff" },
     { value: "before", label: "Before" },
     { value: "after", label: "After" },
+    ...(hasTextData
+      ? [{ value: "text-diff" as ViewMode, label: "Text Diff" }]
+      : []),
   ];
 
   return (
@@ -120,6 +133,13 @@ export function DiffViewer({ beforeUrl, afterUrl, diffUrl }: DiffViewerProps) {
             </div>
           )}
         </div>
+      )}
+
+      {mode === "text-diff" && hasTextData && (
+        <TextDiffView
+          beforeText={beforeTextContent ?? ""}
+          afterText={afterTextContent ?? ""}
+        />
       )}
     </div>
   );

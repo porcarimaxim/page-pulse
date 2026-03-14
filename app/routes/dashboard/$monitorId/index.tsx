@@ -513,8 +513,71 @@ function MonitorDetailPage() {
                   </span>
                 </div>
               )}
+              {monitor.compareType && monitor.compareType !== "all" && (
+                <div className="flex justify-between">
+                  <span className="text-[#888]">Compare</span>
+                  <span className="font-bold capitalize">
+                    {monitor.compareType}
+                  </span>
+                </div>
+              )}
+              {monitor.mobileViewport && (
+                <div className="flex justify-between">
+                  <span className="text-[#888]">Viewport</span>
+                  <span className="font-bold">Mobile</span>
+                </div>
+              )}
+              {monitor.delay !== undefined && monitor.delay > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-[#888]">Delay</span>
+                  <span className="font-bold">{monitor.delay}s</span>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Keywords */}
+          {monitor.keywords && monitor.keywords.length > 0 && (
+            <div className="border-2 border-[#1a1a1a] p-4">
+              <p className="text-sm font-bold mb-2">Keyword Alerts</p>
+              <div className="flex gap-1 flex-wrap">
+                {monitor.keywords.map((kw) => (
+                  <span
+                    key={kw}
+                    className="text-[10px] uppercase font-bold text-[#2d5a2d] bg-[#e8e8e0] border border-[#ccc] px-2 py-0.5"
+                  >
+                    {kw}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[10px] text-[#888] mt-1 uppercase">
+                Mode: {monitor.keywordMode ?? "any"}
+              </p>
+            </div>
+          )}
+
+          {/* Active Days */}
+          {monitor.activeDays && monitor.activeDays.length > 0 && (
+            <div className="border-2 border-[#1a1a1a] p-4">
+              <p className="text-sm font-bold mb-2">Active Days</p>
+              <div className="flex gap-1">
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                  (day, i) => (
+                    <span
+                      key={day}
+                      className={`text-[10px] font-bold px-1.5 py-0.5 ${
+                        monitor.activeDays!.includes(i)
+                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                          : "text-[#ccc]"
+                      }`}
+                    >
+                      {day}
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </main>

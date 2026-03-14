@@ -10,6 +10,8 @@ interface Change {
   diffUrl: string | null;
   beforeUrl: string | null;
   afterUrl: string | null;
+  beforeTextContent?: string | null;
+  afterTextContent?: string | null;
 }
 
 interface ChangeTimelineProps {
@@ -66,6 +68,8 @@ export function ChangeTimeline({ changes }: ChangeTimelineProps) {
                   beforeUrl={change.beforeUrl}
                   afterUrl={change.afterUrl}
                   diffUrl={change.diffUrl}
+                  beforeTextContent={change.beforeTextContent}
+                  afterTextContent={change.afterTextContent}
                 />
               </div>
             )}
