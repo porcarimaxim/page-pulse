@@ -53,15 +53,23 @@ export const cropAndCompare = internalAction({
     sensitivityThreshold: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const t0 = Date.now();
+    const label = `[cropAndCompare]`;
+
     // 1. Fetch the full screenshot
     const fullUrl = await ctx.storage.getUrl(args.fullStorageId);
     if (!fullUrl) throw new Error("Full screenshot not found");
 
+    const t1 = Date.now();
     const fullResponse = await fetch(fullUrl);
     const fullBuffer = Buffer.from(await fullResponse.arrayBuffer());
+    console.log(`${label} fetch full screenshot: ${Date.now() - t1}ms (${fullBuffer.length} bytes)`);
 
     // 2. Decode PNG and crop to zone
+    const tDecode = Date.now();
     const fullPng = PNG.sync.read(fullBuffer);
+    console.log(`${label} decode PNG: ${Date.now() - tDecode}ms (${fullPng.width}x${fullPng.height})`);
+
     const imgWidth = fullPng.width;
     const imgHeight = fullPng.height;
 
@@ -70,14 +78,19 @@ export const cropAndCompare = internalAction({
     const width = Math.min(Math.round((args.zone.width / 100) * imgWidth), imgWidth - left);
     const height = Math.min(Math.round((args.zone.height / 100) * imgHeight), imgHeight - top);
 
+    const tCrop = Date.now();
     const croppedPng = cropPng(fullPng, left, top, width, height);
     const croppedBuffer = PNG.sync.write(croppedPng);
+    console.log(`${label} crop + encode: ${Date.now() - tCrop}ms (${width}x${height} → ${croppedBuffer.length} bytes)`);
 
+    const tStore = Date.now();
     const croppedBlob = new Blob([croppedBuffer], { type: "image/png" });
     const croppedStorageId = await ctx.storage.store(croppedBlob);
+    console.log(`${label} store cropped: ${Date.now() - tStore}ms`);
 
     // 3. If no previous snapshot, just return the cropped image (first run)
     if (!args.previousCroppedStorageId) {
+      console.log(`${label} no previous snapshot — first run, total: ${Date.now() - t0}ms`);
       return {
         croppedStorageId,
         fullStorageId: args.fullStorageId,
@@ -90,6 +103,7 @@ export const cropAndCompare = internalAction({
     // 4. Fetch previous cropped screenshot for comparison
     const prevUrl = await ctx.storage.getUrl(args.previousCroppedStorageId);
     if (!prevUrl) {
+      console.log(`${label} previous screenshot URL missing, total: ${Date.now() - t0}ms`);
       return {
         croppedStorageId,
         fullStorageId: args.fullStorageId,
@@ -99,19 +113,30 @@ export const cropAndCompare = internalAction({
       };
     }
 
+    const tPrev = Date.now();
     const prevResponse = await fetch(prevUrl);
     const prevBuffer = Buffer.from(await prevResponse.arrayBuffer());
+    console.log(`${label} fetch previous screenshot: ${Date.now() - tPrev}ms (${prevBuffer.length} bytes)`);
 
     // 5. Resize previous to match current dimensions (in case viewport changed)
     const cw = croppedPng.width;
     const ch = croppedPng.height;
+    const tPrevDecode = Date.now();
     const prevPng = PNG.sync.read(prevBuffer);
+    console.log(`${label} decode previous PNG: ${Date.now() - tPrevDecode}ms (${prevPng.width}x${prevPng.height})`);
 
-    const resizedPrev = (prevPng.width !== cw || prevPng.height !== ch)
-      ? resizePng(prevPng, cw, ch)
-      : prevPng;
+    const needsResize = prevPng.width !== cw || prevPng.height !== ch;
+    let resizedPrev: PNG;
+    if (needsResize) {
+      const tResize = Date.now();
+      resizedPrev = resizePng(prevPng, cw, ch);
+      console.log(`${label} resize previous: ${Date.now() - tResize}ms (${prevPng.width}x${prevPng.height} → ${cw}x${ch})`);
+    } else {
+      resizedPrev = prevPng;
+    }
 
     // 6. Run pixelmatch
+    const tMatch = Date.now();
     const diffPng = new PNG({ width: cw, height: ch });
 
     const numDiffPixels = pixelmatch(
@@ -122,16 +147,21 @@ export const cropAndCompare = internalAction({
       ch,
       { threshold: 0.1 }
     );
+    console.log(`${label} pixelmatch: ${Date.now() - tMatch}ms (${cw}x${ch} = ${cw * ch} pixels, ${numDiffPixels} diff)`);
 
     const totalPixels = cw * ch;
     const diffPercentage = (numDiffPixels / totalPixels) * 100;
 
     // 7. Store diff image
+    const tDiffStore = Date.now();
     const diffBuffer = PNG.sync.write(diffPng);
     const diffBlob = new Blob([diffBuffer], { type: "image/png" });
     const diffStorageId = await ctx.storage.store(diffBlob);
+    console.log(`${label} encode + store diff: ${Date.now() - tDiffStore}ms (${diffBuffer.length} bytes)`);
 
     const threshold = args.sensitivityThreshold ?? 0.1;
+
+    console.log(`${label} TOTAL: ${Date.now() - t0}ms — diff=${Math.round(diffPercentage * 100) / 100}%, changed=${diffPercentage > threshold}`);
 
     return {
       croppedStorageId,
@@ -152,8 +182,12 @@ export const compareElementScreenshots = internalAction({
     sensitivityThreshold: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    const t0 = Date.now();
+    const label = `[compareElementScreenshots]`;
+
     // No previous → first run
     if (!args.previousStorageId) {
+      console.log(`${label} no previous — first run`);
       return {
         croppedStorageId: args.currentStorageId,
         fullStorageId: args.currentStorageId,
@@ -167,6 +201,7 @@ export const compareElementScreenshots = internalAction({
     const currentUrl = await ctx.storage.getUrl(args.currentStorageId);
     const prevUrl = await ctx.storage.getUrl(args.previousStorageId);
     if (!currentUrl || !prevUrl) {
+      console.log(`${label} missing storage URLs`);
       return {
         croppedStorageId: args.currentStorageId,
         fullStorageId: args.currentStorageId,
@@ -176,25 +211,35 @@ export const compareElementScreenshots = internalAction({
       };
     }
 
+    const tFetch = Date.now();
     const [currentResp, prevResp] = await Promise.all([
       fetch(currentUrl),
       fetch(prevUrl),
     ]);
+    const currentBuf = Buffer.from(await currentResp.arrayBuffer());
+    const prevBuf = Buffer.from(await prevResp.arrayBuffer());
+    console.log(`${label} fetch both screenshots: ${Date.now() - tFetch}ms (current: ${currentBuf.length} bytes, prev: ${prevBuf.length} bytes)`);
 
-    const currentPng = PNG.sync.read(
-      Buffer.from(await currentResp.arrayBuffer())
-    );
-    const prevPng = PNG.sync.read(Buffer.from(await prevResp.arrayBuffer()));
+    const tDecode = Date.now();
+    const currentPng = PNG.sync.read(currentBuf);
+    const prevPng = PNG.sync.read(prevBuf);
+    console.log(`${label} decode PNGs: ${Date.now() - tDecode}ms (current: ${currentPng.width}x${currentPng.height}, prev: ${prevPng.width}x${prevPng.height})`);
 
     // Resize previous to match current if needed
     const w = currentPng.width;
     const h = currentPng.height;
-    const resizedPrev =
-      prevPng.width !== w || prevPng.height !== h
-        ? resizePng(prevPng, w, h)
-        : prevPng;
+    const needsResize = prevPng.width !== w || prevPng.height !== h;
+    let resizedPrev: PNG;
+    if (needsResize) {
+      const tResize = Date.now();
+      resizedPrev = resizePng(prevPng, w, h);
+      console.log(`${label} resize previous: ${Date.now() - tResize}ms (${prevPng.width}x${prevPng.height} → ${w}x${h})`);
+    } else {
+      resizedPrev = prevPng;
+    }
 
     // Pixelmatch
+    const tMatch = Date.now();
     const diffPng = new PNG({ width: w, height: h });
     const numDiffPixels = pixelmatch(
       resizedPrev.data,
@@ -204,13 +249,18 @@ export const compareElementScreenshots = internalAction({
       h,
       { threshold: 0.1 }
     );
+    console.log(`${label} pixelmatch: ${Date.now() - tMatch}ms (${w}x${h} = ${w * h} pixels, ${numDiffPixels} diff)`);
 
     const diffPercentage = (numDiffPixels / (w * h)) * 100;
+
+    const tStore = Date.now();
     const diffBuffer = PNG.sync.write(diffPng);
     const diffBlob = new Blob([diffBuffer], { type: "image/png" });
     const diffStorageId = await ctx.storage.store(diffBlob);
+    console.log(`${label} encode + store diff: ${Date.now() - tStore}ms (${diffBuffer.length} bytes)`);
 
     const threshold = args.sensitivityThreshold ?? 0.1;
+    console.log(`${label} TOTAL: ${Date.now() - t0}ms — diff=${Math.round(diffPercentage * 100) / 100}%, changed=${diffPercentage > threshold}`);
 
     return {
       croppedStorageId: args.currentStorageId,

@@ -12,6 +12,10 @@ export const extractTextContent = internalAction({
     selector: v.optional(v.string()),
   },
   handler: async (_ctx, args): Promise<string> => {
+    const t0 = Date.now();
+    const label = `[extractTextContent] url=${args.url}`;
+
+    const tFetch = Date.now();
     const response = await fetch(args.url, {
       headers: {
         "User-Agent":
@@ -26,6 +30,9 @@ export const extractTextContent = internalAction({
     }
 
     const html = await response.text();
+    console.log(`${label} — fetch: ${Date.now() - tFetch}ms (${html.length} chars HTML)`);
+
+    const tParse = Date.now();
     const $ = cheerio.load(html);
 
     // Remove non-content elements
@@ -42,6 +49,7 @@ export const extractTextContent = internalAction({
     } else {
       text = $("body").text();
     }
+    console.log(`${label} — parse + extract: ${Date.now() - tParse}ms`);
 
     // Clean whitespace: collapse runs, trim lines
     text = text
@@ -54,6 +62,8 @@ export const extractTextContent = internalAction({
     if (text.length > MAX_TEXT_LENGTH) {
       text = text.substring(0, MAX_TEXT_LENGTH);
     }
+
+    console.log(`${label} — total: ${Date.now() - t0}ms (${text.length} chars output)`);
 
     return text;
   },

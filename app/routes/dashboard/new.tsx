@@ -65,7 +65,9 @@ function NewMonitorPage() {
         setUrl(finalUrl);
       }
 
-      const result = await captureScreenshot({ url: finalUrl });
+      const result = await captureScreenshot({
+        url: finalUrl,
+      });
       setScreenshotStorageId(result.storageId);
       setScreenshotUrl(result.url);
 
@@ -213,6 +215,7 @@ function NewMonitorPage() {
               ) : (
                 <ElementPicker
                   url={url}
+                  screenshotUrl={screenshotUrl!}
                   onElementSelect={handleElementSelect}
                 />
               )

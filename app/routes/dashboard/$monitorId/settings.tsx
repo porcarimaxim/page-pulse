@@ -295,6 +295,8 @@ function MonitorSettingsPage() {
               ) : (
                 <ElementPicker
                   url={monitor.url}
+                  screenshotUrl={screenshotUrl!}
+                  mobileViewport={mobileViewport}
                   onElementSelect={handleElementSelect}
                 />
               )

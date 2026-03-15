@@ -36,16 +36,21 @@ function checkKeywords(
 export const processOneMonitor = internalAction({
   args: { monitorId: v.id("monitors") },
   handler: async (ctx, args) => {
+    const pipelineStart = Date.now();
     const monitor = await ctx.runQuery(
       internal.schedulerHelpers.getMonitor,
       { monitorId: args.monitorId }
     );
     if (!monitor) return;
 
+    const label = `[processOneMonitor] "${monitor.name}" (${monitor.url})`;
+    console.log(`${label} — starting pipeline`);
+
     // Active days gate — skip check if today is not an active day
     if (monitor.activeDays && monitor.activeDays.length > 0) {
       const today = new Date().getDay(); // 0=Sun..6=Sat
       if (!monitor.activeDays.includes(today)) {
+        console.log(`${label} — skipped (day ${today} not in activeDays)`);
         await ctx.runMutation(internal.schedulerHelpers.rescheduleMonitor, {
           monitorId: args.monitorId,
         });
@@ -60,6 +65,7 @@ export const processOneMonitor = internalAction({
         monitor.selectionMode === "element" && monitor.cssSelector;
 
       // 1. Capture screenshot (with selector for element mode)
+      const t1 = Date.now();
       const fullStorageId = await ctx.runAction(
         internal.screenshotActions.captureForMonitor,
         {
@@ -71,10 +77,13 @@ export const processOneMonitor = internalAction({
           delay: monitor.delay,
         }
       );
+      const screenshotMs = Date.now() - t1;
+      console.log(`${label} — step 1 screenshot: ${screenshotMs}ms`);
 
       // 1.5 Extract text content (skip if visual-only compare)
       let textContent: string | undefined;
       if (compareType !== "visual") {
+        const t15 = Date.now();
         try {
           textContent = await ctx.runAction(
             internal.textExtraction.extractTextContent,
@@ -83,19 +92,23 @@ export const processOneMonitor = internalAction({
               selector: isElementMode ? monitor.cssSelector : undefined,
             }
           );
+          console.log(`${label} — step 1.5 text extraction: ${Date.now() - t15}ms (${textContent?.length ?? 0} chars)`);
         } catch (e) {
-          console.error("Text extraction failed (non-fatal):", e);
+          console.error(`${label} — step 1.5 text extraction FAILED in ${Date.now() - t15}ms:`, e);
         }
       }
 
       // 2. Get previous snapshot
+      const t2 = Date.now();
       const lastSnapshot = monitor.lastSnapshotId
         ? await ctx.runQuery(internal.schedulerHelpers.getSnapshot, {
             snapshotId: monitor.lastSnapshotId,
           })
         : null;
+      console.log(`${label} — step 2 get previous snapshot: ${Date.now() - t2}ms (found: ${!!lastSnapshot})`);
 
       // 3. Compare (visual comparison)
+      const t3 = Date.now();
       let result;
       if (compareType === "text") {
         // Text-only mode: still need to crop/store the screenshot, but skip pixelmatch
@@ -151,11 +164,14 @@ export const processOneMonitor = internalAction({
           }
         );
       }
+      const compareMs = Date.now() - t3;
+      console.log(`${label} — step 3 comparison (${compareType}/${isElementMode ? "element" : "zone"}): ${compareMs}ms, changed=${result.changed}, diff=${result.diffPercentage}%`);
 
       // For "all" mode: also check text changes even if visual didn't change
       if (compareType === "all" && !result.changed && lastSnapshot?.textContent && textContent) {
         if (lastSnapshot.textContent !== textContent) {
           result = { ...result, changed: true };
+          console.log(`${label} — text change detected (visual was unchanged)`);
         }
       }
 
@@ -174,10 +190,12 @@ export const processOneMonitor = internalAction({
         );
         if (!keywordMatch) {
           result = { ...result, changed: false };
+          console.log(`${label} — change suppressed by keyword filter (mode=${monitor.keywordMode})`);
         }
       }
 
       // 4. Store new snapshot
+      const t4 = Date.now();
       const snapshotId = await ctx.runMutation(
         internal.schedulerHelpers.recordSnapshot,
         {
@@ -187,14 +205,17 @@ export const processOneMonitor = internalAction({
           textContent,
         }
       );
+      console.log(`${label} — step 4 record snapshot: ${Date.now() - t4}ms`);
 
       // 5. If changed, record and notify
       if (result.changed && lastSnapshot) {
+        const t5 = Date.now();
         // Compute text diff if text content is available
         let textDiff: string | undefined;
         if (textContent && lastSnapshot.textContent) {
           const previousText = lastSnapshot.textContent;
           if (previousText !== textContent) {
+            const tDiff = Date.now();
             textDiff = createTwoFilesPatch(
               "before",
               "after",
@@ -204,6 +225,7 @@ export const processOneMonitor = internalAction({
               "",
               { context: 3 }
             );
+            console.log(`${label} — text diff generation: ${Date.now() - tDiff}ms`);
           }
         }
 
@@ -225,6 +247,7 @@ export const processOneMonitor = internalAction({
           : null;
 
         // Email notification
+        const tEmail = Date.now();
         const userEmail = await ctx.runQuery(
           internal.schedulerHelpers.getMonitorUserEmail,
           { monitorId: monitor._id }
@@ -242,13 +265,15 @@ export const processOneMonitor = internalAction({
               diffUrl: diffUrl ?? undefined,
               dashboardUrl: `${process.env.SITE_URL ?? "https://pagepulse.dev"}/dashboard/${monitor._id}`,
             });
+            console.log(`${label} — email notification: ${Date.now() - tEmail}ms`);
           } catch (e) {
-            console.error("Email notification failed (non-fatal):", e);
+            console.error(`${label} — email notification FAILED in ${Date.now() - tEmail}ms:`, e);
           }
         }
 
         // Webhook notification
         if (monitor.webhookUrl) {
+          const tWebhook = Date.now();
           try {
             await ctx.runAction(internal.webhookActions.sendWebhook, {
               monitorId: monitor._id,
@@ -262,20 +287,26 @@ export const processOneMonitor = internalAction({
               diffUrl: diffUrl ?? undefined,
               dashboardUrl: `${process.env.SITE_URL ?? "https://pagepulse.dev"}/dashboard/${monitor._id}`,
             });
+            console.log(`${label} — webhook notification: ${Date.now() - tWebhook}ms`);
           } catch (e) {
-            console.error("Webhook notification failed (non-fatal):", e);
+            console.error(`${label} — webhook notification FAILED in ${Date.now() - tWebhook}ms:`, e);
           }
         }
+
+        console.log(`${label} — step 5 change recording + notifications: ${Date.now() - t5}ms`);
       }
 
       // 6. Update monitor
+      const t6 = Date.now();
       await ctx.runMutation(internal.schedulerHelpers.updateMonitorAfterCheck, {
         monitorId: monitor._id,
         snapshotId,
         changed: result.changed,
       });
+      console.log(`${label} — step 6 update monitor: ${Date.now() - t6}ms`);
+      console.log(`${label} — PIPELINE COMPLETE: ${Date.now() - pipelineStart}ms (screenshot: ${screenshotMs}ms, compare: ${compareMs}ms, changed: ${result.changed})`);
     } catch (error) {
-      console.error(`Error processing monitor ${args.monitorId}:`, error);
+      console.error(`${label} — PIPELINE FAILED after ${Date.now() - pipelineStart}ms:`, error);
       await ctx.runMutation(internal.schedulerHelpers.recordMonitorError, {
         monitorId: args.monitorId,
       });
