@@ -10,9 +10,33 @@ import {
   Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { MarketingCTA } from "@/components/marketing/MarketingCTA";
 
 export const Route = createFileRoute("/features")({
   component: FeaturesPage,
+  head: () => ({
+    meta: [
+      {
+        title:
+          "Features — Visual Diff, Zone Selection, Smart Alerts | PagePulse",
+      },
+      {
+        name: "description",
+        content:
+          "Pixel-level visual diffs, element-based zone selection, flexible scheduling, email alerts with screenshots, real-time dashboard, and full change history.",
+      },
+      {
+        property: "og:title",
+        content: "Features — Visual Diff, Zone Selection, Smart Alerts",
+      },
+      {
+        property: "og:description",
+        content:
+          "Six powerful monitoring tools: visual diff, zone selection, flexible scheduling, smart alerts, live dashboard, and change history.",
+      },
+    ],
+  }),
 });
 
 const features = [
@@ -110,31 +134,7 @@ const features = [
 
 function FeaturesPage() {
   return (
-    <div className="min-h-screen bg-[#f0f0e8]">
-      {/* Nav */}
-      <nav className="border-b-2 border-[#1a1a1a] px-4 md:px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-black tracking-tighter">
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
-        </Link>
-        <div className="flex items-center gap-4">
-          <Link
-            to="/features"
-            className="hidden md:block text-sm font-bold uppercase tracking-wider text-[#1a1a1a] hover:text-[#2d5a2d] transition-colors"
-          >
-            Features
-          </Link>
-          <Link
-            to="/auth/sign-in"
-            className="hidden sm:block text-sm font-bold uppercase tracking-wider text-[#888] hover:text-[#1a1a1a] transition-colors"
-          >
-            Sign In
-          </Link>
-          <Button asChild size="sm">
-            <Link to="/auth/sign-up">Get Started</Link>
-          </Button>
-        </div>
-      </nav>
-
+    <MarketingLayout>
       {/* Hero */}
       <section className="px-6 py-24 md:py-32 max-w-4xl mx-auto text-center">
         <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
@@ -300,45 +300,12 @@ function FeaturesPage() {
         );
       })}
 
-      {/* CTA */}
-      <section className="border-t-2 border-[#1a1a1a] bg-[#2d5a2d] text-[#f0f0e8] px-6 py-24 text-center">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4">
-            Ready To Start?
-          </p>
-          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 leading-[0.9]">
-            Stop Checking.
-            <br />
-            Start Monitoring.
-          </h2>
-          <p className="text-lg opacity-70 mb-10 max-w-lg mx-auto">
-            Set up your first monitor in under 60 seconds. Free to get started,
-            no credit card required.
-          </p>
-          <Button
-            asChild
-            size="lg"
-            className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-[#f0f0e8] shadow-[6px_6px_0px_0px_#1a4a1a]"
-          >
-            <Link to="/auth/sign-up">
-              Get Started Free
-              <ArrowRight className="ml-2" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t-2 border-[#1a1a1a] px-6 py-8">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <span className="text-sm font-bold tracking-tighter">
-            PAGE<span className="text-[#2d5a2d]">PULSE</span>
-          </span>
-          <span className="text-xs text-[#888]">
-            &copy; {new Date().getFullYear()} PagePulse
-          </span>
-        </div>
-      </footer>
-    </div>
+      <MarketingCTA
+        subheadline="Ready To Start?"
+        headline={"Stop Checking.\nStart Monitoring."}
+        description="Set up your first monitor in under 60 seconds. Free to get started, no credit card required."
+        showPricing={false}
+      />
+    </MarketingLayout>
   );
 }

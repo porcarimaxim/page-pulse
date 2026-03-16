@@ -16,13 +16,16 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PagePulse — Track any webpage for changes" },
+      { title: "PagePulse — Website Change Detection & Monitoring Alerts" },
       {
         name: "description",
         content:
-          "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes. Dead simple page monitoring.",
+          "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes. Track competitors, prices, job postings, and more.",
       },
       { property: "og:site_name", content: "PagePulse" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "robots", content: "index, follow" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

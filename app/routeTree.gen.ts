@@ -9,10 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UseCasesRouteImport } from './routes/use-cases'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UseCasesIndexRouteImport } from './routes/use-cases/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as UseCasesSlugRouteImport } from './routes/use-cases/$slug'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardNewRouteImport } from './routes/dashboard/new'
 import { Route as DashboardMonitorsRouteImport } from './routes/dashboard/monitors'
@@ -23,6 +27,16 @@ import { Route as DashboardMonitorIdSettingsRouteImport } from './routes/dashboa
 import { Route as AuthSignUpSplatRouteImport } from './routes/auth/sign-up.$'
 import { Route as AuthSignInSplatRouteImport } from './routes/auth/sign-in.$'
 
+const UseCasesRoute = UseCasesRouteImport.update({
+  id: '/use-cases',
+  path: '/use-cases',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeaturesRoute = FeaturesRouteImport.update({
   id: '/features',
   path: '/features',
@@ -38,10 +52,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UseCasesIndexRoute = UseCasesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UseCasesRoute,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
+} as any)
+const UseCasesSlugRoute = UseCasesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => UseCasesRoute,
 } as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
@@ -94,12 +118,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
+  '/use-cases': typeof UseCasesRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/use-cases/$slug': typeof UseCasesSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/use-cases/': typeof UseCasesIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
   '/auth/sign-up/$': typeof AuthSignUpSplatRoute
   '/dashboard/$monitorId/settings': typeof DashboardMonitorIdSettingsRoute
@@ -108,12 +136,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/use-cases/$slug': typeof UseCasesSlugRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/use-cases': typeof UseCasesIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
   '/auth/sign-up/$': typeof AuthSignUpSplatRoute
   '/dashboard/$monitorId/settings': typeof DashboardMonitorIdSettingsRoute
@@ -124,12 +155,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
+  '/use-cases': typeof UseCasesRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/use-cases/$slug': typeof UseCasesSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/use-cases/': typeof UseCasesIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
   '/auth/sign-up/$': typeof AuthSignUpSplatRoute
   '/dashboard/$monitorId/settings': typeof DashboardMonitorIdSettingsRoute
@@ -141,12 +176,16 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/features'
+    | '/pricing'
+    | '/use-cases'
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
+    | '/use-cases/$slug'
     | '/dashboard/'
+    | '/use-cases/'
     | '/auth/sign-in/$'
     | '/auth/sign-up/$'
     | '/dashboard/$monitorId/settings'
@@ -155,12 +194,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/features'
+    | '/pricing'
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
+    | '/use-cases/$slug'
     | '/dashboard'
+    | '/use-cases'
     | '/auth/sign-in/$'
     | '/auth/sign-up/$'
     | '/dashboard/$monitorId/settings'
@@ -170,12 +212,16 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/features'
+    | '/pricing'
+    | '/use-cases'
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
+    | '/use-cases/$slug'
     | '/dashboard/'
+    | '/use-cases/'
     | '/auth/sign-in/$'
     | '/auth/sign-up/$'
     | '/dashboard/$monitorId/settings'
@@ -186,12 +232,28 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   FeaturesRoute: typeof FeaturesRoute
+  PricingRoute: typeof PricingRoute
+  UseCasesRoute: typeof UseCasesRouteWithChildren
   AuthSignInRoute: typeof AuthSignInRouteWithChildren
   AuthSignUpRoute: typeof AuthSignUpRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/use-cases': {
+      id: '/use-cases'
+      path: '/use-cases'
+      fullPath: '/use-cases'
+      preLoaderRoute: typeof UseCasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/features': {
       id: '/features'
       path: '/features'
@@ -213,12 +275,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/use-cases/': {
+      id: '/use-cases/'
+      path: '/'
+      fullPath: '/use-cases/'
+      preLoaderRoute: typeof UseCasesIndexRouteImport
+      parentRoute: typeof UseCasesRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/use-cases/$slug': {
+      id: '/use-cases/$slug'
+      path: '/$slug'
+      fullPath: '/use-cases/$slug'
+      preLoaderRoute: typeof UseCasesSlugRouteImport
+      parentRoute: typeof UseCasesRoute
     }
     '/dashboard/settings': {
       id: '/dashboard/settings'
@@ -308,6 +384,20 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
+interface UseCasesRouteChildren {
+  UseCasesSlugRoute: typeof UseCasesSlugRoute
+  UseCasesIndexRoute: typeof UseCasesIndexRoute
+}
+
+const UseCasesRouteChildren: UseCasesRouteChildren = {
+  UseCasesSlugRoute: UseCasesSlugRoute,
+  UseCasesIndexRoute: UseCasesIndexRoute,
+}
+
+const UseCasesRouteWithChildren = UseCasesRoute._addFileChildren(
+  UseCasesRouteChildren,
+)
+
 interface AuthSignInRouteChildren {
   AuthSignInSplatRoute: typeof AuthSignInSplatRoute
 }
@@ -336,6 +426,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
   FeaturesRoute: FeaturesRoute,
+  PricingRoute: PricingRoute,
+  UseCasesRoute: UseCasesRouteWithChildren,
   AuthSignInRoute: AuthSignInRouteWithChildren,
   AuthSignUpRoute: AuthSignUpRouteWithChildren,
 }
