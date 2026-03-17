@@ -10,7 +10,8 @@
     "build:vercel": "bunx convex deploy --cmd 'bun run build' --cmd-url-env-var-name VITE_CONVEX_URL",
     "start": "vite preview --port 5297",
     "typecheck": "tsc --noEmit",
-    "typecheck:convex": "bunx convex typecheck"
+    "typecheck:convex": "bunx convex typecheck",
+    "sitemap": "tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@clerk/tanstack-react-start": "^0.27.14",
