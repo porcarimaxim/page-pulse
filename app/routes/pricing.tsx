@@ -17,21 +17,22 @@ export const Route = createFileRoute("/pricing")({
   component: PricingPage,
   head: () => ({
     meta: [
-      { title: "Pricing — PagePulse Website Change Monitoring" },
+      { title: "Pricing & Plans — Free Website Monitoring | PagePulse" },
       {
         name: "description",
         content:
-          "Simple, transparent pricing for website change monitoring. Start free with 5 monitors, upgrade for more checks, faster intervals, and team features.",
+          "Start monitoring websites free with 5 monitors and daily checks. Pro from $19/mo with 5-minute intervals. Business from $49/mo with unlimited monitors, API access, and team features.",
       },
       {
         property: "og:title",
-        content: "Pricing — PagePulse Website Change Monitoring",
+        content: "Pricing & Plans — Free Website Monitoring | PagePulse",
       },
       {
         property: "og:description",
         content:
-          "Simple, transparent pricing. Start free, upgrade when you need more.",
+          "Free forever with 5 monitors. Pro from $19/mo. Business from $49/mo. No hidden fees.",
       },
+      { property: "og:url", content: "https://pagepulse.io/pricing" },
     ],
   }),
 });

@@ -17,22 +17,23 @@ export const Route = createFileRoute("/use-cases/")({
     meta: [
       {
         title:
-          "Use Cases — Website Change Monitoring for Every Need | PagePulse",
+          "22 Website Monitoring Use Cases — Business, Personal & Industry | PagePulse",
       },
       {
         name: "description",
         content:
-          "Discover how teams and individuals use PagePulse to monitor competitor websites, track price changes, watch job postings, catch SEO issues, and more.",
+          "Discover 22+ ways to use website change monitoring: track competitor pricing, catch compliance changes, monitor job postings, get restock alerts, and watch SEO rankings.",
       },
       {
         property: "og:title",
-        content: "Use Cases — Website Change Monitoring for Every Need",
+        content: "22 Website Monitoring Use Cases for Teams & Individuals",
       },
       {
         property: "og:description",
         content:
-          "Monitor competitor websites, track prices, watch job postings, catch SEO issues, and more with PagePulse.",
+          "From competitor intelligence to price alerts — see how teams and individuals monitor the web with PagePulse.",
       },
+      { property: "og:url", content: "https://pagepulse.io/use-cases" },
     ],
   }),
 });

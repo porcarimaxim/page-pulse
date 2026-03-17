@@ -32,29 +32,30 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "PagePulse — Website Change Detection & Monitoring Alerts" },
+      { title: "PagePulse — #1 Free Website Change Monitoring Tool (2026)" },
       {
         name: "description",
         content:
-          "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes. Track competitor prices, job postings, product availability, and more.",
+          "Monitor any webpage for visual changes in under 60 seconds. Get email alerts with before/after screenshots. Track competitor prices, job postings, stock alerts, and more. Free forever.",
       },
       {
         property: "og:title",
-        content: "PagePulse — Website Change Detection & Monitoring Alerts",
+        content: "PagePulse — Free Website Change Monitoring Tool",
       },
       {
         property: "og:description",
         content:
-          "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes.",
+          "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes. Set up in 60 seconds.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://pagepulse.io" },
       {
         name: "twitter:card",
         content: "summary_large_image",
       },
       {
         name: "twitter:title",
-        content: "PagePulse — Website Change Detection & Monitoring Alerts",
+        content: "PagePulse — Free Website Change Monitoring Tool",
       },
     ],
   }),

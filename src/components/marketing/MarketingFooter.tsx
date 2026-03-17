@@ -39,6 +39,12 @@ export function MarketingFooter() {
               >
                 Use Cases
               </Link>
+              <Link
+                to="/blog"
+                className="block text-xs text-[#888] hover:text-[#1a1a1a] transition-colors"
+              >
+                Blog
+              </Link>
             </div>
           </div>
 

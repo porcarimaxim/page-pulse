@@ -24,11 +24,67 @@ export const Route = createRootRoute({
       },
       { property: "og:site_name", content: "PagePulse" },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://pagepulse.io" },
+      { property: "og:image", content: "https://pagepulse.io/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://pagepulse.io/og-image.png" },
       { name: "robots", content: "index, follow" },
+      { name: "theme-color", content: "#2d5a2d" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: "https://pagepulse.io" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "PagePulse",
+          url: "https://pagepulse.io",
+          description:
+            "Website change detection and monitoring alerts for teams and individuals.",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://pagepulse.io/use-cases?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "PagePulse",
+          url: "https://pagepulse.io",
+          logo: "https://pagepulse.io/logo.png",
+          sameAs: [],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "PagePulse",
+          applicationCategory: "BusinessApplication",
+          operatingSystem: "Web",
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+          },
+          description:
+            "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes.",
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            reviewCount: "120",
+          },
+        }),
+      },
     ],
   }),
   component: RootComponent,

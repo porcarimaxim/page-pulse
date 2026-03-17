@@ -71,8 +71,8 @@ export function MarketingNav() {
           PAGE<span className="text-[#2d5a2d]">PULSE</span>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
+        {/* Desktop Nav - Left links */}
+        <div className="hidden md:flex items-center gap-6 ml-8">
           <Link to="/features" className={linkClass("/features")}>
             Features
           </Link>
@@ -103,6 +103,13 @@ export function MarketingNav() {
             Pricing
           </Link>
 
+          <Link to="/blog" className={linkClass("/blog")}>
+            Blog
+          </Link>
+        </div>
+
+        {/* Desktop Nav - Right actions */}
+        <div className="hidden md:flex items-center gap-6 ml-auto">
           <Link to="/auth/sign-in" className={linkClass("/auth/sign-in")}>
             Sign In
           </Link>
@@ -259,6 +266,13 @@ export function MarketingNav() {
               className="block px-4 py-3 text-sm font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
             >
               Pricing
+            </Link>
+
+            <Link
+              to="/blog"
+              className="block px-4 py-3 text-sm font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
+            >
+              Blog
             </Link>
 
             <Link

@@ -19,22 +19,23 @@ export const Route = createFileRoute("/features")({
     meta: [
       {
         title:
-          "Features — Visual Diff, Zone Selection, Smart Alerts | PagePulse",
+          "Website Change Monitoring Features — Visual Diffs, Alerts, Scheduling | PagePulse",
       },
       {
         name: "description",
         content:
-          "Pixel-level visual diffs, element-based zone selection, flexible scheduling, email alerts with screenshots, real-time dashboard, and full change history.",
+          "Pixel-level visual diffs, point-and-click zone selection, 5-minute check intervals, email alerts with before/after screenshots, real-time dashboard, and full change history timeline.",
       },
       {
         property: "og:title",
-        content: "Features — Visual Diff, Zone Selection, Smart Alerts",
+        content: "Website Monitoring Features — Visual Diffs, Alerts & More",
       },
       {
         property: "og:description",
         content:
-          "Six powerful monitoring tools: visual diff, zone selection, flexible scheduling, smart alerts, live dashboard, and change history.",
+          "Six powerful tools: visual diff, zone selection, flexible scheduling, smart alerts, live dashboard, and change history.",
       },
+      { property: "og:url", content: "https://pagepulse.io/features" },
     ],
   }),
 });

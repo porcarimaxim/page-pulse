@@ -13,13 +13,17 @@ import { Route as UseCasesRouteImport } from './routes/use-cases'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UseCasesIndexRouteImport } from './routes/use-cases/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as UseCasesSlugRouteImport } from './routes/use-cases/$slug'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardNewRouteImport } from './routes/dashboard/new'
 import { Route as DashboardMonitorsRouteImport } from './routes/dashboard/monitors'
+import { Route as CompareVisualpingAlternativeRouteImport } from './routes/compare/visualping-alternative'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
 import { Route as DashboardMonitorIdIndexRouteImport } from './routes/dashboard/$monitorId/index'
@@ -47,6 +51,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,6 +70,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
 } as any)
 const UseCasesSlugRoute = UseCasesSlugRouteImport.update({
   id: '/$slug',
@@ -81,6 +95,17 @@ const DashboardMonitorsRoute = DashboardMonitorsRouteImport.update({
   id: '/monitors',
   path: '/monitors',
   getParentRoute: () => DashboardRoute,
+} as any)
+const CompareVisualpingAlternativeRoute =
+  CompareVisualpingAlternativeRouteImport.update({
+    id: '/compare/visualping-alternative',
+    path: '/compare/visualping-alternative',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/auth/sign-up',
@@ -116,16 +141,20 @@ const AuthSignInSplatRoute = AuthSignInSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/use-cases': typeof UseCasesRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/compare/visualping-alternative': typeof CompareVisualpingAlternativeRoute
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/use-cases/$slug': typeof UseCasesSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/use-cases/': typeof UseCasesIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
@@ -139,10 +168,13 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/compare/visualping-alternative': typeof CompareVisualpingAlternativeRoute
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/use-cases/$slug': typeof UseCasesSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/use-cases': typeof UseCasesIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
@@ -153,16 +185,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blog': typeof BlogRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/use-cases': typeof UseCasesRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRouteWithChildren
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/compare/visualping-alternative': typeof CompareVisualpingAlternativeRoute
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/use-cases/$slug': typeof UseCasesSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/use-cases/': typeof UseCasesIndexRoute
   '/auth/sign-in/$': typeof AuthSignInSplatRoute
@@ -174,16 +210,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/blog'
     | '/dashboard'
     | '/features'
     | '/pricing'
     | '/use-cases'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/blog/$slug'
+    | '/compare/visualping-alternative'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
     | '/use-cases/$slug'
+    | '/blog/'
     | '/dashboard/'
     | '/use-cases/'
     | '/auth/sign-in/$'
@@ -197,10 +237,13 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/blog/$slug'
+    | '/compare/visualping-alternative'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
     | '/use-cases/$slug'
+    | '/blog'
     | '/dashboard'
     | '/use-cases'
     | '/auth/sign-in/$'
@@ -210,16 +253,20 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/blog'
     | '/dashboard'
     | '/features'
     | '/pricing'
     | '/use-cases'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/blog/$slug'
+    | '/compare/visualping-alternative'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
     | '/use-cases/$slug'
+    | '/blog/'
     | '/dashboard/'
     | '/use-cases/'
     | '/auth/sign-in/$'
@@ -230,12 +277,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlogRoute: typeof BlogRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
   FeaturesRoute: typeof FeaturesRoute
   PricingRoute: typeof PricingRoute
   UseCasesRoute: typeof UseCasesRouteWithChildren
   AuthSignInRoute: typeof AuthSignInRouteWithChildren
   AuthSignUpRoute: typeof AuthSignUpRouteWithChildren
+  CompareVisualpingAlternativeRoute: typeof CompareVisualpingAlternativeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -268,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -288,6 +344,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/use-cases/$slug': {
       id: '/use-cases/$slug'
@@ -316,6 +379,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/monitors'
       preLoaderRoute: typeof DashboardMonitorsRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/compare/visualping-alternative': {
+      id: '/compare/visualping-alternative'
+      path: '/compare/visualping-alternative'
+      fullPath: '/compare/visualping-alternative'
+      preLoaderRoute: typeof CompareVisualpingAlternativeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/auth/sign-up': {
       id: '/auth/sign-up'
@@ -361,6 +438,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 interface DashboardRouteChildren {
   DashboardMonitorsRoute: typeof DashboardMonitorsRoute
@@ -424,12 +513,14 @@ const AuthSignUpRouteWithChildren = AuthSignUpRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlogRoute: BlogRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
   FeaturesRoute: FeaturesRoute,
   PricingRoute: PricingRoute,
   UseCasesRoute: UseCasesRouteWithChildren,
   AuthSignInRoute: AuthSignInRouteWithChildren,
   AuthSignUpRoute: AuthSignUpRouteWithChildren,
+  CompareVisualpingAlternativeRoute: CompareVisualpingAlternativeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
