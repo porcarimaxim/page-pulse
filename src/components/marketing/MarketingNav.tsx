@@ -16,7 +16,7 @@ export function MarketingNav() {
   const [mobileCategory, setMobileCategory] = useState<string | null>(null);
   const location = useLocation();
   const navRef = useRef<HTMLElement>(null);
-  const megaTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const megaTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const closeMega = useCallback(() => {
     setMegaOpen(false);
