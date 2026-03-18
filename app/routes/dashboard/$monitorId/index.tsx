@@ -282,29 +282,31 @@ function MonitorDetailPage() {
       <div className="border-2 border-[#1a1a1a] mb-6">
         <div className="grid grid-cols-2 md:grid-cols-5">
           {/* Screenshot preview */}
-          <div className="relative bg-[#e8e8e0] border-r-2 border-[#1a1a1a] md:row-span-1 h-32 overflow-hidden">
+          <div className="relative bg-[#e8e8e0] border-r-2 border-[#1a1a1a] md:row-span-1 h-32 overflow-hidden flex items-start justify-center">
             {monitor.screenshotUrl ? (
-              <img
-                src={monitor.screenshotUrl}
-                alt="Latest screenshot"
-                className="w-full h-full object-cover object-top"
-              />
+              <div className="relative w-full h-full">
+                <img
+                  src={monitor.screenshotUrl}
+                  alt="Latest screenshot"
+                  className="w-full h-full object-contain object-top"
+                />
+                {/* Zone overlay - positioned relative to image */}
+                {monitor.selectionMode !== "element" && (
+                  <div
+                    className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
+                    style={{
+                      left: `${monitor.zone.x}%`,
+                      top: `${monitor.zone.y}%`,
+                      width: `${monitor.zone.width}%`,
+                      height: `${monitor.zone.height}%`,
+                    }}
+                  />
+                )}
+              </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-[#888] text-xs">
+              <div className="flex items-center justify-center h-full w-full text-[#888] text-xs">
                 No screenshot yet
               </div>
-            )}
-            {/* Zone overlay */}
-            {monitor.screenshotUrl && monitor.selectionMode !== "element" && (
-              <div
-                className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
-                style={{
-                  left: `${monitor.zone.x}%`,
-                  top: `${monitor.zone.y}%`,
-                  width: `${monitor.zone.width}%`,
-                  height: `${monitor.zone.height}%`,
-                }}
-              />
             )}
             {monitor.selectionMode === "element" && (
               <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5">

@@ -40,27 +40,29 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
         {/* Screenshot preview */}
         <div className="relative h-40 bg-[#e8e8e0] border-b-2 border-[#1a1a1a] overflow-hidden">
           {monitor.screenshotUrl ? (
-            <img
-              src={monitor.screenshotUrl}
-              alt={monitor.name}
-              className="w-full h-full object-cover object-top"
-            />
+            <div className="relative w-full h-full">
+              <img
+                src={monitor.screenshotUrl}
+                alt={monitor.name}
+                className="w-full h-full object-contain object-top"
+              />
+              {/* Zone overlay (only for zone mode) */}
+              {monitor.selectionMode !== "element" && (
+                <div
+                  className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
+                  style={{
+                    left: `${monitor.zone.x}%`,
+                    top: `${monitor.zone.y}%`,
+                    width: `${monitor.zone.width}%`,
+                    height: `${monitor.zone.height}%`,
+                  }}
+                />
+              )}
+            </div>
           ) : (
             <div className="flex items-center justify-center h-full text-[#888] text-sm">
               No screenshot yet
             </div>
-          )}
-          {/* Zone overlay (only for zone mode) */}
-          {monitor.screenshotUrl && monitor.selectionMode !== "element" && (
-            <div
-              className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
-              style={{
-                left: `${monitor.zone.x}%`,
-                top: `${monitor.zone.y}%`,
-                width: `${monitor.zone.width}%`,
-                height: `${monitor.zone.height}%`,
-              }}
-            />
           )}
           {/* Element mode badge */}
           {monitor.selectionMode === "element" && (
