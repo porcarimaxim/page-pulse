@@ -49,115 +49,7 @@ export const Route = createFileRoute("/features")({
   }),
 });
 
-/* ─── Bento Grid Feature Cards ─── */
-
-const features = [
-  {
-    id: "visual-diff",
-    title: "Visual Diff",
-    headline: "See Exactly What Changed",
-    description:
-      "Pixel-level screenshot comparison highlights every difference. Drag the slider to compare before and after.",
-    icon: GitCompareArrows,
-    size: "hero" as const,
-  },
-  {
-    id: "zone-selection",
-    title: "Zone Selection",
-    headline: "Monitor Only What Matters",
-    description:
-      "Point-and-click to select any element. Ignore ads, banners, and noise.",
-    icon: Target,
-    size: "tall" as const,
-  },
-  {
-    id: "scheduling",
-    title: "Flexible Scheduling",
-    headline: "Check On Your Terms",
-    description:
-      "From every 5 minutes to weekly. Different intervals per monitor.",
-    icon: Clock,
-    size: "normal" as const,
-  },
-  {
-    id: "alerts",
-    title: "Email Alerts",
-    headline: "Changes In Your Inbox",
-    description:
-      "Before/after screenshots, diff percentage, and direct dashboard link in every alert.",
-    icon: Bell,
-    size: "wide" as const,
-  },
-  {
-    id: "dashboard",
-    title: "Live Dashboard",
-    headline: "All Monitors At A Glance",
-    description:
-      "Live status, change counts, and recent screenshots across every monitor.",
-    icon: BarChart3,
-    size: "normal" as const,
-  },
-  {
-    id: "history",
-    title: "Change History",
-    headline: "Full Timeline Of Every Change",
-    description:
-      "Every change logged with timestamps, diff scores, and visual comparisons.",
-    icon: History,
-    size: "normal" as const,
-  },
-];
-
-function FeatureCard({
-  feature,
-}: {
-  feature: (typeof features)[0];
-}) {
-  const Icon = feature.icon;
-
-  const sizeClasses = {
-    hero: "md:col-span-2 md:row-span-2",
-    tall: "md:row-span-2",
-    wide: "md:col-span-2",
-    normal: "",
-  };
-
-  return (
-    <div
-      className={`group border-2 border-[#1a1a1a] bg-[#f0f0e8] hover:shadow-[8px_8px_0px_0px_#1a1a1a] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all overflow-hidden flex flex-col ${sizeClasses[feature.size]}`}
-    >
-      {/* Illustration area */}
-      <div className="flex-1 min-h-[180px] md:min-h-[220px] bg-white border-b-2 border-[#1a1a1a] p-3 md:p-4 flex items-center justify-center overflow-hidden">
-        {feature.id === "visual-diff" && <DiffSlider />}
-        {feature.id === "zone-selection" && <ElementPicker />}
-        {feature.id === "scheduling" && <FrequencySelector />}
-        {feature.id === "alerts" && <AlertEmailMockup />}
-        {feature.id === "dashboard" && <DashboardMockup monitors={4} />}
-        {feature.id === "history" && <ChangeTimeline events={5} />}
-      </div>
-
-      {/* Text content */}
-      <div className="p-5 md:p-6">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center shrink-0">
-            <Icon className="w-4 h-4 text-[#2d5a2d]" />
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-            {feature.title}
-          </span>
-        </div>
-        <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter leading-[0.95] mb-2">
-          {feature.headline}
-        </h3>
-        <p className="text-sm text-[#666] leading-relaxed">
-          {feature.description}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* ─── How It Works Walkthrough ─── */
+/* ─── How It Works ─── */
 
 const steps = [
   {
@@ -211,15 +103,13 @@ function HowItWorks() {
   const step = steps[activeStep];
 
   return (
-    <section className="border-t-2 border-[#1a1a1a] px-6 py-20 md:py-28">
+    <section className="px-6 py-16 md:py-20">
       <div className="max-w-5xl mx-auto">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#666] mb-3 text-center">
           How It Works
         </p>
-        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-center mb-12 leading-[0.9]">
-          Three Steps.
-          <br />
-          <span className="text-[#2d5a2d]">Zero Complexity.</span>
+        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-center mb-10 leading-[1.1]">
+          Three Steps. <span className="text-[#2d5a2d]">Zero Complexity.</span>
         </h2>
 
         {/* Step tabs */}
@@ -231,7 +121,7 @@ function HowItWorks() {
                 setActiveStep(i);
                 setProgress(0);
               }}
-              className={`flex-1 py-4 px-4 text-center transition-colors relative ${
+              className={`flex-1 py-3 px-4 text-center transition-colors relative ${
                 activeStep === i
                   ? "bg-[#1a1a1a] text-[#f0f0e8]"
                   : "bg-[#f0f0e8] text-[#1a1a1a] hover:bg-[#e8e8e0]"
@@ -243,9 +133,11 @@ function HowItWorks() {
               <span className="text-xs md:text-sm font-black uppercase tracking-wider">
                 {s.label}
               </span>
-              {/* Progress bar */}
               {activeStep === i && (
-                <div className="absolute bottom-0 left-0 h-0.5 bg-[#7cb87c] transition-none" style={{ width: `${progress}%` }} />
+                <div
+                  className="absolute bottom-0 left-0 h-0.5 bg-[#7cb87c] transition-none"
+                  style={{ width: `${progress}%` }}
+                />
               )}
             </button>
           ))}
@@ -254,12 +146,11 @@ function HowItWorks() {
         {/* Step content */}
         <div className="border-2 border-t-0 border-[#1a1a1a] bg-white">
           <div className="flex flex-col md:flex-row">
-            {/* Text */}
-            <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
-              <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-4 leading-[0.95]">
+            <div className="flex-1 p-6 md:p-10 flex flex-col justify-center">
+              <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-3 leading-[1.1]">
                 {step.headline}
               </h3>
-              <p className="text-[#666] leading-relaxed mb-6">
+              <p className="text-[#666] leading-relaxed mb-5 text-sm">
                 {step.description}
               </p>
               <div>
@@ -270,9 +161,7 @@ function HowItWorks() {
                 </Button>
               </div>
             </div>
-
-            {/* Visual */}
-            <div className="flex-1 p-4 md:p-6 border-t-2 md:border-t-0 md:border-l-2 border-[#1a1a1a] bg-[#f5f5f0] flex items-center justify-center min-h-[280px]">
+            <div className="flex-1 p-4 md:p-6 border-t-2 md:border-t-0 md:border-l-2 border-[#1a1a1a] bg-[#f5f5f0] flex items-center justify-center min-h-[240px]">
               {step.visual === "url" && (
                 <div className="w-full max-w-sm">
                   <div className="border-2 border-[#1a1a1a] bg-white">
@@ -345,12 +234,12 @@ function SocialProof() {
   ];
 
   return (
-    <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20 md:py-24">
+    <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-16 md:py-20">
       <div className="max-w-5xl mx-auto">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#7cb87c] mb-3 text-center">
           Trusted By Teams
         </p>
-        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-center mb-12 leading-[0.9]">
+        <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-center mb-10 leading-[1.1]">
           What Users Say
         </h2>
 
@@ -396,12 +285,12 @@ const comparisonFeatures = [
 
 function ComparisonTable() {
   return (
-    <section className="border-t-2 border-[#1a1a1a] px-6 py-20 md:py-24">
+    <section className="px-6 py-16 md:py-20">
       <div className="max-w-4xl mx-auto">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#666] mb-3 text-center">
           Feature Comparison
         </p>
-        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-center mb-12 leading-[0.9]">
+        <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-center mb-10 leading-[1.1]">
           How We <span className="text-[#2d5a2d]">Compare</span>
         </h2>
 
@@ -409,16 +298,16 @@ function ComparisonTable() {
           <table className="w-full">
             <thead>
               <tr className="bg-[#1a1a1a] text-[#f0f0e8]">
-                <th className="text-left py-4 px-4 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider w-[40%]">
+                <th className="text-left py-3 px-4 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider w-[40%]">
                   Feature
                 </th>
-                <th className="py-4 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center bg-[#2d5a2d]">
+                <th className="py-3 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center bg-[#2d5a2d]">
                   PagePulse
                 </th>
-                <th className="py-4 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center">
+                <th className="py-3 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center">
                   Visualping
                 </th>
-                <th className="py-4 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center">
+                <th className="py-3 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center">
                   Hexowatch
                 </th>
               </tr>
@@ -474,62 +363,94 @@ function ComparisonTable() {
   );
 }
 
+/* ─── Feature Section (alternating left/right) ─── */
+
+interface FeatureBlockProps {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  headline: string;
+  description: string;
+  bullets: string[];
+  illustration: React.ReactNode;
+  reversed?: boolean;
+  dark?: boolean;
+}
+
+function FeatureBlock({ icon: Icon, label, headline, description, bullets, illustration, reversed, dark }: FeatureBlockProps) {
+  return (
+    <section className={`px-6 py-10 md:py-16 ${dark ? "bg-[#1a1a1a] text-[#f0f0e8]" : ""} ${!dark ? "border-t-2 border-[#1a1a1a]" : ""}`}>
+      <div className={`max-w-5xl mx-auto flex flex-col ${reversed ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-14`}>
+        {/* Text side */}
+        <div className="flex-1">
+          <div className="flex items-center gap-3 mb-4">
+            <div className={`w-8 h-8 border-2 ${dark ? "border-[#7cb87c]" : "border-[#2d5a2d]"} flex items-center justify-center`}>
+              <Icon className={`w-4 h-4 ${dark ? "text-[#7cb87c]" : "text-[#2d5a2d]"}`} />
+            </div>
+            <span className={`text-[10px] font-bold uppercase tracking-wider ${dark ? "text-[#7cb87c]" : "text-[#2d5a2d]"}`}>
+              {label}
+            </span>
+          </div>
+          <h3 className="text-2xl md:text-4xl font-black uppercase tracking-tighter leading-[1.1] mb-4">
+            {headline}
+          </h3>
+          <p className={`text-sm leading-relaxed mb-5 ${dark ? "text-[#a0a0a0]" : "text-[#666]"}`}>
+            {description}
+          </p>
+          <ul className="space-y-2 mb-6">
+            {bullets.map((b) => (
+              <li key={b} className="flex items-start gap-2 text-sm">
+                <Check className={`w-4 h-4 shrink-0 mt-0.5 ${dark ? "text-[#7cb87c]" : "text-[#2d5a2d]"}`} />
+                <span className={dark ? "text-[#ccc]" : ""}>{b}</span>
+              </li>
+            ))}
+          </ul>
+          <Button asChild size="sm">
+            <Link to="/auth/sign-up">
+              Start Free <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          </Button>
+        </div>
+
+        {/* Illustration side */}
+        <div className={`flex-1 w-full border-2 ${dark ? "border-[#333] bg-[#222]" : "border-[#1a1a1a] bg-white"} p-4 md:p-6`}>
+          {illustration}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Main Page ─── */
 
 function FeaturesPage() {
   return (
     <MarketingLayout>
-      {/* Hero — Split layout */}
-      <section className="px-6 pt-16 pb-12 md:pt-24 md:pb-16">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
-          <div className="flex-1">
-            <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4">
-              Six Powerful Tools
-            </p>
-            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
-              Every Change.
-              <br />
-              <span className="text-[#2d5a2d]">Caught.</span>
-            </h1>
-            <p className="text-lg text-[#666] max-w-md mb-8">
-              Visual diffs, smart alerts, and a live dashboard — everything you
-              need to track webpage changes with zero complexity.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg">
-                <Link to="/auth/sign-up">
-                  Start Free <ArrowRight className="ml-2" />
-                </Link>
-              </Button>
-              <Link
-                to="/pricing"
-                className="text-sm font-bold uppercase tracking-wider text-[#1a1a1a] hover:text-[#2d5a2d] underline underline-offset-4 transition-colors self-center"
-              >
-                View Pricing →
+      {/* Hero */}
+      <section className="px-6 pt-14 pb-10 md:pt-20 md:pb-14">
+        <div className="max-w-5xl mx-auto text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#666] mb-3">
+            Six Powerful Tools
+          </p>
+          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
+            Every Change.<br />
+            <span className="text-[#2d5a2d]">Caught.</span>
+          </h1>
+          <p className="text-lg text-[#666] max-w-lg mx-auto mb-8">
+            Visual diffs, smart alerts, and a live dashboard — everything you
+            need to track webpage changes with zero complexity.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Button asChild size="lg">
+              <Link to="/auth/sign-up">
+                Start Free <ArrowRight className="ml-2" />
               </Link>
-            </div>
-          </div>
-
-          {/* Hero illustration — mini feature grid */}
-          <div className="flex-1 grid grid-cols-3 gap-2 max-w-sm">
-            {[
-              { icon: GitCompareArrows, label: "Visual Diff" },
-              { icon: Target, label: "Zone Select" },
-              { icon: Clock, label: "Scheduling" },
-              { icon: Bell, label: "Alerts" },
-              { icon: BarChart3, label: "Dashboard" },
-              { icon: History, label: "History" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="border-2 border-[#1a1a1a] p-3 md:p-4 flex flex-col items-center gap-2 bg-[#f0f0e8] hover:bg-white transition-colors"
-              >
-                <item.icon className="w-5 h-5 text-[#2d5a2d]" />
-                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-wider text-center">
-                  {item.label}
-                </span>
-              </div>
-            ))}
+            </Button>
+            <Link
+              to="/pricing"
+              className="text-sm font-bold uppercase tracking-wider text-[#1a1a1a] hover:text-[#2d5a2d] underline underline-offset-4 transition-colors self-center"
+            >
+              View Pricing →
+            </Link>
           </div>
         </div>
       </section>
@@ -543,11 +464,11 @@ function FeaturesPage() {
             { value: "100%", label: "Visual Accuracy" },
             { value: "24/7", label: "Monitoring" },
           ].map((stat) => (
-            <div key={stat.label} className="py-6 md:py-8 px-3 md:px-6 text-center">
-              <div className="text-xl md:text-3xl font-black tracking-tighter text-[#7cb87c]">
+            <div key={stat.label} className="py-5 md:py-6 px-3 md:px-6 text-center">
+              <div className="text-xl md:text-2xl font-black tracking-tighter text-[#7cb87c]">
                 {stat.value}
               </div>
-              <div className="text-[8px] md:text-xs uppercase tracking-wider text-[#a0a0a0] mt-1">
+              <div className="text-[8px] md:text-[10px] uppercase tracking-wider text-[#a0a0a0] mt-1">
                 {stat.label}
               </div>
             </div>
@@ -555,180 +476,95 @@ function FeaturesPage() {
         </div>
       </section>
 
-      {/* Bento Grid */}
-      <section className="border-t-2 border-[#1a1a1a] px-6 py-16 md:py-24">
-        <div className="max-w-5xl mx-auto">
-          {/* Grid uses gap-[2px] on dark bg to create border effect */}
-          <div className="border-2 border-[#1a1a1a] bg-[#1a1a1a]">
-            {/* Row 1: Visual Diff hero (wide) + Zone Selection */}
-            <div className="grid md:grid-cols-5 gap-[2px]">
-              {/* Visual Diff — 3/5 width */}
-              <div className="md:col-span-3 bg-[#f0f0e8] flex flex-col">
-                <div className="bg-white p-4 h-[240px] md:h-[280px]">
-                  <DiffSlider />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center">
-                      <GitCompareArrows className="w-4 h-4 text-[#2d5a2d]" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                      Visual Diff
-                    </span>
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                    See Exactly What Changed
-                  </h3>
-                  <p className="text-sm text-[#666]">
-                    Pixel-level comparison. Drag the slider to see it in action.
-                  </p>
-                </div>
-              </div>
+      {/* Feature 1: Visual Diff (hero feature) */}
+      <FeatureBlock
+        icon={GitCompareArrows}
+        label="Visual Diff"
+        headline="See Exactly What Changed"
+        description="Pixel-level screenshot comparison highlights every difference. Drag the slider to compare before and after — no more guessing."
+        bullets={[
+          "Side-by-side before/after comparison",
+          "Highlighted change regions",
+          "Percentage-based diff scoring",
+        ]}
+        illustration={<DiffSlider />}
+      />
 
-              {/* Zone Selection — 2/5 width */}
-              <div className="md:col-span-2 bg-[#f0f0e8] flex flex-col">
-                <div className="bg-white p-3 flex-1 flex items-center justify-center">
-                  <ElementPicker />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center">
-                      <Target className="w-4 h-4 text-[#2d5a2d]" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                      Zone Selection
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                    Monitor Only What Matters
-                  </h3>
-                  <p className="text-sm text-[#666]">
-                    Click any element. Ignore the noise.
-                  </p>
-                </div>
-              </div>
-            </div>
+      {/* Feature 2: Zone Selection */}
+      <FeatureBlock
+        icon={Target}
+        label="Zone Selection"
+        headline="Monitor Only What Matters"
+        description="Point-and-click to select any element on the page. Ignore ads, cookie banners, and dynamic noise — focus on the content that matters."
+        bullets={[
+          "Visual element picker",
+          "CSS selector support",
+          "Ignore dynamic elements",
+        ]}
+        illustration={<ElementPicker />}
+        reversed
+        dark
+      />
 
-            {/* Row 2: Scheduling + Alerts (2 equal cols) */}
-            <div className="grid md:grid-cols-2 gap-[2px]">
-              <div className="bg-[#f0f0e8] flex flex-col">
-                <div className="bg-white p-3 flex items-center justify-center h-[260px]">
-                  <div className="w-full max-w-[240px]">
-                    <FrequencySelector />
-                  </div>
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                      <Clock className="w-3.5 h-3.5 text-[#2d5a2d]" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                      Scheduling
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                    Check On Your Terms
-                  </h3>
-                  <p className="text-xs text-[#666]">
-                    5 min to weekly. Per-monitor intervals.
-                  </p>
-                </div>
-              </div>
+      {/* Feature 3: Scheduling */}
+      <FeatureBlock
+        icon={Clock}
+        label="Flexible Scheduling"
+        headline="Check On Your Terms"
+        description="From every 5 minutes to weekly — set different intervals per monitor based on how critical each page is."
+        bullets={[
+          "5-minute to weekly intervals",
+          "Per-monitor scheduling",
+          "Time-zone aware checks",
+        ]}
+        illustration={<FrequencySelector />}
+      />
 
-              <div className="bg-[#f0f0e8] flex flex-col">
-                <div className="bg-white p-3 flex items-center justify-center h-[260px]">
-                  <div className="w-full max-w-[280px]">
-                    <AlertEmailMockup />
-                  </div>
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                      <Bell className="w-3.5 h-3.5 text-[#2d5a2d]" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                      Email Alerts
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                    Changes In Your Inbox
-                  </h3>
-                  <p className="text-xs text-[#666]">
-                    Before/after screenshots in every email.
-                  </p>
-                </div>
-              </div>
-            </div>
+      {/* Feature 4: Email Alerts */}
+      <FeatureBlock
+        icon={Bell}
+        label="Email Alerts"
+        headline="Changes In Your Inbox"
+        description="Every alert includes before/after screenshots, the exact diff percentage, and a direct link to your dashboard."
+        bullets={[
+          "Before/after screenshots in email",
+          "Diff percentage and summary",
+          "Direct dashboard link",
+        ]}
+        illustration={<AlertEmailMockup />}
+        reversed
+        dark
+      />
 
-            {/* Row 3: Dashboard + History + CTA (3 cols) */}
-            <div className="grid md:grid-cols-3 gap-[2px]">
-              <div className="bg-[#f0f0e8] flex flex-col">
-                <div className="bg-white p-3 flex items-center justify-center h-[220px]">
-                  <div className="w-full max-w-[240px]">
-                    <DashboardMockup monitors={4} />
-                  </div>
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                      <BarChart3 className="w-3.5 h-3.5 text-[#2d5a2d]" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                      Dashboard
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                    All Monitors At A Glance
-                  </h3>
-                  <p className="text-xs text-[#666]">
-                    Live status across every monitor.
-                  </p>
-                </div>
-              </div>
+      {/* Feature 5: Dashboard */}
+      <FeatureBlock
+        icon={BarChart3}
+        label="Live Dashboard"
+        headline="All Monitors At A Glance"
+        description="Live status, change counts, and recent screenshots across every monitor — all in one clean interface."
+        bullets={[
+          "Real-time monitor status",
+          "Change count tracking",
+          "Recent screenshot previews",
+        ]}
+        illustration={<DashboardMockup monitors={4} />}
+      />
 
-              <div className="bg-[#f0f0e8] flex flex-col">
-                <div className="bg-white p-3 flex items-center justify-center h-[220px]">
-                  <div className="w-full max-w-[200px]">
-                    <ChangeTimeline events={5} />
-                  </div>
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                      <History className="w-3.5 h-3.5 text-[#2d5a2d]" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                      History
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                    Full Change Timeline
-                  </h3>
-                  <p className="text-xs text-[#666]">
-                    Every change logged with diffs.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-[#2d5a2d] text-[#f0f0e8] flex flex-col items-center justify-center p-8 text-center">
-                <div className="text-4xl md:text-5xl font-black tracking-tighter mb-2">6</div>
-                <div className="text-xs font-bold uppercase tracking-wider text-[#7cb87c] mb-6">
-                  Tools Working Together
-                </div>
-                <Button
-                  asChild
-                  size="sm"
-                  className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8]"
-                >
-                  <Link to="/auth/sign-up">
-                    Get Started <ArrowRight className="ml-1 w-3 h-3" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Feature 6: History */}
+      <FeatureBlock
+        icon={History}
+        label="Change History"
+        headline="Full Timeline Of Every Change"
+        description="Every change logged with timestamps, diff scores, and visual comparisons. Go back and see exactly what happened and when."
+        bullets={[
+          "Timestamped change log",
+          "Visual diff for each change",
+          "Export and share history",
+        ]}
+        illustration={<ChangeTimeline events={5} />}
+        reversed
+        dark
+      />
 
       {/* How It Works */}
       <HowItWorks />
