@@ -558,164 +558,173 @@ function FeaturesPage() {
       {/* Bento Grid */}
       <section className="border-t-2 border-[#1a1a1a] px-6 py-16 md:py-24">
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-0 border-2 border-[#1a1a1a]">
-            {/* Row 1: Visual Diff (2 cols) + Zone Selection (1 col, 2 rows) */}
-            <div className="md:col-span-2 border-b-2 md:border-b-0 md:border-r-2 border-[#1a1a1a]">
-              <div className="bg-white p-3 md:p-5 min-h-[280px] md:min-h-[320px] flex items-center justify-center border-b-2 border-[#1a1a1a]">
-                <DiffSlider />
-              </div>
-              <div className="p-5 md:p-6 bg-[#f0f0e8]">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center">
-                    <GitCompareArrows className="w-4 h-4 text-[#2d5a2d]" />
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                    Visual Diff
-                  </span>
+          {/* Grid uses gap-[2px] on dark bg to create border effect */}
+          <div className="border-2 border-[#1a1a1a] bg-[#1a1a1a]">
+            {/* Row 1: Visual Diff hero (wide) + Zone Selection */}
+            <div className="grid md:grid-cols-5 gap-[2px]">
+              {/* Visual Diff — 3/5 width */}
+              <div className="md:col-span-3 bg-[#f0f0e8] flex flex-col">
+                <div className="bg-white p-4 h-[240px] md:h-[280px]">
+                  <DiffSlider />
                 </div>
-                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[0.95] mb-2">
-                  See Exactly What Changed
-                </h3>
-                <p className="text-sm text-[#666]">
-                  Pixel-level screenshot comparison highlights every difference. Drag the slider to see it in action.
-                </p>
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center">
+                      <GitCompareArrows className="w-4 h-4 text-[#2d5a2d]" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
+                      Visual Diff
+                    </span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter leading-[0.95] mb-1">
+                    See Exactly What Changed
+                  </h3>
+                  <p className="text-sm text-[#666]">
+                    Pixel-level comparison. Drag the slider to see it in action.
+                  </p>
+                </div>
+              </div>
+
+              {/* Zone Selection — 2/5 width */}
+              <div className="md:col-span-2 bg-[#f0f0e8] flex flex-col">
+                <div className="bg-white p-3 flex-1 flex items-center justify-center">
+                  <ElementPicker />
+                </div>
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center">
+                      <Target className="w-4 h-4 text-[#2d5a2d]" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
+                      Zone Selection
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-black uppercase tracking-tighter leading-[0.95] mb-1">
+                    Monitor Only What Matters
+                  </h3>
+                  <p className="text-sm text-[#666]">
+                    Click any element. Ignore the noise.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="border-b-2 md:border-b-0 border-[#1a1a1a] md:row-span-2 flex flex-col">
-              <div className="bg-white p-3 md:p-4 flex-1 flex items-center justify-center border-b-2 border-[#1a1a1a] min-h-[200px]">
-                <ElementPicker />
-              </div>
-              <div className="p-5 md:p-6 bg-[#f0f0e8]">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center">
-                    <Target className="w-4 h-4 text-[#2d5a2d]" />
+            {/* Row 2: Scheduling + Alerts (2 equal cols) */}
+            <div className="grid md:grid-cols-2 gap-[2px]">
+              <div className="bg-[#f0f0e8] flex flex-col">
+                <div className="bg-white p-3 flex items-center justify-center h-[260px]">
+                  <div className="w-full max-w-[240px]">
+                    <FrequencySelector />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                    Zone Selection
-                  </span>
                 </div>
-                <h3 className="text-xl font-black uppercase tracking-tighter leading-[0.95] mb-2">
-                  Monitor Only What Matters
-                </h3>
-                <p className="text-sm text-[#666]">
-                  Click any element. Ignore the noise.
-                </p>
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
+                      <Clock className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
+                      Scheduling
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
+                    Check On Your Terms
+                  </h3>
+                  <p className="text-xs text-[#666]">
+                    5 min to weekly. Per-monitor intervals.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-[#f0f0e8] flex flex-col">
+                <div className="bg-white p-3 flex items-center justify-center h-[260px]">
+                  <div className="w-full max-w-[280px]">
+                    <AlertEmailMockup />
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
+                      <Bell className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
+                      Email Alerts
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
+                    Changes In Your Inbox
+                  </h3>
+                  <p className="text-xs text-[#666]">
+                    Before/after screenshots in every email.
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Row 2: Scheduling + Alerts (under Visual Diff) */}
-            <div className="border-b-2 md:border-b-0 border-[#1a1a1a] border-t-2 md:border-r-2">
-              <div className="bg-white p-3 flex items-center justify-center border-b-2 border-[#1a1a1a] min-h-[200px]">
-                <div className="w-full max-w-[200px]">
-                  <FrequencySelector />
-                </div>
-              </div>
-              <div className="p-5 bg-[#f0f0e8]">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                    <Clock className="w-3.5 h-3.5 text-[#2d5a2d]" />
+            {/* Row 3: Dashboard + History + CTA (3 cols) */}
+            <div className="grid md:grid-cols-3 gap-[2px]">
+              <div className="bg-[#f0f0e8] flex flex-col">
+                <div className="bg-white p-3 flex items-center justify-center h-[220px]">
+                  <div className="w-full max-w-[240px]">
+                    <DashboardMockup monitors={4} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                    Scheduling
-                  </span>
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                  Check On Your Terms
-                </h3>
-                <p className="text-xs text-[#666]">
-                  5 min to weekly. Per-monitor intervals.
-                </p>
-              </div>
-            </div>
-
-            <div className="border-b-2 md:border-b-0 border-[#1a1a1a] border-t-2">
-              <div className="bg-white p-3 flex items-center justify-center border-b-2 border-[#1a1a1a] min-h-[200px]">
-                <div className="w-full max-w-[220px]">
-                  <AlertEmailMockup />
-                </div>
-              </div>
-              <div className="p-5 bg-[#f0f0e8]">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                    <Bell className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
+                      <BarChart3 className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
+                      Dashboard
+                    </span>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                    Email Alerts
-                  </span>
+                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
+                    All Monitors At A Glance
+                  </h3>
+                  <p className="text-xs text-[#666]">
+                    Live status across every monitor.
+                  </p>
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                  Changes In Your Inbox
-                </h3>
-                <p className="text-xs text-[#666]">
-                  Before/after screenshots in every email.
-                </p>
               </div>
-            </div>
 
-            {/* Row 3: Dashboard + History — full width */}
-            <div className="border-t-2 border-[#1a1a1a] md:border-r-2">
-              <div className="bg-white p-3 flex items-center justify-center border-b-2 border-[#1a1a1a] min-h-[200px]">
-                <div className="w-full max-w-[240px]">
-                  <DashboardMockup monitors={4} />
-                </div>
-              </div>
-              <div className="p-5 bg-[#f0f0e8]">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                    <BarChart3 className="w-3.5 h-3.5 text-[#2d5a2d]" />
+              <div className="bg-[#f0f0e8] flex flex-col">
+                <div className="bg-white p-3 flex items-center justify-center h-[220px]">
+                  <div className="w-full max-w-[200px]">
+                    <ChangeTimeline events={5} />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                    Dashboard
-                  </span>
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                  All Monitors At A Glance
-                </h3>
-                <p className="text-xs text-[#666]">
-                  Live status across every monitor.
-                </p>
-              </div>
-            </div>
-
-            <div className="border-t-2 border-[#1a1a1a] md:border-r-2">
-              <div className="bg-white p-3 flex items-center justify-center border-b-2 border-[#1a1a1a] min-h-[200px]">
-                <div className="w-full max-w-[200px]">
-                  <ChangeTimeline events={5} />
-                </div>
-              </div>
-              <div className="p-5 bg-[#f0f0e8]">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
-                    <History className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-7 h-7 border-2 border-[#2d5a2d] flex items-center justify-center">
+                      <History className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
+                      History
+                    </span>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
-                    History
-                  </span>
+                  <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
+                    Full Change Timeline
+                  </h3>
+                  <p className="text-xs text-[#666]">
+                    Every change logged with diffs.
+                  </p>
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-1">
-                  Full Change Timeline
-                </h3>
-                <p className="text-xs text-[#666]">
-                  Every change logged with diffs.
-                </p>
               </div>
-            </div>
 
-            <div className="border-t-2 border-[#1a1a1a] bg-[#2d5a2d] text-[#f0f0e8] flex flex-col items-center justify-center p-8 text-center">
-              <div className="text-3xl md:text-4xl font-black tracking-tighter mb-2">6</div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#7cb87c] mb-4">
-                Tools Working Together
+              <div className="bg-[#2d5a2d] text-[#f0f0e8] flex flex-col items-center justify-center p-8 text-center">
+                <div className="text-4xl md:text-5xl font-black tracking-tighter mb-2">6</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-[#7cb87c] mb-6">
+                  Tools Working Together
+                </div>
+                <Button
+                  asChild
+                  size="sm"
+                  className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8]"
+                >
+                  <Link to="/auth/sign-up">
+                    Get Started <ArrowRight className="ml-1 w-3 h-3" />
+                  </Link>
+                </Button>
               </div>
-              <Button
-                asChild
-                size="sm"
-                className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8]"
-              >
-                <Link to="/auth/sign-up">
-                  Get Started <ArrowRight className="ml-1 w-3 h-3" />
-                </Link>
-              </Button>
             </div>
           </div>
         </div>

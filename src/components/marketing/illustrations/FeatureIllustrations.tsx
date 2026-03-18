@@ -9,7 +9,7 @@ export function DiffSlider() {
 
   return (
     <div
-      className="relative w-full aspect-[4/3] border-2 border-[#1a1a1a] overflow-hidden cursor-col-resize select-none bg-white"
+      className="relative w-full h-full min-h-[200px] border-2 border-[#1a1a1a] overflow-hidden cursor-col-resize select-none bg-white"
       onMouseMove={(e) => {
         if (e.buttons === 1) {
           const rect = e.currentTarget.getBoundingClientRect();
