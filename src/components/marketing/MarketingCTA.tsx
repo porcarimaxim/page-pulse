@@ -32,7 +32,7 @@ export function MarketingCTA({
           <Button
             asChild
             size="lg"
-            className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8] shadow-[6px_6px_0px_0px_#1a4a1a] text-base px-8 py-6 h-auto font-black uppercase tracking-wider"
+            className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8] shadow-[6px_6px_0px_0px_#7cb87c] text-base px-8 py-6 h-auto font-black uppercase tracking-wider"
           >
             <Link to="/auth/sign-up">
               Start Monitoring Free

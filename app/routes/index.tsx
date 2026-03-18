@@ -15,6 +15,7 @@ import {
   Zap,
   CreditCard,
   Eye,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
@@ -36,7 +37,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Monitor any webpage for visual changes in under 60 seconds. Get email alerts with before/after screenshots. Track competitor prices, job postings, stock alerts, and more. Free forever.",
+          "Monitor any webpage for visual changes in under 60 seconds. Get email alerts with AI-powered summaries and before/after screenshots. Track competitor prices, job postings, stock alerts, and more. Free forever.",
       },
       {
         property: "og:title",
@@ -118,7 +119,7 @@ function Hero() {
             <br />
             <span
               aria-live="polite"
-              className={`text-[#2d5a2d] inline-block min-w-[240px] sm:min-w-[300px] transition-all duration-300 ${
+              className={`text-[#1a5a1a] inline-block min-w-[240px] sm:min-w-[300px] transition-all duration-300 ${
                 isExiting
                   ? "opacity-0 translate-y-2"
                   : "opacity-100 translate-y-0"
@@ -131,8 +132,8 @@ function Hero() {
           </h1>
           <p className="text-base md:text-lg text-[#666] max-w-lg mb-8 md:mb-10 leading-relaxed">
             Select a zone on any webpage. Get email alerts with visual diffs
-            when something changes. Dead simple monitoring for teams and
-            individuals.
+            and AI-powered summaries when something changes. Dead simple
+            monitoring for teams and individuals.
           </p>
 
           <form
@@ -143,7 +144,7 @@ function Hero() {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="Enter any URL to start monitoring..."
+              placeholder="Enter any URL to monitor"
               className="flex-1 px-4 md:px-6 py-4 text-sm md:text-base bg-transparent outline-none placeholder:text-[#999] font-mono"
             />
             <Button
@@ -220,7 +221,7 @@ const howItWorksSteps = [
     label: "Get Alerts",
     headline: "Changes delivered to you",
     description:
-      "When something changes, you get an email with before/after screenshots, the exact diff percentage, and a direct link to your dashboard.",
+      "When something changes, you get an email with before/after screenshots, the exact diff percentage, an AI-generated summary of what changed, and a direct link to your dashboard.",
     visual: "alerts" as const,
   },
 ];
@@ -514,7 +515,7 @@ function CoreFeature() {
               <div className="grid grid-cols-3 gap-4 mb-8">
                 {[
                   { icon: Eye, label: "Visual\nComparison" },
-                  { icon: Clock, label: "5-Min\nChecks" },
+                  { icon: Sparkles, label: "AI\nSummaries" },
                   { icon: Zap, label: "Instant\nAlerts" },
                 ].map((f) => (
                   <div key={f.label} className="text-center">
@@ -532,7 +533,7 @@ function CoreFeature() {
                 <Button
                   asChild
                   size="sm"
-                  className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8]"
+                  className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8] shadow-[4px_4px_0px_0px_#7cb87c]"
                 >
                   <Link to="/auth/sign-up">
                     Start Free <ArrowRight className="ml-2 w-4 h-4" />
@@ -598,7 +599,7 @@ function Testimonials() {
               key={i}
               className={`border-2 p-6 flex flex-col justify-between ${
                 q.featured
-                  ? "border-[#7cb87c] md:scale-105 md:-my-2"
+                  ? "border-[#7cb87c]"
                   : "border-[#333]"
               }`}
             >

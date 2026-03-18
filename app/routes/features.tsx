@@ -10,6 +10,7 @@ import {
   History,
   Check,
   X,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
@@ -33,7 +34,7 @@ export const Route = createFileRoute("/features")({
       {
         name: "description",
         content:
-          "Pixel-level visual diffs, point-and-click zone selection, 5-minute check intervals, email alerts with before/after screenshots, real-time dashboard, and full change history timeline.",
+          "Pixel-level visual diffs, AI-powered change summaries, point-and-click zone selection, 5-minute check intervals, email alerts with before/after screenshots, real-time dashboard, and full change history.",
       },
       {
         property: "og:title",
@@ -48,6 +49,77 @@ export const Route = createFileRoute("/features")({
     ],
   }),
 });
+
+/* ─── AI Summary Mockup Illustration ─── */
+
+function AiSummaryMockup() {
+  return (
+    <div className="space-y-3">
+      {/* Change entry with AI summary */}
+      <div className="border-2 border-[#555] bg-[#2a2a2a]">
+        <div className="flex items-center justify-between p-3 border-b border-[#444]">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 bg-[#dc2626] border border-[#fff]/20" />
+            <span className="text-[9px] font-bold uppercase text-[#dc2626]">
+              Major Change
+            </span>
+          </div>
+          <span className="text-[9px] font-black text-[#f0f0e8]">45.1%</span>
+        </div>
+        <div className="p-3">
+          <div className="flex items-start gap-2 px-3 py-2 bg-[#2d1f4e] border border-[#7c3aed]/40">
+            <div className="w-3 h-3 text-[#a78bfa] shrink-0 mt-0.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 3l1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3z" />
+              </svg>
+            </div>
+            <p className="text-[9px] text-[#c4b5fd] leading-relaxed">
+              Pricing page restructured — Pro plan reduced from $49/mo to $39/mo. New Enterprise tier added at $99/mo with custom integrations.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Second entry */}
+      <div className="border-2 border-[#555] bg-[#2a2a2a]">
+        <div className="flex items-center justify-between p-3 border-b border-[#444]">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 bg-[#7cb87c] border border-[#fff]/20" />
+            <span className="text-[9px] font-bold uppercase text-[#7cb87c]">
+              Minor Change
+            </span>
+          </div>
+          <span className="text-[9px] font-black text-[#f0f0e8]">2.3%</span>
+        </div>
+        <div className="p-3">
+          <div className="flex items-start gap-2 px-3 py-2 bg-[#2d1f4e] border border-[#7c3aed]/40">
+            <div className="w-3 h-3 text-[#a78bfa] shrink-0 mt-0.5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 3l1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3z" />
+              </svg>
+            </div>
+            <p className="text-[9px] text-[#c4b5fd] leading-relaxed">
+              Footer copyright year updated from 2025 to 2026. No functional changes detected.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Third — pending */}
+      <div className="border-2 border-[#555] bg-[#2a2a2a]">
+        <div className="flex items-center justify-between p-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 bg-[#ca8a04] border border-[#fff]/20" />
+            <span className="text-[9px] font-bold uppercase text-[#ca8a04]">
+              Moderate Change
+            </span>
+          </div>
+          <span className="text-[9px] font-black text-[#f0f0e8]">12.8%</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ─── How It Works ─── */
 
@@ -73,7 +145,7 @@ const steps = [
     label: "Get Alerts",
     headline: "Changes delivered to you",
     description:
-      "When something changes, you get an email with before/after screenshots, the exact diff percentage, and a direct link to your dashboard.",
+      "When something changes, you get an email with before/after screenshots, an AI-generated summary, the exact diff percentage, and a direct link to your dashboard.",
     visual: "alerts" as const,
   },
 ];
@@ -274,8 +346,10 @@ function SocialProof() {
 
 const comparisonFeatures = [
   { name: "Visual Diff", pagepulse: true, visualping: true, hexowatch: true },
+  { name: "AI Change Summaries", pagepulse: true, visualping: true, hexowatch: false },
   { name: "Zone Selection", pagepulse: true, visualping: true, hexowatch: false },
   { name: "5-Min Checks (Free)", pagepulse: true, visualping: false, hexowatch: false },
+  { name: "BYOK (Bring Your Own Key)", pagepulse: true, visualping: false, hexowatch: false },
   { name: "Email Alerts", pagepulse: true, visualping: true, hexowatch: true },
   { name: "Webhook / Slack", pagepulse: true, visualping: true, hexowatch: true },
   { name: "Change History", pagepulse: true, visualping: true, hexowatch: true },
@@ -429,15 +503,16 @@ function FeaturesPage() {
       <section className="px-6 pt-14 pb-10 md:pt-20 md:pb-14">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#666] mb-3">
-            Six Powerful Tools
+            Seven Powerful Tools
           </p>
           <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
             Every Change.<br />
             <span className="text-[#2d5a2d]">Caught.</span>
           </h1>
           <p className="text-lg text-[#666] max-w-lg mx-auto mb-8">
-            Visual diffs, smart alerts, and a live dashboard — everything you
-            need to track webpage changes with zero complexity.
+            Visual diffs, AI-powered summaries, smart alerts, and a live
+            dashboard — everything you need to track webpage changes with zero
+            complexity.
           </p>
           <div className="flex justify-center gap-4">
             <Button asChild size="lg">
@@ -490,7 +565,23 @@ function FeaturesPage() {
         illustration={<DiffSlider />}
       />
 
-      {/* Feature 2: Zone Selection */}
+      {/* Feature 2: AI Summaries */}
+      <FeatureBlock
+        icon={Sparkles}
+        label="AI Summaries"
+        headline="Understand Changes In Seconds"
+        description="Every detected change gets an AI-generated plain-language summary powered by Claude. No more loading pages and comparing screenshots — read the summary, understand the change, move on."
+        bullets={[
+          "Automatic summaries for every change",
+          "On-demand generation for past changes",
+          "Powered by Claude — fast and accurate",
+        ]}
+        illustration={<AiSummaryMockup />}
+        reversed
+        dark
+      />
+
+      {/* Feature 3: Zone Selection */}
       <FeatureBlock
         icon={Target}
         label="Zone Selection"
@@ -525,10 +616,10 @@ function FeaturesPage() {
         icon={Bell}
         label="Email Alerts"
         headline="Changes In Your Inbox"
-        description="Every alert includes before/after screenshots, the exact diff percentage, and a direct link to your dashboard."
+        description="Every alert includes before/after screenshots, an AI-generated summary of what changed, the exact diff percentage, and a direct link to your dashboard."
         bullets={[
           "Before/after screenshots in email",
-          "Diff percentage and summary",
+          "AI-powered change summary",
           "Direct dashboard link",
         ]}
         illustration={<AlertEmailMockup />}

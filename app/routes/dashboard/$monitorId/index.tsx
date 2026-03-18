@@ -9,16 +9,19 @@ import { formatRelativeTime, intervalLabel } from "@/lib/utils";
 import { toCSV, toJSON, downloadFile } from "@/lib/export";
 import {
   ArrowLeft,
-  Pause,
-  Play,
   RefreshCw,
   Settings,
   Trash2,
   ExternalLink,
-  Activity,
   AlertTriangle,
   Loader2,
   Download,
+  Clock,
+  Eye,
+  Zap,
+  TrendingUp,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 import { useState } from "react";
 import type { Id } from "@convex/_generated/dataModel";
@@ -26,6 +29,51 @@ import type { Id } from "@convex/_generated/dataModel";
 export const Route = createFileRoute("/dashboard/$monitorId/")({
   component: MonitorDetailPage,
 });
+
+/* ─── Severity helpers ─── */
+
+function diffSeverity(pct: number): "low" | "medium" | "high" {
+  if (pct < 5) return "low";
+  if (pct < 20) return "medium";
+  return "high";
+}
+
+function severityColor(severity: "low" | "medium" | "high") {
+  switch (severity) {
+    case "low":
+      return { bg: "bg-[#2d5a2d]", text: "text-[#2d5a2d]", border: "border-[#2d5a2d]" };
+    case "medium":
+      return { bg: "bg-[#ca8a04]", text: "text-[#ca8a04]", border: "border-[#ca8a04]" };
+    case "high":
+      return { bg: "bg-[#dc2626]", text: "text-[#dc2626]", border: "border-[#dc2626]" };
+  }
+}
+
+/* ─── Mini sparkline from check history ─── */
+
+function ActivitySparkline({ history }: { history: { status: string; diffPercentage?: number }[] }) {
+  if (!history || history.length === 0) return null;
+  const last20 = history.slice(0, 20).reverse();
+  return (
+    <div className="flex items-end gap-0.5 h-8">
+      {last20.map((entry, i) => {
+        const pct = entry.status === "changed" ? (entry.diffPercentage ?? 1) : 0;
+        const height = pct > 0 ? Math.max(4, Math.min(32, (pct / 50) * 32)) : 2;
+        const color = pct > 0 ? severityColor(diffSeverity(pct)).bg : "bg-[#ccc]";
+        return (
+          <div
+            key={i}
+            className={`w-2 ${color} transition-all`}
+            style={{ height: `${height}px` }}
+            title={pct > 0 ? `${pct.toFixed(1)}% changed` : "No change"}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── Main Page ─── */
 
 function MonitorDetailPage() {
   const { monitorId } = Route.useParams();
@@ -118,6 +166,16 @@ function MonitorDetailPage() {
     setShowExport(false);
   };
 
+  /* Compute stats */
+  const totalChecks = checkHistory?.length ?? 0;
+  const changedChecks = checkHistory?.filter((e) => e.status === "changed").length ?? 0;
+  const avgDiff =
+    changedChecks > 0
+      ? (checkHistory!
+          .filter((e) => e.status === "changed")
+          .reduce((sum, e) => sum + (e.diffPercentage ?? 0), 0) / changedChecks)
+      : 0;
+
   return (
     <main className="px-8 py-8">
       {/* Back + Header */}
@@ -129,9 +187,22 @@ function MonitorDetailPage() {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="flex-1">
-          <h1 className="text-2xl font-black uppercase tracking-tighter">
-            {monitor.name}
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-black uppercase tracking-tighter">
+              {monitor.name}
+            </h1>
+            <Badge
+              variant={
+                monitor.status === "active"
+                  ? "success"
+                  : monitor.status === "error"
+                    ? "destructive"
+                    : "secondary"
+              }
+            >
+              {monitor.status}
+            </Badge>
+          </div>
           <a
             href={monitor.url}
             target="_blank"
@@ -145,6 +216,17 @@ function MonitorDetailPage() {
 
         {/* Action buttons */}
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleCheckNow}
+            disabled={isChecking}
+          >
+            <RefreshCw
+              className={`w-4 h-4 ${isChecking ? "animate-spin" : ""}`}
+            />
+            {isChecking ? "Checking..." : "Check Now"}
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -196,6 +278,93 @@ function MonitorDetailPage() {
         </div>
       )}
 
+      {/* ─── Stats Banner ─── */}
+      <div className="border-2 border-[#1a1a1a] mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5">
+          {/* Screenshot preview */}
+          <div className="relative bg-[#e8e8e0] border-r-2 border-[#1a1a1a] md:row-span-1 h-32 overflow-hidden">
+            {monitor.screenshotUrl ? (
+              <img
+                src={monitor.screenshotUrl}
+                alt="Latest screenshot"
+                className="w-full h-full object-cover object-top"
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-[#888] text-xs">
+                No screenshot yet
+              </div>
+            )}
+            {/* Zone overlay */}
+            {monitor.screenshotUrl && monitor.selectionMode !== "element" && (
+              <div
+                className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
+                style={{
+                  left: `${monitor.zone.x}%`,
+                  top: `${monitor.zone.y}%`,
+                  width: `${monitor.zone.width}%`,
+                  height: `${monitor.zone.height}%`,
+                }}
+              />
+            )}
+            {monitor.selectionMode === "element" && (
+              <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5">
+                Element
+              </div>
+            )}
+          </div>
+
+          {/* Stat cards */}
+          <div className="border-r-2 border-[#1a1a1a] p-4 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-1">
+              <Eye className="w-3.5 h-3.5 text-[#888]" />
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+                Total Checks
+              </p>
+            </div>
+            <p className="text-2xl font-black tracking-tighter">{totalChecks}</p>
+          </div>
+
+          <div className="border-r-2 border-[#1a1a1a] p-4 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-1">
+              <Zap className="w-3.5 h-3.5 text-[#888]" />
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+                Changes Found
+              </p>
+            </div>
+            <p className="text-2xl font-black tracking-tighter text-[#dc2626]">
+              {monitor.changeCount}
+            </p>
+          </div>
+
+          <div className="border-r-2 border-[#1a1a1a] p-4 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-1">
+              <TrendingUp className="w-3.5 h-3.5 text-[#888]" />
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+                Avg Diff
+              </p>
+            </div>
+            <p className="text-2xl font-black tracking-tighter">
+              {avgDiff > 0 ? `${avgDiff.toFixed(1)}%` : "—"}
+            </p>
+          </div>
+
+          <div className="p-4 flex flex-col justify-center">
+            <div className="flex items-center gap-2 mb-1">
+              <Clock className="w-3.5 h-3.5 text-[#888]" />
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+                Frequency
+              </p>
+            </div>
+            <p className="text-lg font-black tracking-tighter">
+              {intervalLabel(monitor.interval)}
+            </p>
+            <p className="text-[10px] text-[#888] mt-0.5">
+              Next: {monitor.nextCheckAt ? formatRelativeTime(monitor.nextCheckAt) : "N/A"}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Main content + Sidebar */}
       <div className="flex gap-6">
         {/* Left: Tabs content */}
@@ -211,6 +380,11 @@ function MonitorDetailPage() {
               }`}
             >
               Detected Changes
+              {changes && changes.length > 0 && (
+                <span className="ml-2 text-[10px] bg-[#1a1a1a] text-[#f0f0e8] px-1.5 py-0.5 align-middle">
+                  {changes.length}
+                </span>
+              )}
               {activeTab === "changes" && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2d5a2d]" />
               )}
@@ -229,58 +403,52 @@ function MonitorDetailPage() {
               )}
             </button>
             <div className="flex-1" />
-            <span className="text-xs text-[#888]">
-              Next check:{" "}
-              {monitor.nextCheckAt
-                ? new Date(monitor.nextCheckAt).toLocaleString()
-                : "N/A"}
-            </span>
+            {/* Export button inline */}
+            {exportData && exportData.length > 0 && (
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowExport(!showExport)}
+                  className="text-[#888] border-transparent"
+                >
+                  <Download className="w-4 h-4" />
+                  Export
+                </Button>
+                {showExport && (
+                  <div className="absolute right-0 top-full mt-1 border-2 border-[#1a1a1a] bg-[#f0f0e8] z-10 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+                    <button
+                      onClick={() => handleExport("csv")}
+                      className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0] border-b border-[#ccc]"
+                    >
+                      CSV
+                    </button>
+                    <button
+                      onClick={() => handleExport("json")}
+                      className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0]"
+                    >
+                      JSON
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Tab content */}
           {activeTab === "changes" ? (
             <div>
-              {/* Export */}
-              {exportData && exportData.length > 0 && (
-                <div className="flex justify-end mb-4">
-                  <div className="relative">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowExport(!showExport)}
-                    >
-                      <Download className="w-4 h-4" />
-                      Export
-                    </Button>
-                    {showExport && (
-                      <div className="absolute right-0 top-full mt-1 border-2 border-[#1a1a1a] bg-[#f0f0e8] z-10 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
-                        <button
-                          onClick={() => handleExport("csv")}
-                          className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0] border-b border-[#ccc]"
-                        >
-                          CSV
-                        </button>
-                        <button
-                          onClick={() => handleExport("json")}
-                          className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0]"
-                        >
-                          JSON
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
               {changes === undefined ? (
                 <div className="text-center py-8 text-[#888]">Loading...</div>
               ) : changes.length === 0 ? (
-                <div className="text-center py-16 text-[#888]">
-                  <p className="text-sm font-bold">
+                <div className="border-2 border-[#1a1a1a] border-dashed p-12 text-center">
+                  <Eye className="w-8 h-8 text-[#ccc] mx-auto mb-3" />
+                  <p className="text-sm font-black uppercase tracking-tighter mb-1">
                     No changes detected yet
                   </p>
-                  <p className="text-xs mt-1">
-                    Once changes are detected, they will appear here.
+                  <p className="text-xs text-[#888]">
+                    We're watching this page. Changes will appear here with
+                    before/after screenshots and visual diffs.
                   </p>
                 </div>
               ) : (
@@ -289,64 +457,27 @@ function MonitorDetailPage() {
             </div>
           ) : (
             <div>
-              {/* Stats summary */}
-              <div className="border-2 border-[#1a1a1a] p-4 mb-6">
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <p className="text-xs font-bold uppercase text-[#888]">
-                      Frequency
-                    </p>
-                    <p className="text-sm font-bold mt-1">
-                      {intervalLabel(monitor.interval)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase text-[#888]">
-                      Total Changes
-                    </p>
-                    <p className="text-sm font-bold mt-1">
-                      {monitor.changeCount}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase text-[#888]">
-                      Last Checked
-                    </p>
-                    <p className="text-sm font-bold mt-1">
-                      {monitor.lastCheckedAt
-                        ? formatRelativeTime(monitor.lastCheckedAt)
-                        : "Never"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Check history table */}
+              {/* Check history table — cleaned up */}
               <div className="border-2 border-[#1a1a1a]">
                 {/* Table header */}
-                <div className="grid grid-cols-3 gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8]">
+                <div className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8]">
                   <p className="text-xs font-bold uppercase tracking-wider">
-                    Job Name
+                    Check Time
                   </p>
-                  <p className="text-xs font-bold uppercase tracking-wider">
-                    Check Date
+                  <p className="text-xs font-bold uppercase tracking-wider w-24 text-right">
+                    Diff
                   </p>
-                  <p className="text-xs font-bold uppercase tracking-wider">
+                  <p className="text-xs font-bold uppercase tracking-wider w-28 text-right">
                     Status
                   </p>
                 </div>
 
                 {/* In-progress row */}
                 {isChecking && (
-                  <div className="grid grid-cols-3 gap-4 px-4 py-3 border-b border-[#ccc] bg-[#e8e8e0]">
-                    <div>
-                      <p className="text-sm font-bold">{monitor.name}</p>
-                      <p className="text-xs text-[#888] font-mono truncate">
-                        {monitor.url}
-                      </p>
-                    </div>
+                  <div className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 border-b border-[#ccc] bg-[#e8e8e0]">
                     <p className="text-sm text-[#888] self-center">Now</p>
-                    <div className="flex items-center gap-2 self-center">
+                    <p className="text-sm text-[#888] self-center w-24 text-right">—</p>
+                    <div className="flex items-center gap-2 self-center w-28 justify-end">
                       <Loader2 className="w-3 h-3 animate-spin text-[#ca8a04]" />
                       <Badge variant="warning">In Progress</Badge>
                     </div>
@@ -363,33 +494,58 @@ function MonitorDetailPage() {
                     No checks recorded yet.
                   </div>
                 ) : (
-                  checkHistory.map((entry) => (
-                    <div
-                      key={entry._id}
-                      className="grid grid-cols-3 gap-4 px-4 py-3 border-b border-[#ccc] last:border-b-0"
-                    >
-                      <div>
-                        <p className="text-sm font-bold">{monitor.name}</p>
-                        <p className="text-xs text-[#888] font-mono truncate">
-                          {monitor.url}
+                  checkHistory.map((entry) => {
+                    const isChanged = entry.status === "changed";
+                    const severity = isChanged
+                      ? diffSeverity(entry.diffPercentage ?? 0)
+                      : null;
+                    const colors = severity ? severityColor(severity) : null;
+
+                    return (
+                      <div
+                        key={entry._id}
+                        className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 border-b border-[#ccc] last:border-b-0 hover:bg-[#e8e8e0] transition-colors"
+                      >
+                        <p className="text-sm self-center">
+                          {new Date(entry.capturedAt).toLocaleString()}
                         </p>
+                        <div className="self-center w-24 text-right">
+                          {isChanged ? (
+                            <div className="flex items-center gap-2 justify-end">
+                              <div className="w-12 h-1.5 bg-[#e8e8e0] overflow-hidden">
+                                <div
+                                  className={`h-full ${colors!.bg}`}
+                                  style={{ width: `${Math.min(100, (entry.diffPercentage ?? 0) * 2)}%` }}
+                                />
+                              </div>
+                              <span className={`text-xs font-bold ${colors!.text}`}>
+                                {entry.diffPercentage?.toFixed(1)}%
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-[#ccc]">0%</span>
+                          )}
+                        </div>
+                        <div className="self-center w-28 text-right">
+                          {isChanged ? (
+                            <div className="flex items-center gap-1.5 justify-end">
+                              <XCircle className={`w-3.5 h-3.5 ${colors!.text}`} />
+                              <span className={`text-xs font-bold uppercase ${colors!.text}`}>
+                                Changed
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1.5 justify-end">
+                              <CheckCircle className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                              <span className="text-xs font-bold uppercase text-[#2d5a2d]">
+                                No change
+                              </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-sm text-[#888] self-center">
-                        {new Date(entry.capturedAt).toLocaleString()}
-                      </p>
-                      <div className="self-center">
-                        {entry.status === "changed" ? (
-                          <Badge variant="destructive">
-                            {entry.diffPercentage?.toFixed(1)}% changed
-                          </Badge>
-                        ) : (
-                          <span className="text-sm font-bold text-[#2d5a2d]">
-                            No change
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>
@@ -434,21 +590,16 @@ function MonitorDetailPage() {
             </div>
           </div>
 
-          {/* Check now */}
-          <div className="border-2 border-[#1a1a1a] p-4">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
-              onClick={handleCheckNow}
-              disabled={isChecking}
-            >
-              <RefreshCw
-                className={`w-4 h-4 ${isChecking ? "animate-spin" : ""}`}
-              />
-              {isChecking ? "Checking..." : "Check Now"}
-            </Button>
-          </div>
+          {/* Activity sparkline */}
+          {checkHistory && checkHistory.length > 0 && (
+            <div className="border-2 border-[#1a1a1a] p-4">
+              <p className="text-sm font-bold mb-3">Recent Activity</p>
+              <ActivitySparkline history={checkHistory} />
+              <p className="text-[10px] text-[#888] mt-2 uppercase tracking-wider">
+                Last {Math.min(20, checkHistory.length)} checks
+              </p>
+            </div>
+          )}
 
           {/* Notifications */}
           <div className="border-2 border-[#1a1a1a] p-4">
@@ -483,22 +634,8 @@ function MonitorDetailPage() {
 
           {/* Info */}
           <div className="border-2 border-[#1a1a1a] p-4">
-            <p className="text-sm font-bold mb-2">Info</p>
+            <p className="text-sm font-bold mb-2">Monitor Details</p>
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-[#888]">Status</span>
-                <Badge
-                  variant={
-                    monitor.status === "active"
-                      ? "success"
-                      : monitor.status === "error"
-                        ? "destructive"
-                        : "secondary"
-                  }
-                >
-                  {monitor.status}
-                </Badge>
-              </div>
               <div className="flex justify-between">
                 <span className="text-[#888]">Mode</span>
                 <span className="font-bold">
@@ -513,7 +650,7 @@ function MonitorDetailPage() {
                   </span>
                 </div>
               )}
-              {monitor.compareType && monitor.compareType !== "all" && (
+              {monitor.compareType && (
                 <div className="flex justify-between">
                   <span className="text-[#888]">Compare</span>
                   <span className="font-bold capitalize">
@@ -533,6 +670,14 @@ function MonitorDetailPage() {
                   <span className="font-bold">{monitor.delay}s</span>
                 </div>
               )}
+              <div className="flex justify-between">
+                <span className="text-[#888]">Last Checked</span>
+                <span className="font-bold">
+                  {monitor.lastCheckedAt
+                    ? formatRelativeTime(monitor.lastCheckedAt)
+                    : "Never"}
+                </span>
+              </div>
             </div>
           </div>
 

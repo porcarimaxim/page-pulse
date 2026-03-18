@@ -97,7 +97,14 @@ export default defineSchema({
     detectedAt: v.number(),
     notified: v.boolean(),
     textDiff: v.optional(v.string()),
+    // AI summary
+    aiSummary: v.optional(v.string()),
   })
     .index("by_monitorId", ["monitorId"])
     .index("by_monitorId_detectedAt", ["monitorId", "detectedAt"]),
+
+  userSettings: defineTable({
+    userId: v.string(),
+    claudeApiKey: v.optional(v.string()),
+  }).index("by_userId", ["userId"]),
 });
