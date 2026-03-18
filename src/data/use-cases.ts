@@ -78,30 +78,30 @@ export interface UseCase {
 export const CATEGORIES = [
   {
     key: "personal" as const,
-    label: "Personal Use",
-    description: "Track what matters in your life",
+    label: "Everyday Wins",
+    description: "Save time and money on autopilot",
   },
   {
     key: "business" as const,
-    label: "Business Use Cases",
-    description: "Professional monitoring for teams",
+    label: "For Teams",
+    description: "Stay ahead without the manual work",
   },
   {
     key: "industry" as const,
-    label: "Industry Solutions",
-    description: "Tailored for your sector",
+    label: "By Sector",
+    description: "Purpose-built monitoring strategies",
   },
 ];
 
 export const USE_CASES: UseCase[] = [
   // ─── Personal (11) ───────────────────────────────────
   {
-    slug: "price-drops",
-    title: "Price Drops",
+    slug: "smart-shopping",
+    title: "Smart Shopping",
     category: "personal",
     icon: ShoppingCart,
-    tagline: "Shop smarter and save with the latest deals",
-    headline: "Never Miss A Price Drop Again",
+    tagline: "Your personal deal radar across every store",
+    headline: "Buy At The Perfect Moment",
     description:
       "Monitor product pages on any shopping site. Get alerted the moment prices drop to your target, when flash sales start, or when items go on clearance.",
     longDescription: [
@@ -168,17 +168,17 @@ export const USE_CASES: UseCase[] = [
       "Outlet and clearance section landing pages",
       "Price comparison sites for your specific product search",
     ],
-    metaTitle: "Price Drop Alerts — Track Prices on Any Website | PagePulse",
+    metaTitle: "Smart Shopping — Track Prices on Any Website | PagePulse",
     metaDescription:
       "Monitor product prices on any e-commerce site. Get instant email alerts when prices drop, flash sales start, or coupons appear. Works on any website, not just major retailers.",
   },
   {
-    slug: "back-in-stock",
-    title: "Back in Stock",
+    slug: "restock-radar",
+    title: "Restock Radar",
     category: "personal",
     icon: Package,
-    tagline: "Know when to act fast with restock alerts",
-    headline: "Get It Before It Sells Out Again",
+    tagline: "Know the second sold-out items return",
+    headline: "Get It Before It's Gone Again",
     description:
       "Watch out-of-stock items, limited edition drops, and appointment slots. Be the first to know when what you want becomes available.",
     longDescription: [
@@ -240,18 +240,17 @@ export const USE_CASES: UseCase[] = [
       "Restaurant reservation platforms (OpenTable, Resy, direct booking pages)",
       "Event ticket pages for sold-out shows",
     ],
-    metaTitle:
-      "Back in Stock Alerts — Restock Notifications for Any Product | PagePulse",
+    metaTitle: "Restock Radar — Restock Notifications for Any Product | PagePulse",
     metaDescription:
       "Monitor out-of-stock products and get instant alerts when they're back. Faster than brand restock emails. Track appointments, limited editions, and reservations.",
   },
   {
-    slug: "job-hunting",
-    title: "Job Hunting",
+    slug: "career-edge",
+    title: "Career Edge",
     category: "personal",
     icon: Briefcase,
-    tagline: "Monitor openings at your dream company",
-    headline: "Be First To Apply For Your Dream Job",
+    tagline: "Apply before the crowd shows up",
+    headline: "Be First To Every Opening",
     description:
       "Monitor career pages at your target companies. Get notified the moment a new position appears — before it hits LinkedIn or job boards.",
     longDescription: [
@@ -314,17 +313,17 @@ export const USE_CASES: UseCase[] = [
       "Startup job boards and niche industry hiring pages",
     ],
     metaTitle:
-      "Job Posting Alerts — Monitor Career Pages Automatically | PagePulse",
+      "Career Edge — Be First To Every Opening | PagePulse",
     metaDescription:
       "Monitor company career pages and get instant alerts when new positions appear. Apply before jobs hit LinkedIn or Indeed. Track government, university, and direct listings.",
   },
   {
-    slug: "news-monitoring",
-    title: "News Monitoring",
+    slug: "source-watch",
+    title: "Source Watch",
     category: "personal",
     icon: Newspaper,
-    tagline: "Stay on top of the latest headlines",
-    headline: "Stay Informed Without The Noise",
+    tagline: "Follow the pages that matter, skip the noise",
+    headline: "Your Personal Wire Service",
     description:
       "Track news sites, blogs, and announcement pages. Get alerted when new content appears on topics you care about.",
     longDescription: [
@@ -386,17 +385,17 @@ export const USE_CASES: UseCase[] = [
       "Blog and publication landing pages for niche topics",
       "Research journal and preprint server new submissions pages",
     ],
-    metaTitle: "News Monitoring — Track Updates on Any Website | PagePulse",
+    metaTitle: "Source Watch — Track Updates on Any Website | PagePulse",
     metaDescription:
       "Monitor news sites, blogs, and announcement pages for new content. Get signal without the noise. Visual alerts when specific source pages update.",
   },
   {
-    slug: "house-hunting",
-    title: "House Hunting",
+    slug: "listing-scout",
+    title: "Listing Scout",
     category: "personal",
     icon: Home,
-    tagline: "Track new listings that match your criteria",
-    headline: "Catch Listings Before Everyone Else",
+    tagline: "See new homes before the email alerts arrive",
+    headline: "Move Faster Than Other Buyers",
     description:
       "Monitor real estate listings and price changes. Get notified when homes in your target area drop in price or new listings appear.",
     longDescription: [
@@ -459,17 +458,17 @@ export const USE_CASES: UseCase[] = [
       "New construction community sales pages",
     ],
     metaTitle:
-      "Real Estate Monitoring — Track Listings & Price Changes | PagePulse",
+      "Listing Scout — Move Faster Than Other Buyers | PagePulse",
     metaDescription:
       "Monitor real estate listings for new properties and price drops. Get alerts faster than Zillow and Redfin emails. Track multiple sites from one dashboard.",
   },
   {
-    slug: "social-media",
-    title: "Social Media",
+    slug: "profile-pulse",
+    title: "Profile Pulse",
     category: "personal",
     icon: Users,
-    tagline: "Monitor profile updates and new posts",
-    headline: "Track Public Profiles And Pages",
+    tagline: "Catch bios, branding, and messaging shifts quietly",
+    headline: "Track Public Profiles Automatically",
     description:
       "Monitor public social media profiles and pages for changes. Track when bios update, new content appears, or messaging shifts.",
     longDescription: [
@@ -531,17 +530,16 @@ export const USE_CASES: UseCase[] = [
       "Public Facebook page About sections",
       "YouTube channel descriptions and about pages",
     ],
-    metaTitle:
-      "Social Media Monitoring — Track Profile Changes | PagePulse",
+    metaTitle: "Profile Pulse Monitoring — Track Profile Changes | PagePulse",
     metaDescription:
       "Monitor public social media profiles for bio changes, branding shifts, and content updates. Visual before/after comparisons for competitive intelligence.",
   },
   {
-    slug: "grades-and-courses",
-    title: "Grades & Courses",
+    slug: "campus-alerts",
+    title: "Campus Alerts",
     category: "personal",
     icon: GraduationCap,
-    tagline: "Get alerted of grades and registration dates",
+    tagline: "Grades, seats, and deadlines — on autopilot",
     headline: "Stop Refreshing Your Student Portal",
     description:
       "Monitor university portals for grade postings, course registration openings, and scholarship announcements.",
@@ -605,17 +603,17 @@ export const USE_CASES: UseCase[] = [
       "Academic calendar pages for schedule and deadline updates",
     ],
     metaTitle:
-      "Grade & Course Alerts — Monitor Student Portals | PagePulse",
+      "Campus Alerts — Stop Refreshing Your Student Portal | PagePulse",
     metaDescription:
       "Monitor university portals for grade postings and course openings. Get instant alerts when grades appear or registration slots open. Stop refreshing student portals.",
   },
   {
-    slug: "restaurant-reservations",
-    title: "Restaurant Reservations",
+    slug: "table-sniper",
+    title: "Table Sniper",
     category: "personal",
     icon: UtensilsCrossed,
-    tagline: "Score a table at your favourite restaurant",
-    headline: "Snag Hard-To-Get Reservations",
+    tagline: "Pounce on cancellations at impossible restaurants",
+    headline: "Score Hard-To-Get Tables",
     description:
       "Monitor restaurant reservation pages for cancellations and new booking windows. Get alerted when coveted time slots open up.",
     longDescription: [
@@ -678,17 +676,17 @@ export const USE_CASES: UseCase[] = [
       "Special event and tasting menu booking pages",
     ],
     metaTitle:
-      "Restaurant Reservation Alerts — Book Impossible Tables | PagePulse",
+      "Table Sniper — Score Hard-To-Get Tables | PagePulse",
     metaDescription:
       "Monitor restaurant reservation pages for cancellations and new openings. Get instant alerts when hard-to-get tables become available on any booking platform.",
   },
   {
-    slug: "scholarships",
-    title: "Scholarships",
+    slug: "funding-finder",
+    title: "Funding Finder",
     category: "personal",
     icon: Award,
-    tagline: "Keep an eye on scholarship updates",
-    headline: "Never Miss A Scholarship Deadline",
+    tagline: "New grants and awards surfaced the day they post",
+    headline: "Discover Money Left On The Table",
     description:
       "Monitor scholarship listings and application portals. Get alerted when new opportunities are posted or deadlines change.",
     longDescription: [
@@ -751,17 +749,17 @@ export const USE_CASES: UseCase[] = [
       "Research funding agency announcement portals (NSF, NIH, etc.)",
     ],
     metaTitle:
-      "Scholarship Alerts — Monitor Financial Aid Opportunities | PagePulse",
+      "Funding Finder — Discover Money Left On The Table | PagePulse",
     metaDescription:
       "Monitor scholarship listings and financial aid announcements. Get instant alerts when new opportunities are posted. Apply early with maximum preparation time.",
   },
   {
-    slug: "travel-planning",
-    title: "Travel Planning",
+    slug: "fare-watch",
+    title: "Fare Watch",
     category: "personal",
     icon: Plane,
-    tagline: "Snag hard-to-get hotels and flights",
-    headline: "Travel Smarter With Price Tracking",
+    tagline: "Flight and hotel prices tracked while you sleep",
+    headline: "Travel Smarter, Spend Less",
     description:
       "Monitor flight prices, hotel rates, and travel deals. Get alerted when prices drop or flash sales launch on your target routes.",
     longDescription: [
@@ -824,17 +822,17 @@ export const USE_CASES: UseCase[] = [
       "Vacation package pricing pages on tour operator sites",
     ],
     metaTitle:
-      "Travel Price Alerts — Monitor Flights & Hotels | PagePulse",
+      "Fare Watch — Travel Smarter, Spend Less | PagePulse",
     metaDescription:
       "Track flight and hotel prices automatically. Get instant alerts when prices drop or flash sales launch. Works with any travel booking site.",
   },
   {
-    slug: "tickets-and-events",
-    title: "Tickets & Events",
+    slug: "drop-day",
+    title: "Drop Day",
     category: "personal",
     icon: Ticket,
-    tagline: "Know the moment you can score a ticket",
-    headline: "Score Tickets The Moment They Drop",
+    tagline: "Presales, restocks, and surprise releases — caught",
+    headline: "Never Miss A Ticket Drop",
     description:
       "Monitor event pages and ticket sale announcements. Get alerted when tickets go on sale or sold-out events release more seats.",
     longDescription: [
@@ -896,18 +894,18 @@ export const USE_CASES: UseCase[] = [
       "Festival lineup and ticket release announcement pages",
       "Resale marketplace listing pages for price tracking (StubHub, SeatGeek)",
     ],
-    metaTitle: "Ticket & Event Alerts — Never Miss a Sale | PagePulse",
+    metaTitle: "Drop Day — Never Miss a Sale | PagePulse",
     metaDescription:
       "Monitor ticket sales, tour announcements, and event pages. Get instant alerts when tickets go on sale or sold-out events release more seats.",
   },
 
   // ─── Business (5) ────────────────────────────────────
   {
-    slug: "competitor-monitoring",
-    title: "Competitor Monitoring",
+    slug: "rival-radar",
+    title: "Rival Radar",
     category: "business",
     icon: TrendingUp,
-    tagline: "Stay on top of your competitors",
+    tagline: "Every pricing, feature, and messaging change — instant",
     headline: "Know When Competitors Make A Move",
     description:
       "Track competitor homepages, pricing pages, feature announcements, and hiring pages. Get alerted the moment they make a move.",
@@ -975,17 +973,16 @@ export const USE_CASES: UseCase[] = [
       "Career/jobs listing pages for hiring signal intelligence",
       "Blog and newsroom pages for strategic announcements",
     ],
-    metaTitle:
-      "Competitor Monitoring — Track Competitor Websites Automatically | PagePulse",
+    metaTitle: "Rival Radar — Track Competitor Websites Automatically | PagePulse",
     metaDescription:
       "Monitor competitor pricing, features, messaging, and hiring automatically. Get instant visual alerts when competitors change their websites. Respond in hours, not months.",
   },
   {
-    slug: "regulatory-intelligence",
-    title: "Regulatory Intelligence",
+    slug: "policy-watch",
+    title: "Policy Watch",
     category: "business",
     icon: Gavel,
-    tagline: "Get real-time updates straight from the source",
+    tagline: "Government and agency updates the day they publish",
     headline: "Catch Regulatory Changes In Real Time",
     description:
       "Monitor government agencies and regulatory bodies for policy updates, rule changes, and new guidance documents.",
@@ -1048,17 +1045,16 @@ export const USE_CASES: UseCase[] = [
       "International regulatory body portals (EU, UK FCA, etc.)",
       "Enforcement action and penalty announcement pages",
     ],
-    metaTitle:
-      "Regulatory Intelligence — Monitor Government & Policy Changes | PagePulse",
+    metaTitle: "Policy Watch — Monitor Government & Policy Changes | PagePulse",
     metaDescription:
       "Track regulatory agencies and government websites for policy changes in real time. Get instant alerts when new rules, guidance, or enforcement actions are published.",
   },
   {
-    slug: "compliance-monitoring",
-    title: "Compliance Monitoring",
+    slug: "vendor-guard",
+    title: "Vendor Guard",
     category: "business",
     icon: Scale,
-    tagline: "Catch non-compliance anywhere online",
+    tagline: "TOS, privacy policies, and vendor terms — tracked",
     headline: "Monitor Compliance Across The Web",
     description:
       "Watch vendor terms of service, privacy policies, and third-party compliance pages. Detect unauthorized changes to shared agreements.",
@@ -1121,17 +1117,16 @@ export const USE_CASES: UseCase[] = [
       "Service level agreement (SLA) documentation pages",
       "Sub-processor and third-party data sharing disclosure pages",
     ],
-    metaTitle:
-      "Compliance Monitoring — Track Terms & Policies Automatically | PagePulse",
+    metaTitle: "Vendor Guard — Track Terms & Policies Automatically | PagePulse",
     metaDescription:
       "Monitor vendor terms of service, privacy policies, and compliance certifications. Get instant alerts when third-party agreements change. Maintain audit trails.",
   },
   {
-    slug: "regression-defacement",
-    title: "Regression & Defacement",
+    slug: "site-shield",
+    title: "Site Shield",
     category: "business",
     icon: Shield,
-    tagline: "Catch irregularities before your customers do",
+    tagline: "Visual QA for production, running 24/7",
     headline: "Protect Your Production Site",
     description:
       "Monitor your live website for visual regressions, layout breaks, and defacement. Catch issues before your users or your boss notices.",
@@ -1195,17 +1190,17 @@ export const USE_CASES: UseCase[] = [
       "Pages with third-party embeds, widgets, or advertising scripts",
     ],
     metaTitle:
-      "Website QA & Defacement Monitoring — Visual Regression Alerts | PagePulse",
+      "Site Shield — Protect Your Production Site | PagePulse",
     metaDescription:
       "Monitor your production website for visual regressions, layout breaks, and defacement. Get instant alerts when deploys break styling or third-party scripts misbehave.",
   },
   {
-    slug: "seo-monitoring",
-    title: "SEO Monitoring",
+    slug: "rank-protect",
+    title: "Rank Protect",
     category: "business",
     icon: FileSearch,
-    tagline: "Detect issues before your rankings drop",
-    headline: "Catch SEO Issues Before Rankings Drop",
+    tagline: "Catch content drift before Google does",
+    headline: "Guard Your Search Rankings",
     description:
       "Monitor your site for content drift, broken elements, and changes that could hurt search rankings. Protect your organic traffic.",
     longDescription: [
@@ -1267,19 +1262,18 @@ export const USE_CASES: UseCase[] = [
       "Site navigation and internal linking structures on key pages",
       "XML sitemap and robots.txt pages for unintended access changes",
     ],
-    metaTitle:
-      "SEO Monitoring — Detect Content & Ranking Changes | PagePulse",
+    metaTitle: "Rank Protect — Detect Content & Ranking Changes | PagePulse",
     metaDescription:
       "Monitor your website for SEO-impacting changes. Get instant alerts when content drifts, schema breaks, or critical pages are modified. Fix before Google notices.",
   },
 
   // ─── Industry Solutions (6) ──────────────────────────
   {
-    slug: "investment-management",
-    title: "Investment Management",
+    slug: "market-pulse",
+    title: "Market Pulse",
     category: "industry",
     icon: LineChart,
-    tagline: "Be the first to know about market-moving events",
+    tagline: "IR pages, filings, and policy moves — first",
     headline: "Market Intelligence On Autopilot",
     description:
       "Monitor company IR pages, SEC filings, and financial announcements. Get alerted the moment material information is published.",
@@ -1343,16 +1337,16 @@ export const USE_CASES: UseCase[] = [
       "Sovereign wealth fund and major institutional disclosure pages",
     ],
     metaTitle:
-      "Investment Monitoring — Track Market-Moving Events | PagePulse",
+      "Market Pulse — Market Intelligence On Autopilot | PagePulse",
     metaDescription:
       "Monitor company IR pages, SEC filings, and central bank announcements. Get instant alerts on market-moving information. Scale coverage across your entire universe.",
   },
   {
-    slug: "law-firms",
-    title: "Law Firms",
+    slug: "legal-intel",
+    title: "Legal Intel",
     category: "industry",
     icon: Gavel,
-    tagline: "Know every legal update before your clients do",
+    tagline: "Dockets, filings, and regulatory shifts — automated",
     headline: "Legal Intelligence That Never Sleeps",
     description:
       "Monitor court dockets, regulatory announcements, and opposing counsel websites. Stay ahead of case developments and regulatory changes.",
@@ -1416,16 +1410,16 @@ export const USE_CASES: UseCase[] = [
       "Bar association regulatory announcement and ethics opinion pages",
     ],
     metaTitle:
-      "Law Firm Monitoring — Track Legal & Regulatory Changes | PagePulse",
+      "Legal Intel — Legal Intelligence That Never Sleeps | PagePulse",
     metaDescription:
       "Monitor court dockets, regulatory announcements, and opposing party websites. Stay ahead of case developments. Deliver proactive intelligence to your clients.",
   },
   {
-    slug: "saas-information-services",
-    title: "SaaS & Info Services",
+    slug: "data-freshness",
+    title: "Data Freshness",
     category: "industry",
     icon: Globe,
-    tagline: "Keep your content up-to-date with web change data",
+    tagline: "Keep your product's source data current",
     headline: "Power Your Product With Web Data",
     description:
       "Build web change detection into your platform. Monitor source websites for updates and feed changes into your data pipeline.",
@@ -1489,17 +1483,17 @@ export const USE_CASES: UseCase[] = [
       "News and content source pages for aggregation products",
     ],
     metaTitle:
-      "SaaS & Info Services — Web Change Data for Your Platform | PagePulse",
+      "Data Freshness — Power Your Product With Web Data | PagePulse",
     metaDescription:
       "Monitor source websites and feed change data into your product pipeline. Build reliable web change detection without building infrastructure. Scale to hundreds of sources.",
   },
   {
-    slug: "ecommerce",
-    title: "eCommerce",
+    slug: "shelf-watch",
+    title: "Shelf Watch",
     category: "industry",
     icon: ShoppingCart,
-    tagline: "Stay competitive by tracking price and inventory changes",
-    headline: "Win The eCommerce Intelligence War",
+    tagline: "Competitor pricing and inventory — real time",
+    headline: "Win The Pricing Intelligence War",
     description:
       "Monitor competitor pricing, promotions, and inventory across the e-commerce landscape. Adjust your strategy in real time.",
     longDescription: [
@@ -1561,17 +1555,16 @@ export const USE_CASES: UseCase[] = [
       "Marketplace search results for your brand name (Amazon, eBay, etc.)",
       "Competitor homepage hero sections for major promotional pushes",
     ],
-    metaTitle:
-      "eCommerce Monitoring — Track Competitor Prices & Promotions | PagePulse",
+    metaTitle: "Shelf Watch Monitoring — Track Competitor Prices & Promotions | PagePulse",
     metaDescription:
       "Monitor competitor pricing, promotions, and product launches across e-commerce. Protect your brand on marketplaces. Respond to competitive moves in hours, not weeks.",
   },
   {
-    slug: "insurance",
-    title: "Insurance",
+    slug: "risk-lens",
+    title: "Risk Lens",
     category: "industry",
     icon: ShieldCheck,
-    tagline: "Detect underwriting risk across your client base",
+    tagline: "Policyholder changes and regulatory updates — tracked",
     headline: "Underwriting Intelligence In Real Time",
     description:
       "Monitor insured party websites and regulatory announcements. Detect changes that affect underwriting decisions and claims exposure.",
@@ -1634,17 +1627,16 @@ export const USE_CASES: UseCase[] = [
       "Catastrophe and severe weather monitoring service pages",
       "Professional liability insured parties' professional licensing status pages",
     ],
-    metaTitle:
-      "Insurance Monitoring — Underwriting & Risk Intelligence | PagePulse",
+    metaTitle: "Risk Lens Monitoring — Underwriting & Risk Intelligence | PagePulse",
     metaDescription:
       "Monitor insured party websites and regulatory changes for underwriting intelligence. Detect risk signal changes and compliance requirements in real time.",
   },
   {
-    slug: "journalism",
-    title: "Journalism",
+    slug: "scoop-engine",
+    title: "Scoop Engine",
     category: "industry",
     icon: PenTool,
-    tagline: "Detect the updates you need to source your best story yet",
+    tagline: "Source pages monitored, stealth edits caught",
     headline: "Break Stories Before Anyone Else",
     description:
       "Monitor government pages, corporate websites, and public records for changes that signal breaking news. Get tipped off to story leads from the source.",
@@ -1707,8 +1699,7 @@ export const USE_CASES: UseCase[] = [
       "Campaign finance, lobbying, and political disclosure databases",
       "Statistical agency data release and publication pages",
     ],
-    metaTitle:
-      "Journalism Monitoring — Source Monitoring for Reporters | PagePulse",
+    metaTitle: "Scoop Engine Monitoring — Source Monitoring for Reporters | PagePulse",
     metaDescription:
       "Monitor government pages, corporate websites, and public records for story leads. Detect stealth edits and document changes. Break stories from primary sources.",
   },

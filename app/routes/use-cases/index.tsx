@@ -73,7 +73,7 @@ function UseCaseCard({
           {useCase.title}
         </span>
       </div>
-      <h3 className="text-lg font-black uppercase tracking-tighter mb-2 leading-[0.95]">
+      <h3 className="text-lg font-black uppercase tracking-tighter mb-2 leading-[1.1]">
         {useCase.headline}
       </h3>
       <p
@@ -102,7 +102,7 @@ function UseCasesHub() {
         <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-6">
           22 Use Cases &amp; Growing
         </p>
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
           Monitor
           <br />
           <span className="text-[#2d5a2d]">Everything</span>

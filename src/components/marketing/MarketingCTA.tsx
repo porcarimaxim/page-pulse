@@ -21,7 +21,7 @@ export function MarketingCTA({
         <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4">
           {subheadline}
         </p>
-        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 leading-[0.9] whitespace-pre-line">
+        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6 leading-[1.1] whitespace-pre-line">
           {headline}
         </h2>
         <p className="text-lg opacity-70 mb-10 max-w-lg mx-auto">

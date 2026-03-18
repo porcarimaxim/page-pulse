@@ -210,7 +210,7 @@ function VisualPingAlternativePage() {
         <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
           PagePulse vs Visualping
         </p>
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
           The Best
           <br />
           <span className="text-[#2d5a2d]">Visualping</span>

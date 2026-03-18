@@ -146,7 +146,7 @@ function UseCasePage() {
 
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-black uppercase tracking-tighter leading-[0.9] mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-black uppercase tracking-tighter leading-[1.1] mb-6">
                 {useCase.headline}
               </h1>
               <p className="text-lg text-[#666] leading-relaxed mb-10 max-w-md">
@@ -226,7 +226,7 @@ function UseCasePage() {
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
               Instant Alerts
             </p>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[0.95] mb-5">
+            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
               Identify changes at speed — and scale
             </h3>
             <p className="text-[#666] leading-relaxed mb-6">
@@ -278,7 +278,7 @@ function UseCasePage() {
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
               Advanced Analysis
             </p>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[0.95] mb-5">
+            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
               Assess the impact, not the details
             </h3>
             <p className="text-[#666] leading-relaxed mb-6">
@@ -316,7 +316,7 @@ function UseCasePage() {
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
               Centralized Dashboard
             </p>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[0.95] mb-5">
+            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
               All your monitors in one place
             </h3>
             <p className="text-[#666] leading-relaxed mb-6">
@@ -453,7 +453,7 @@ function UseCasePage() {
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
                 Use Cases
               </p>
-              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-[0.92] mb-4">
+              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-[1.1] mb-4">
                 What To Monitor
               </h2>
               <p className="text-[#666] leading-relaxed mb-8">
@@ -565,7 +565,7 @@ function UseCasePage() {
                       {uc.title}
                     </span>
                   </div>
-                  <h3 className="font-black text-sm uppercase tracking-tighter mb-2 leading-[0.95]">
+                  <h3 className="font-black text-sm uppercase tracking-tighter mb-2 leading-[1.1]">
                     {uc.headline}
                   </h3>
                   <span className="text-xs font-bold text-[#2d5a2d] uppercase tracking-wider group-hover:underline">

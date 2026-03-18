@@ -114,7 +114,7 @@ function BlogPostPage() {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[0.95] mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
             {post.title}
           </h1>
 
@@ -173,7 +173,7 @@ function BlogPostPage() {
         <div className="max-w-3xl mx-auto space-y-12">
           {post.sections.map((section, i) => (
             <section key={i} id={`section-${i}`}>
-              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[0.95] mb-5">
+              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
                 {section.heading}
               </h2>
               <div
@@ -227,7 +227,7 @@ function BlogPostPage() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#7cb87c] mb-3">
                     {CATEGORY_LABELS[rel.category]}
                   </span>
-                  <h3 className="text-base font-black uppercase tracking-tighter leading-[0.95] mb-3 group-hover:text-[#7cb87c] transition-colors flex-1">
+                  <h3 className="text-base font-black uppercase tracking-tighter leading-[1.1] mb-3 group-hover:text-[#7cb87c] transition-colors flex-1">
                     {rel.title}
                   </h3>
                   <span className="text-xs font-bold text-[#7cb87c] uppercase tracking-wider group-hover:underline">

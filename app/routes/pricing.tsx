@@ -143,7 +143,7 @@ function PricingPage() {
         <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4">
           Simple Pricing
         </p>
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-4">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-4">
           Plans That
           <br />
           <span className="text-[#2d5a2d]">Scale</span>

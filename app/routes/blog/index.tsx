@@ -60,7 +60,7 @@ function BlogIndex() {
         <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-6">
           {ALL_BLOG_POSTS.length} Articles &amp; Growing
         </p>
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
           The
           <br />
           <span className="text-[#2d5a2d]">Blog</span>
@@ -106,7 +106,7 @@ function BlogIndex() {
                   {posts[0].readTime}
                 </span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.95] mb-4 group-hover:text-[#2d5a2d] transition-colors">
+              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[1.1] mb-4 group-hover:text-[#2d5a2d] transition-colors">
                 {posts[0].title}
               </h2>
               <p className="text-[#666] leading-relaxed mb-6 max-w-2xl">
@@ -139,7 +139,7 @@ function BlogIndex() {
                     {post.readTime}
                   </span>
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-3 group-hover:text-[#7cb87c] transition-colors">
+                <h3 className="text-lg font-black uppercase tracking-tighter leading-[1.1] mb-3 group-hover:text-[#7cb87c] transition-colors">
                   {post.title}
                 </h3>
                 <p className="text-xs text-[#666] leading-relaxed mb-4 flex-1">
