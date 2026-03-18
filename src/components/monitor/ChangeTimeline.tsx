@@ -126,9 +126,26 @@ function AiSummaryBadge({
       );
     }
     return (
-      <div className="flex items-start gap-2 mt-2 px-4 py-2.5 border bg-[#f5f0ff] border-[#d4c8f0]">
-        <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#7c3aed]" />
-        <p className="text-xs leading-relaxed text-[#4a3272]">{summary}</p>
+      <div className="mt-2">
+        <div className="flex items-start gap-2 px-4 py-2.5 border bg-[#f5f0ff] border-[#d4c8f0]">
+          <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#7c3aed]" />
+          <p className="text-xs leading-relaxed text-[#4a3272]">{summary}</p>
+        </div>
+        <button
+          onClick={async (e) => {
+            e.stopPropagation();
+            setPending(true);
+            try {
+              await generateSummary({ changeId: changeId as Id<"changes"> });
+            } catch (err: any) {
+              setPending(false);
+            }
+          }}
+          className="flex items-center gap-1.5 mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#888] hover:text-[#7c3aed] transition-colors"
+        >
+          <Sparkles className="w-3 h-3" />
+          Regenerate
+        </button>
       </div>
     );
   }

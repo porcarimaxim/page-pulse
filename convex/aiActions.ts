@@ -40,7 +40,6 @@ export const generateChangeSummary = internalAction({
 
     let contentDescription = "";
     if (hasTextDiff) {
-      // Truncate very large diffs
       const diff = args.textDiff!.length > 3000
         ? args.textDiff!.slice(0, 3000) + "\n... (truncated)"
         : args.textDiff!;
@@ -49,30 +48,38 @@ export const generateChangeSummary = internalAction({
       const before = (args.beforeTextContent ?? "").slice(0, 1500);
       const after = (args.afterTextContent ?? "").slice(0, 1500);
       contentDescription = `\nBefore text (excerpt):\n${before}\n\nAfter text (excerpt):\n${after}`;
+    } else {
+      contentDescription = `\nNo text content available — only a visual screenshot diff. Infer from the URL and diff percentage what likely changed.`;
     }
 
-    const prompt = `You analyze website changes detected by a monitoring tool. A ${args.diffPercentage.toFixed(1)}% visual change was detected on "${args.monitorName}" (${args.monitorUrl}).
-
+    const prompt = `A monitoring tool detected a ${args.diffPercentage.toFixed(1)}% visual change on "${args.monitorName}" (${args.monitorUrl}).
 ${contentDescription}
 
-Your job is to identify WHAT specifically changed and WHY it matters. Classify the change into one of these categories and lead with it:
+Write ONE short sentence describing what changed. Be specific — quote actual values (old → new) when possible. You MUST answer even with limited data — use the URL and diff % to infer.
 
-- PRICE CHANGE: identify old price → new price, product/plan affected
-- STOCK/AVAILABILITY: item went in/out of stock, availability changed
-- CONTENT UPDATE: new text, articles, announcements, or sections added/removed
-- TIME/DATE UPDATE: timestamps, countdowns, schedules, or dates changed (e.g. a live clock — if so, say "Live clock update — not a meaningful change")
-- LAYOUT/DESIGN: visual redesign, new UI elements, styling changes
-- REMOVAL: content, products, pages, or sections were removed
-- NEW FEATURE: new functionality, buttons, forms appeared
-- STATUS CHANGE: service status, badges, labels changed
+Examples of good answers:
+- "Price dropped $49/mo → $39/mo on Pro plan."
+- "Nike Air Max 90 back in stock."
+- "3 new job listings added to careers page."
+- "Live clock updated — not a real change."
+- "New article: 'Q1 2026 Product Roadmap'."
+- "Restaurant reservation slots opened for Saturday."
+- "Scholarship deadline extended to April 15."
+- "Flight LAX→JFK dropped $420 → $380."
+- "Concert tickets now showing 'Sold Out'."
+- "Competitor added new 'Enterprise' pricing tier."
+- "Regulatory filing FR-2026-0042 published."
+- "Insurance policy wording updated in Section 4.2."
+- "Google ranking for 'best CRM' moved #5 → #3."
+- "Product listing photo changed on main SKU."
+- "Government press release added about tax reform."
+- "Social media bio changed from 'CEO' → 'Founder & CEO'."
+- "Course enrollment status changed to 'Closed'."
+- "SaaS status page: API latency incident reported."
+- "Legal disclaimer text updated with new arbitration clause."
+- "News homepage lead story changed to election coverage."
 
-Rules:
-- Be specific: quote actual values that changed (old → new) when available
-- For time.is or clock pages: recognize that time display changes are expected and not meaningful
-- For e-commerce: focus on prices, stock, and product changes
-- For news sites: identify what headline or article changed
-- If before/after text is nearly identical except for timestamps or minor dynamic content, say so clearly
-- Keep it under 60 words. No markdown. No "Summary:" prefix.`;
+One sentence only. Never say you can't access the site.`;
 
     try {
       const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -84,7 +91,7 @@ Rules:
         },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
-          max_tokens: 150,
+          max_tokens: 80,
           messages: [
             {
               role: "user",
