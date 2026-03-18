@@ -33,6 +33,10 @@ export const generateChangeSummary = internalAction({
       console.log(`[AI] No Claude API key configured for user ${monitor.userId}`);
       return;
     }
+    if (settings.aiEnabled === false) {
+      console.log(`[AI] AI summaries disabled for user ${monitor.userId}`);
+      return;
+    }
 
     // Build the prompt
     const hasTextDiff = args.textDiff && args.textDiff.length > 0;

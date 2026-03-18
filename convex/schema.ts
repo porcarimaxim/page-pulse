@@ -99,6 +99,8 @@ export default defineSchema({
     textDiff: v.optional(v.string()),
     // AI summary
     aiSummary: v.optional(v.string()),
+    // Inbox reviewed state
+    reviewed: v.optional(v.boolean()),
   })
     .index("by_monitorId", ["monitorId"])
     .index("by_monitorId_detectedAt", ["monitorId", "detectedAt"]),
@@ -106,5 +108,6 @@ export default defineSchema({
   userSettings: defineTable({
     userId: v.string(),
     claudeApiKey: v.optional(v.string()),
+    aiEnabled: v.optional(v.boolean()),
   }).index("by_userId", ["userId"]),
 });

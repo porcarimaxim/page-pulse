@@ -1,20 +1,20 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime, intervalLabel } from "@/lib/utils";
 import {
   Plus,
   Search,
-  Activity,
-  Pause,
-  AlertTriangle,
   Eye,
-  TrendingUp,
-  RefreshCw,
+  AlertTriangle,
+  Clock,
+  Zap,
+  LayoutGrid,
+  List,
+  ArrowRight,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import type { Id } from "@convex/_generated/dataModel";
@@ -23,36 +23,80 @@ export const Route = createFileRoute("/dashboard/monitors")({
   component: MonitorsListPage,
 });
 
+type StatusFilter = "all" | "active" | "paused" | "error";
+type ViewMode = "cards" | "list";
+
+/* ─── Shared types ─── */
+
+type Monitor = {
+  _id: string;
+  name: string;
+  url: string;
+  status: "active" | "paused" | "error";
+  interval: string;
+  lastCheckedAt?: number;
+  changeCount: number;
+  consecutiveErrors: number;
+  screenshotUrl: string | null;
+  selectionMode?: string;
+  cssSelector?: string;
+  tags?: string[];
+  zone: { x: number; y: number; width: number; height: number };
+};
+
+/* ─── Page ─── */
+
 function MonitorsListPage() {
   const { isSignedIn } = useAuth();
   const monitors = useQuery(api.monitors.list, isSignedIn ? {} : "skip");
   const pauseMonitor = useMutation(api.monitors.pause);
   const resumeMonitor = useMutation(api.monitors.resume);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    try {
+      const saved = localStorage.getItem("pagepulse:monitors-view");
+      if (saved === "list" || saved === "cards") return saved;
+    } catch {}
+    return "cards";
+  });
+
+  const setAndPersistViewMode = (mode: ViewMode) => {
+    setViewMode(mode);
+    try {
+      localStorage.setItem("pagepulse:monitors-view", mode);
+    } catch {}
+  };
 
   const stats = useMemo(() => {
-    if (!monitors) return { total: 0, active: 0, changes: 0 };
+    if (!monitors)
+      return { total: 0, active: 0, paused: 0, errored: 0, changes: 0 };
     return {
       total: monitors.length,
       active: monitors.filter((m) => m.status === "active").length,
+      paused: monitors.filter((m) => m.status === "paused").length,
+      errored: monitors.filter((m) => m.status === "error").length,
       changes: monitors.reduce((sum, m) => sum + m.changeCount, 0),
     };
   }, [monitors]);
 
   const filteredMonitors = useMemo(() => {
     if (!monitors) return [];
-    if (!search) return monitors;
-    const q = search.toLowerCase();
-    return monitors.filter(
-      (m) =>
-        m.name.toLowerCase().includes(q) || m.url.toLowerCase().includes(q)
-    );
-  }, [monitors, search]);
+    let result = monitors;
+    if (statusFilter !== "all") {
+      result = result.filter((m) => m.status === statusFilter);
+    }
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (m) =>
+          m.name.toLowerCase().includes(q) || m.url.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [monitors, search, statusFilter]);
 
-  const handleToggle = async (
-    monitorId: string,
-    currentStatus: string
-  ) => {
+  const handleToggle = async (monitorId: string, currentStatus: string) => {
     const id = monitorId as Id<"monitors">;
     if (currentStatus === "active") {
       await pauseMonitor({ monitorId: id });
@@ -64,14 +108,21 @@ function MonitorsListPage() {
   return (
     <main className="px-8 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-black uppercase tracking-tighter">
-          Monitoring Jobs
-        </h1>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-black uppercase tracking-tighter">
+            Monitors
+          </h1>
+          <p className="text-sm text-[#888] mt-1">
+            {monitors
+              ? `${monitors.length} monitor${monitors.length !== 1 ? "s" : ""} tracking ${stats.changes} change${stats.changes !== 1 ? "s" : ""}`
+              : "Loading..."}
+          </p>
+        </div>
         <Button asChild>
           <Link to="/dashboard/new">
             <Plus className="w-4 h-4" />
-            Add New
+            New Monitor
           </Link>
         </Button>
       </div>
@@ -82,206 +133,383 @@ function MonitorsListPage() {
         <EmptyState />
       ) : (
         <>
-          {/* Stats strip */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="border-2 border-[#1a1a1a] p-4">
-              <p className="text-xs font-bold uppercase text-[#888]">
-                Total Jobs
-              </p>
-              <p className="text-2xl font-black mt-1">{stats.total}</p>
+          {/* Filter bar */}
+          <div className="flex items-center gap-3 mb-6">
+            {/* Status tabs */}
+            <div className="flex border-2 border-[#1a1a1a]">
+              {(
+                [
+                  { key: "all", label: "All", count: stats.total },
+                  { key: "active", label: "Active", count: stats.active },
+                  { key: "paused", label: "Paused", count: stats.paused },
+                  { key: "error", label: "Errors", count: stats.errored },
+                ] as const
+              ).map((tab, i) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setStatusFilter(tab.key)}
+                  className={`px-3 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                    i > 0 ? "border-l-2 border-[#1a1a1a]" : ""
+                  } ${
+                    statusFilter === tab.key
+                      ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                      : "text-[#888] hover:bg-[#e8e8e0]"
+                  }`}
+                >
+                  {tab.label}
+                  <span className="ml-1 opacity-60">{tab.count}</span>
+                </button>
+              ))}
             </div>
-            <div className="border-2 border-[#1a1a1a] p-4">
-              <p className="text-xs font-bold uppercase text-[#888]">
-                Active Jobs
-              </p>
-              <p className="text-2xl font-black mt-1">
-                {stats.active}
-                <span className="text-sm font-bold text-[#888]">
-                  {" "}
-                  of {stats.total}
-                </span>
-              </p>
-            </div>
-            <div className="border-2 border-[#1a1a1a] p-4">
-              <p className="text-xs font-bold uppercase text-[#888]">
-                Detected Changes
-              </p>
-              <p className="text-2xl font-black mt-1">{stats.changes}</p>
-            </div>
-            <div className="border-2 border-[#1a1a1a] p-4">
-              <p className="text-xs font-bold uppercase text-[#888]">
-                Remaining Checks
-              </p>
-              <p className="text-2xl font-black mt-1">&infin;</p>
-            </div>
-          </div>
 
-          {/* Search */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="relative flex-1 max-w-sm">
+            {/* Search */}
+            <div className="relative flex-1 max-w-xs">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#888]" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search"
+                placeholder="Search monitors..."
                 className="pl-10"
               />
             </div>
+
             <div className="flex-1" />
-            <button className="border-2 border-[#1a1a1a] p-2 hover:bg-[#e8e8e0] transition-colors">
-              <RefreshCw className="w-4 h-4" />
-            </button>
-          </div>
 
-          {/* Table */}
-          <div className="border-2 border-[#1a1a1a]">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-[#1a1a1a] text-left">
-                  <th className="px-4 py-3 text-xs font-bold uppercase text-[#888]">
-                    Is Active
-                  </th>
-                  <th className="px-4 py-3 text-xs font-bold uppercase text-[#888]">
-                    Job Name
-                  </th>
-                  <th className="px-4 py-3 text-xs font-bold uppercase text-[#888]">
-                    Interval
-                  </th>
-                  <th className="px-4 py-3 text-xs font-bold uppercase text-[#888]">
-                    Last Check
-                  </th>
-                  <th className="px-4 py-3 text-xs font-bold uppercase text-[#888]">
-                    Status
-                  </th>
-                  <th className="px-4 py-3 text-xs font-bold uppercase text-[#888]">
-                    Changes
-                  </th>
-                  <th className="px-4 py-3 text-xs font-bold uppercase text-[#888]" />
-                </tr>
-              </thead>
-              <tbody>
-                {filteredMonitors.map((monitor) => (
-                  <tr
-                    key={monitor._id}
-                    className="border-b border-[#ccc] hover:bg-[#e8e8e0] transition-colors"
-                  >
-                    {/* Toggle */}
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() =>
-                          handleToggle(monitor._id, monitor.status)
-                        }
-                        className={`w-10 h-5 relative transition-colors ${
-                          monitor.status === "active"
-                            ? "bg-[#2d5a2d]"
-                            : "bg-[#ccc]"
-                        }`}
-                      >
-                        <div
-                          className={`absolute top-0.5 w-4 h-4 bg-[#f0f0e8] transition-transform ${
-                            monitor.status === "active"
-                              ? "translate-x-5"
-                              : "translate-x-0.5"
-                          }`}
-                        />
-                      </button>
-                    </td>
+            {/* View mode toggle */}
+            <div className="flex border-2 border-[#1a1a1a]">
+              <button
+                onClick={() => setAndPersistViewMode("cards")}
+                className={`p-2 transition-colors ${
+                  viewMode === "cards"
+                    ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                    : "text-[#888] hover:bg-[#e8e8e0]"
+                }`}
+                title="Card view"
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setAndPersistViewMode("list")}
+                className={`p-2 border-l-2 border-[#1a1a1a] transition-colors ${
+                  viewMode === "list"
+                    ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                    : "text-[#888] hover:bg-[#e8e8e0]"
+                }`}
+                title="List view"
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
 
-                    {/* Name + URL */}
-                    <td className="px-4 py-3">
-                      <div>
-                        <p className="text-sm font-bold">{monitor.name}</p>
-                        <p className="text-xs text-[#888] font-mono truncate max-w-xs">
-                          {monitor.url}
-                        </p>
-                      </div>
-                    </td>
-
-                    {/* Interval */}
-                    <td className="px-4 py-3 text-xs text-[#888]">
-                      {intervalLabel(monitor.interval)}
-                    </td>
-
-                    {/* Last Check */}
-                    <td className="px-4 py-3 text-xs text-[#888]">
-                      {monitor.lastCheckedAt
-                        ? formatRelativeTime(monitor.lastCheckedAt)
-                        : "Never"}
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-4 py-3">
-                      <StatusBadge
-                        status={monitor.status}
-                        changeCount={monitor.changeCount}
-                      />
-                    </td>
-
-                    {/* Changes */}
-                    <td className="px-4 py-3 text-sm font-bold">
-                      {monitor.changeCount}
-                    </td>
-
-                    {/* Detail link */}
-                    <td className="px-4 py-3">
-                      <Link
-                        to="/dashboard/$monitorId"
-                        params={{ monitorId: monitor._id } as any}
-                        className="text-xs font-bold uppercase text-[#2d5a2d] hover:underline"
-                      >
-                        Detail
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination hint */}
-          <div className="flex items-center justify-end mt-3">
-            <p className="text-xs text-[#888]">
-              Showing {filteredMonitors.length} of {monitors.length}
+            <p className="text-[10px] text-[#888] uppercase tracking-wider">
+              {filteredMonitors.length} shown
             </p>
           </div>
+
+          {/* Content */}
+          {viewMode === "cards" ? (
+            <CardGrid
+              monitors={filteredMonitors as Monitor[]}
+              onToggle={handleToggle}
+            />
+          ) : (
+            <ListView
+              monitors={filteredMonitors as Monitor[]}
+              onToggle={handleToggle}
+            />
+          )}
+
+          {/* No results */}
+          {filteredMonitors.length === 0 && (
+            <div className="border-2 border-[#ccc] border-dashed p-12 text-center mt-4">
+              <Search className="w-8 h-8 text-[#ccc] mx-auto mb-3" />
+              <p className="text-sm font-bold text-[#888]">
+                No monitors match your filters
+              </p>
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setStatusFilter("all");
+                }}
+                className="text-xs text-[#2d5a2d] hover:underline mt-2"
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
         </>
       )}
     </main>
   );
 }
 
+/* ─── Card Grid View ─── */
+
+function CardGrid({
+  monitors,
+  onToggle,
+}: {
+  monitors: Monitor[];
+  onToggle: (id: string, status: string) => void;
+}) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {monitors.map((monitor) => (
+        <div
+          key={monitor._id}
+          className="border-2 border-[#1a1a1a] group hover:shadow-[4px_4px_0px_0px_#1a1a1a] transition-all"
+        >
+          {/* Screenshot */}
+          <Link
+            to="/dashboard/$monitorId"
+            params={{ monitorId: monitor._id } as any}
+            className="block relative h-36 bg-[#e8e8e0] border-b-2 border-[#1a1a1a] overflow-hidden"
+          >
+            {monitor.screenshotUrl ? (
+              <img
+                src={monitor.screenshotUrl}
+                alt={monitor.name}
+                className="w-full h-full object-cover object-top"
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full text-[#888] text-xs">
+                No screenshot yet
+              </div>
+            )}
+            <StatusBadge status={monitor.status} position="absolute top-2 right-2" />
+            {monitor.changeCount > 0 && (
+              <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1a1a1a] text-[#f0f0e8] px-1.5 py-0.5">
+                <Zap className="w-2.5 h-2.5" />
+                <span className="text-[9px] font-bold">{monitor.changeCount}</span>
+              </div>
+            )}
+            {monitor.selectionMode === "element" && (
+              <div className="absolute bottom-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5">
+                Element
+              </div>
+            )}
+          </Link>
+
+          {/* Info */}
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <Link
+                to="/dashboard/$monitorId"
+                params={{ monitorId: monitor._id } as any}
+                className="flex-1 min-w-0"
+              >
+                <h3 className="text-sm font-black uppercase tracking-tighter truncate group-hover:text-[#2d5a2d] transition-colors">
+                  {monitor.name}
+                </h3>
+                <p className="text-[10px] text-[#888] font-mono truncate mt-0.5">
+                  {monitor.url}
+                </p>
+              </Link>
+              <ToggleSwitch
+                active={monitor.status === "active"}
+                onToggle={() => onToggle(monitor._id, monitor.status)}
+              />
+            </div>
+            <div className="flex items-center gap-3 text-[10px] text-[#888]">
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {intervalLabel(monitor.interval)}
+              </span>
+              <span className="flex items-center gap-1">
+                <Eye className="w-3 h-3" />
+                {monitor.lastCheckedAt
+                  ? formatRelativeTime(monitor.lastCheckedAt)
+                  : "Never"}
+              </span>
+            </div>
+            {monitor.tags && monitor.tags.length > 0 && (
+              <div className="flex gap-1 mt-2 flex-wrap">
+                {monitor.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[8px] uppercase font-bold text-[#888] bg-[#e8e8e0] border border-[#ccc] px-1.5 py-0"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            {monitor.status === "error" && (
+              <div className="flex items-center gap-1.5 mt-2 text-[10px] text-[#dc2626] font-bold">
+                <AlertTriangle className="w-3 h-3" />
+                {monitor.consecutiveErrors} consecutive failures
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ─── List View ─── */
+
+function ListView({
+  monitors,
+  onToggle,
+}: {
+  monitors: Monitor[];
+  onToggle: (id: string, status: string) => void;
+}) {
+  return (
+    <div className="border-2 border-[#1a1a1a]">
+      {/* Table header */}
+      <div className="grid grid-cols-[auto_2fr_1fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8] items-center">
+        <span className="text-[10px] font-bold uppercase tracking-wider w-12" />
+        <span className="text-[10px] font-bold uppercase tracking-wider">
+          Monitor
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider">
+          Interval
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider">
+          Last Check
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider">
+          Changes
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider w-16 text-center">
+          Status
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider w-12" />
+      </div>
+
+      {monitors.map((monitor, i) => (
+        <Link
+          key={monitor._id}
+          to="/dashboard/$monitorId"
+          params={{ monitorId: monitor._id } as any}
+          className={`grid grid-cols-[auto_2fr_1fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 items-center hover:bg-[#e8e8e0] transition-colors ${
+            i < monitors.length - 1 ? "border-b border-[#ccc]" : ""
+          }`}
+        >
+          {/* Thumbnail */}
+          <div className="w-12 h-8 bg-[#e8e8e0] border border-[#ccc] overflow-hidden shrink-0">
+            {monitor.screenshotUrl ? (
+              <img
+                src={monitor.screenshotUrl}
+                alt=""
+                className="w-full h-full object-cover object-top"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Eye className="w-3 h-3 text-[#ccc]" />
+              </div>
+            )}
+          </div>
+
+          {/* Name + URL */}
+          <div className="min-w-0">
+            <p className="text-sm font-black uppercase tracking-tighter truncate">
+              {monitor.name}
+            </p>
+            <p className="text-[10px] text-[#888] font-mono truncate">
+              {monitor.url}
+            </p>
+          </div>
+
+          {/* Interval */}
+          <span className="text-xs text-[#888]">
+            {intervalLabel(monitor.interval)}
+          </span>
+
+          {/* Last check */}
+          <span className="text-xs text-[#888]">
+            {monitor.lastCheckedAt
+              ? formatRelativeTime(monitor.lastCheckedAt)
+              : "Never"}
+          </span>
+
+          {/* Changes */}
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-sm font-black ${
+                monitor.changeCount > 0 ? "text-[#1a1a1a]" : "text-[#ccc]"
+              }`}
+            >
+              {monitor.changeCount}
+            </span>
+            {monitor.status === "error" && (
+              <AlertTriangle className="w-3.5 h-3.5 text-[#dc2626]" />
+            )}
+          </div>
+
+          {/* Status */}
+          <StatusBadge status={monitor.status} position="" />
+
+          {/* Toggle */}
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggle(monitor._id, monitor.status);
+            }}
+          >
+            <ToggleSwitch
+              active={monitor.status === "active"}
+              onToggle={() => {}}
+            />
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+/* ─── Shared Components ─── */
+
 function StatusBadge({
   status,
-  changeCount,
+  position,
 }: {
   status: string;
-  changeCount: number;
+  position: string;
 }) {
-  if (status === "error") {
-    return (
-      <span className="text-xs font-bold uppercase text-[#dc2626]">
-        Error
-      </span>
-    );
-  }
-  if (status === "paused") {
-    return (
-      <span className="text-xs font-bold uppercase text-[#888]">
-        Paused
-      </span>
-    );
-  }
-  if (changeCount > 0) {
-    return (
-      <span className="text-xs font-bold uppercase text-[#2d5a2d]">
-        Changed
-      </span>
-    );
-  }
   return (
-    <span className="text-xs font-bold uppercase text-[#888]">
-      No change
-    </span>
+    <div
+      className={`${position} px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider border ${
+        status === "active"
+          ? "bg-[#2d5a2d] text-[#f0f0e8] border-[#2d5a2d]"
+          : status === "error"
+            ? "bg-[#dc2626] text-white border-[#dc2626] animate-pulse"
+            : "bg-[#f0f0e8] text-[#888] border-[#ccc]"
+      }`}
+    >
+      {status}
+    </div>
+  );
+}
+
+function ToggleSwitch({
+  active,
+  onToggle,
+}: {
+  active: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onToggle();
+      }}
+      className={`w-9 h-5 relative transition-colors shrink-0 ${
+        active ? "bg-[#2d5a2d]" : "bg-[#ccc]"
+      }`}
+      title={active ? "Pause monitor" : "Resume monitor"}
+    >
+      <div
+        className={`absolute top-0.5 w-4 h-4 bg-[#f0f0e8] transition-transform ${
+          active ? "translate-x-4" : "translate-x-0.5"
+        }`}
+      />
+    </button>
   );
 }
 

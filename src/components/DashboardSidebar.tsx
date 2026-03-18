@@ -1,5 +1,5 @@
 import { Link, useMatches } from "@tanstack/react-router";
-import { UserButton } from "@clerk/tanstack-react-start";
+import { UserButton, useUser } from "@clerk/tanstack-react-start";
 import {
   BarChart3,
   Eye,
@@ -15,6 +15,31 @@ const navItems = [
   { to: "/dashboard/monitors", label: "Monitors", icon: Eye, exact: false },
   { to: "/dashboard/settings", label: "Settings", icon: Settings, exact: true },
 ] as const;
+
+function UserInfo() {
+  const { user } = useUser();
+  const name =
+    user?.fullName || user?.firstName || user?.username || "User";
+  const email = user?.primaryEmailAddress?.emailAddress;
+
+  return (
+    <div className="px-4 py-3 border-t-2 border-[#1a1a1a]">
+      <div className="flex items-center gap-2.5">
+        <UserButton
+          appearance={{
+            elements: { avatarBox: "border-2 border-[#1a1a1a] w-8 h-8" },
+          }}
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-bold truncate">{name}</p>
+          {email && (
+            <p className="text-[10px] text-[#888] truncate">{email}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function DashboardSidebar() {
   const matches = useMatches();
@@ -88,20 +113,20 @@ export function DashboardSidebar() {
         })}
       </nav>
 
-      <div className="px-4 py-3 border-t border-[#ccc]">
+      <Link
+        to="/dashboard/settings"
+        onClick={onClose}
+        className="block px-4 py-3 border-t border-[#ccc] hover:bg-[#e8e8e0] transition-colors"
+      >
         <div className="flex items-center gap-2">
           <Zap className="w-3 h-3 text-[#2d5a2d]" />
-          <span className="text-[10px] font-bold uppercase text-[#666]">Free plan</span>
+          <span className="text-[10px] font-bold uppercase text-[#666]">
+            Manage Plan
+          </span>
         </div>
-      </div>
+      </Link>
 
-      <div className="px-4 py-4 border-t-2 border-[#1a1a1a]">
-        <UserButton
-          appearance={{
-            elements: { avatarBox: "border-2 border-[#1a1a1a]" },
-          }}
-        />
-      </div>
+      <UserInfo />
     </>
   );
 

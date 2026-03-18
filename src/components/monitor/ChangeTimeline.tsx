@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAction } from "convex/react";
+import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { formatRelativeTime } from "@/lib/utils";
 import { DiffViewer } from "@/components/diff/DiffViewer";
@@ -12,6 +13,7 @@ import {
   Info,
   Sparkles,
   Loader2,
+  Lock,
 } from "lucide-react";
 import type { Id } from "@convex/_generated/dataModel";
 
@@ -72,9 +74,11 @@ function severityConfig(severity: "low" | "medium" | "high") {
 function AiSummaryBadge({
   changeId,
   summary,
+  hasAiFeature,
 }: {
   changeId: string;
   summary?: string | null;
+  hasAiFeature: boolean;
 }) {
   const generateSummary = useAction(api.aiActions.generateSummaryOnDemand);
   const [pending, setPending] = useState(false);
@@ -87,16 +91,7 @@ function AiSummaryBadge({
     }
   }, [summary, pending]);
 
-  // Show loading state first (takes priority over stale summary)
-  if (pending) {
-    return (
-      <div className="flex items-center gap-2 mt-2 text-[10px] font-bold uppercase tracking-wider text-[#7c3aed]">
-        <Loader2 className="w-3 h-3 animate-spin" />
-        Generating summary...
-      </div>
-    );
-  }
-
+  // Show existing summaries regardless of plan (they were already generated)
   if (summary) {
     const isError = summary.startsWith("[Error]");
     if (isError) {
@@ -106,22 +101,24 @@ function AiSummaryBadge({
             <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#dc2626]" />
             <p className="text-xs leading-relaxed text-[#dc2626]">{summary.slice(8)}</p>
           </div>
-          <button
-            onClick={async (e) => {
-              e.stopPropagation();
-              setPending(true);
-              try {
-                await generateSummary({ changeId: changeId as Id<"changes"> });
-              } catch (err: any) {
-                setPending(false);
-                setError(err.message ?? "Failed");
-              }
-            }}
-            className="flex items-center gap-1.5 mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#7c3aed] hover:text-[#5b21b6] transition-colors"
-          >
-            <Sparkles className="w-3 h-3" />
-            Retry
-          </button>
+          {hasAiFeature && (
+            <button
+              onClick={async (e) => {
+                e.stopPropagation();
+                setPending(true);
+                try {
+                  await generateSummary({ changeId: changeId as Id<"changes"> });
+                } catch (err: any) {
+                  setPending(false);
+                  setError(err.message ?? "Failed");
+                }
+              }}
+              className="flex items-center gap-1.5 mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#7c3aed] hover:text-[#5b21b6] transition-colors"
+            >
+              <Sparkles className="w-3 h-3" />
+              Retry
+            </button>
+          )}
         </div>
       );
     }
@@ -131,21 +128,50 @@ function AiSummaryBadge({
           <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#7c3aed]" />
           <p className="text-xs leading-relaxed text-[#4a3272]">{summary}</p>
         </div>
-        <button
-          onClick={async (e) => {
-            e.stopPropagation();
-            setPending(true);
-            try {
-              await generateSummary({ changeId: changeId as Id<"changes"> });
-            } catch (err: any) {
-              setPending(false);
-            }
-          }}
-          className="flex items-center gap-1.5 mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#888] hover:text-[#7c3aed] transition-colors"
-        >
-          <Sparkles className="w-3 h-3" />
-          Regenerate
-        </button>
+        {hasAiFeature && (
+          <button
+            onClick={async (e) => {
+              e.stopPropagation();
+              setPending(true);
+              try {
+                await generateSummary({ changeId: changeId as Id<"changes"> });
+              } catch (err: any) {
+                setPending(false);
+              }
+            }}
+            className="flex items-center gap-1.5 mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#888] hover:text-[#7c3aed] transition-colors"
+          >
+            <Sparkles className="w-3 h-3" />
+            Regenerate
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  // Loading state
+  if (pending) {
+    return (
+      <div className="flex items-center gap-2 mt-2 text-[10px] font-bold uppercase tracking-wider text-[#7c3aed]">
+        <Loader2 className="w-3 h-3 animate-spin" />
+        Generating summary...
+      </div>
+    );
+  }
+
+  // No summary yet — show button or locked state
+  if (!hasAiFeature) {
+    return (
+      <div className="mt-2 relative group/ai">
+        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#ccc] cursor-not-allowed">
+          <Lock className="w-3 h-3" />
+          AI Summary
+        </div>
+        <div className="absolute left-0 bottom-full mb-1 hidden group-hover/ai:block z-10">
+          <div className="bg-[#1a1a1a] text-[#f0f0e8] text-[10px] px-3 py-1.5 whitespace-nowrap">
+            Upgrade to Pro or Business to use AI Summaries
+          </div>
+        </div>
       </div>
     );
   }
@@ -182,6 +208,8 @@ function AiSummaryBadge({
 
 export function ChangeTimeline({ changes }: ChangeTimelineProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { has } = useAuth();
+  const hasAiFeature = has?.({ feature: "ai_summaries" }) ?? false;
 
   if (changes.length === 0) {
     return (
@@ -258,6 +286,7 @@ export function ChangeTimeline({ changes }: ChangeTimelineProps) {
                 <AiSummaryBadge
                   changeId={change._id}
                   summary={change.aiSummary}
+                  hasAiFeature={hasAiFeature}
                 />
               </div>
             </div>
