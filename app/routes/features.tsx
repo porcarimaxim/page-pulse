@@ -138,7 +138,7 @@ function FeaturesPage() {
     <MarketingLayout>
       {/* Hero */}
       <section className="px-6 py-24 md:py-32 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-6">
           Everything You Need
         </p>
         <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
@@ -146,7 +146,7 @@ function FeaturesPage() {
           <br />
           <span className="text-[#2d5a2d]">Monitoring</span>
         </h1>
-        <p className="text-lg text-[#888] max-w-xl mx-auto mb-12">
+        <p className="text-lg text-[#666] max-w-xl mx-auto mb-12">
           Six powerful tools working together to track webpage changes with zero
           complexity. Set up in seconds, monitor forever.
         </p>
@@ -170,7 +170,7 @@ function FeaturesPage() {
               <div className="text-2xl md:text-3xl font-black tracking-tighter text-[#7cb87c]">
                 {stat.value}
               </div>
-              <div className="text-xs uppercase tracking-wider text-[#888] mt-1">
+              <div className="text-xs uppercase tracking-wider text-[#a0a0a0] mt-1">
                 {stat.label}
               </div>
             </div>
@@ -237,7 +237,7 @@ function FeaturesPage() {
 
                   <p
                     className={`text-base md:text-lg mb-8 leading-relaxed ${
-                      isInverted ? "opacity-70" : "text-[#888]"
+                      isInverted ? "opacity-70" : "text-[#666]"
                     }`}
                   >
                     {feature.description}

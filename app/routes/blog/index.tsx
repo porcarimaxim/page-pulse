@@ -57,7 +57,7 @@ function BlogIndex() {
     <MarketingLayout>
       {/* Hero */}
       <section className="px-6 pt-16 pb-12 md:pt-24 md:pb-16 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-6">
           {ALL_BLOG_POSTS.length} Articles &amp; Growing
         </p>
         <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
@@ -65,7 +65,7 @@ function BlogIndex() {
           <br />
           <span className="text-[#2d5a2d]">Blog</span>
         </h1>
-        <p className="text-lg text-[#888] max-w-xl mx-auto">
+        <p className="text-lg text-[#666] max-w-xl mx-auto">
           Guides, tutorials, and comparisons to help you monitor the web and
           stay ahead of changes that matter.
         </p>
@@ -81,7 +81,7 @@ function BlogIndex() {
               className={`px-5 py-2 text-xs font-bold uppercase tracking-wider border-2 transition-colors ${
                 filter === cat.key
                   ? "bg-[#1a1a1a] text-[#f0f0e8] border-[#1a1a1a]"
-                  : "border-[#ccc] text-[#888] hover:border-[#1a1a1a] hover:text-[#1a1a1a]"
+                  : "border-[#ccc] text-[#666] hover:border-[#1a1a1a] hover:text-[#1a1a1a]"
               }`}
             >
               {cat.label}
@@ -102,14 +102,14 @@ function BlogIndex() {
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-[#2d5a2d] text-[#f0f0e8] px-3 py-1">
                   {CATEGORY_LABELS[posts[0].category]}
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#666]">
                   {posts[0].readTime}
                 </span>
               </div>
               <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[0.95] mb-4 group-hover:text-[#2d5a2d] transition-colors">
                 {posts[0].title}
               </h2>
-              <p className="text-[#888] leading-relaxed mb-6 max-w-2xl">
+              <p className="text-[#666] leading-relaxed mb-6 max-w-2xl">
                 {posts[0].heroSubtitle}
               </p>
               <span className="text-sm font-bold text-[#2d5a2d] uppercase tracking-wider group-hover:underline">
@@ -134,19 +134,19 @@ function BlogIndex() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#7cb87c]">
                     {CATEGORY_LABELS[post.category]}
                   </span>
-                  <span className="text-[10px] text-[#888]">·</span>
-                  <span className="text-[10px] text-[#888]">
+                  <span className="text-[10px] text-[#a0a0a0]">·</span>
+                  <span className="text-[10px] text-[#a0a0a0]">
                     {post.readTime}
                   </span>
                 </div>
                 <h3 className="text-lg font-black uppercase tracking-tighter leading-[0.95] mb-3 group-hover:text-[#7cb87c] transition-colors">
                   {post.title}
                 </h3>
-                <p className="text-xs text-[#888] leading-relaxed mb-4 flex-1">
+                <p className="text-xs text-[#666] leading-relaxed mb-4 flex-1">
                   {post.heroSubtitle}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#888]">
+                  <span className="text-xs text-[#a0a0a0]">
                     {new Date(post.publishedAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",

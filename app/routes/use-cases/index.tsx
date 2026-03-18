@@ -78,7 +78,7 @@ function UseCaseCard({
       </h3>
       <p
         className={`text-xs leading-relaxed mb-3 ${
-          isDark ? "opacity-60" : "text-[#888]"
+          isDark ? "opacity-60" : "text-[#666]"
         }`}
       >
         {useCase.tagline}
@@ -99,7 +99,7 @@ function UseCasesHub() {
     <MarketingLayout>
       {/* Hero */}
       <section className="px-6 py-20 md:py-28 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-6">
           22 Use Cases &amp; Growing
         </p>
         <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
@@ -107,7 +107,7 @@ function UseCasesHub() {
           <br />
           <span className="text-[#2d5a2d]">Everything</span>
         </h1>
-        <p className="text-lg text-[#888] max-w-xl mx-auto">
+        <p className="text-lg text-[#666] max-w-xl mx-auto">
           From competitor intelligence to price alerts — see how teams and
           individuals use PagePulse to stay ahead of changes that matter.
         </p>
@@ -122,7 +122,7 @@ function UseCasesHub() {
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
             Business Use Cases
           </h2>
-          <p className="text-[#888] leading-relaxed mb-16 max-w-lg">
+          <p className="text-[#a0a0a0] leading-relaxed mb-16 max-w-lg">
             Professional monitoring for competitive intelligence, compliance,
             and website integrity.
           </p>
@@ -138,13 +138,13 @@ function UseCasesHub() {
       {/* Personal Use Cases */}
       <section className="border-t-2 border-[#1a1a1a] px-6 py-24">
         <div className="max-w-5xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-4">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4">
             For Everyone
           </p>
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
             Personal Use Cases
           </h2>
-          <p className="text-[#888] leading-relaxed mb-16 max-w-lg">
+          <p className="text-[#666] leading-relaxed mb-16 max-w-lg">
             Stop manually checking websites. Let PagePulse watch for the changes
             that matter to you.
           </p>

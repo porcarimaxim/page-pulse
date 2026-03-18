@@ -27,26 +27,26 @@ export function MarketingCTA({
         <p className="text-lg opacity-70 mb-10 max-w-lg mx-auto">
           {description}
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          {/* Primary CTA — filled cream, prominent */}
           <Button
             asChild
             size="lg"
-            className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-[#f0f0e8] shadow-[6px_6px_0px_0px_#1a4a1a]"
+            className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8] shadow-[6px_6px_0px_0px_#1a4a1a] text-base px-8 py-6 h-auto font-black uppercase tracking-wider"
           >
             <Link to="/auth/sign-up">
               Start Monitoring Free
-              <ArrowRight className="ml-2" />
+              <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </Button>
+          {/* Secondary CTA — ghost outline, visually lighter */}
           {showPricing && (
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-[#f0f0e8] text-[#f0f0e8] hover:bg-[#f0f0e8] hover:text-[#1a1a1a]"
+            <Link
+              to="/pricing"
+              className="text-sm font-bold uppercase tracking-wider text-[#f0f0e8]/70 hover:text-[#f0f0e8] underline underline-offset-4 transition-colors"
             >
-              <Link to="/pricing">View Pricing</Link>
-            </Button>
+              View Pricing →
+            </Link>
           )}
         </div>
       </div>

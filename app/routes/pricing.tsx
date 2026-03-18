@@ -138,43 +138,51 @@ function PricingPage() {
 
   return (
     <MarketingLayout>
-      {/* Hero */}
-      <section className="px-6 py-20 md:py-28 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
+      {/* Hero — tightened so pricing cards appear above fold */}
+      <section className="px-6 pt-12 pb-8 md:pt-16 md:pb-10 max-w-4xl mx-auto text-center">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4">
           Simple Pricing
         </p>
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-4">
           Plans That
           <br />
           <span className="text-[#2d5a2d]">Scale</span>
         </h1>
-        <p className="text-lg text-[#888] max-w-xl mx-auto mb-10">
+        <p className="text-base text-[#666] max-w-xl mx-auto mb-6">
           Start free, upgrade when you need more. No surprises, no hidden fees.
         </p>
 
-        {/* Annual/Monthly Toggle */}
-        <div className="inline-flex border-2 border-[#1a1a1a]">
-          <button
-            onClick={() => setAnnual(false)}
-            className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
-              !annual
-                ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                : "bg-transparent text-[#888] hover:text-[#1a1a1a]"
+        {/* Annual/Monthly Toggle + savings callout below */}
+        <div className="flex flex-col items-center gap-2">
+          <div className="inline-flex border-2 border-[#1a1a1a]">
+            <button
+              onClick={() => setAnnual(false)}
+              className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+                !annual
+                  ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                  : "bg-transparent text-[#666] hover:text-[#1a1a1a]"
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setAnnual(true)}
+              className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors border-l-2 border-[#1a1a1a] ${
+                annual
+                  ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                  : "bg-transparent text-[#666] hover:text-[#1a1a1a]"
+              }`}
+            >
+              Annual
+            </button>
+          </div>
+          <span
+            className={`text-xs font-bold uppercase tracking-wider transition-opacity duration-200 ${
+              annual ? "text-[#2d5a2d] opacity-100" : "opacity-0"
             }`}
           >
-            Monthly
-          </button>
-          <button
-            onClick={() => setAnnual(true)}
-            className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors border-l-2 border-[#1a1a1a] ${
-              annual
-                ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                : "bg-transparent text-[#888] hover:text-[#1a1a1a]"
-            }`}
-          >
-            Annual
-            <span className="ml-2 text-[#7cb87c] text-xs">Save 17%</span>
-          </button>
+            ✓ Save 2 months — best value
+          </span>
         </div>
       </section>
 
@@ -222,7 +230,7 @@ function PricingPage() {
 
                 <p
                   className={`text-sm mb-6 ${
-                    isHighlighted ? "opacity-60" : "text-[#888]"
+                    isHighlighted ? "opacity-70" : "text-[#666]"
                   }`}
                 >
                   {plan.description}
@@ -235,7 +243,7 @@ function PricingPage() {
                   {price > 0 && (
                     <span
                       className={`text-sm ${
-                        isHighlighted ? "opacity-50" : "text-[#888]"
+                        isHighlighted ? "opacity-60" : "text-[#666]"
                       }`}
                     >
                       {period}
@@ -244,7 +252,7 @@ function PricingPage() {
                   {price === 0 && (
                     <span
                       className={`text-sm ml-2 ${
-                        isHighlighted ? "opacity-50" : "text-[#888]"
+                        isHighlighted ? "opacity-60" : "text-[#666]"
                       }`}
                     >
                       forever

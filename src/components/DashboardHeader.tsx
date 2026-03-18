@@ -11,7 +11,7 @@ export function DashboardHeader() {
         <nav className="flex items-center gap-4">
           <Link
             to="/dashboard"
-            className="text-sm font-bold uppercase tracking-wider text-[#888] hover:text-[#1a1a1a] transition-colors [&.active]:text-[#1a1a1a]"
+            className="text-sm font-bold uppercase tracking-wider text-[#666] hover:text-[#1a1a1a] transition-colors [&.active]:text-[#1a1a1a]"
           >
             Monitors
           </Link>
