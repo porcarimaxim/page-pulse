@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { ChangeTimeline } from "@/components/monitor/ChangeTimeline";
+import { ZoneFocusedPreview } from "@/components/monitor/ZoneFocusedPreview";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatRelativeTime, intervalLabel } from "@/lib/utils";
@@ -282,38 +283,12 @@ function MonitorDetailPage() {
       <div className="border-2 border-[#1a1a1a] mb-6">
         <div className="grid grid-cols-2 md:grid-cols-5">
           {/* Screenshot preview */}
-          <div className="relative bg-[#e8e8e0] border-r-2 border-[#1a1a1a] md:row-span-1 h-32 overflow-hidden flex items-start justify-center">
-            {monitor.screenshotUrl ? (
-              <div className="relative w-full h-full">
-                <img
-                  src={monitor.screenshotUrl}
-                  alt="Latest screenshot"
-                  className="w-full h-full object-contain object-top"
-                />
-                {/* Zone overlay - positioned relative to image */}
-                {monitor.selectionMode !== "element" && (
-                  <div
-                    className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
-                    style={{
-                      left: `${monitor.zone.x}%`,
-                      top: `${monitor.zone.y}%`,
-                      width: `${monitor.zone.width}%`,
-                      height: `${monitor.zone.height}%`,
-                    }}
-                  />
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-full w-full text-[#888] text-xs">
-                No screenshot yet
-              </div>
-            )}
-            {monitor.selectionMode === "element" && (
-              <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5">
-                Element
-              </div>
-            )}
-          </div>
+          <ZoneFocusedPreview
+            screenshotUrl={monitor.screenshotUrl}
+            zone={monitor.zone}
+            selectionMode={monitor.selectionMode}
+            className="border-r-2 border-[#1a1a1a] md:row-span-1 h-32"
+          />
 
           {/* Stat cards */}
           <div className="border-r-2 border-[#1a1a1a] p-4 flex flex-col justify-center">

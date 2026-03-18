@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
+import { ZoneFocusedPreview } from "@/components/monitor/ZoneFocusedPreview";
 import { formatRelativeTime, intervalLabel } from "@/lib/utils";
 import { Activity, Pause, AlertTriangle } from "lucide-react";
 
@@ -38,39 +39,12 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
     >
       <div className="border-2 border-[#1a1a1a] bg-[#f0f0e8] shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] transition-all">
         {/* Screenshot preview */}
-        <div className="relative h-40 bg-[#e8e8e0] border-b-2 border-[#1a1a1a] overflow-hidden">
-          {monitor.screenshotUrl ? (
-            <div className="relative w-full h-full">
-              <img
-                src={monitor.screenshotUrl}
-                alt={monitor.name}
-                className="w-full h-full object-contain object-top"
-              />
-              {/* Zone overlay (only for zone mode) */}
-              {monitor.selectionMode !== "element" && (
-                <div
-                  className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/10"
-                  style={{
-                    left: `${monitor.zone.x}%`,
-                    top: `${monitor.zone.y}%`,
-                    width: `${monitor.zone.width}%`,
-                    height: `${monitor.zone.height}%`,
-                  }}
-                />
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-full text-[#888] text-sm">
-              No screenshot yet
-            </div>
-          )}
-          {/* Element mode badge */}
-          {monitor.selectionMode === "element" && (
-            <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5">
-              Element
-            </div>
-          )}
-        </div>
+        <ZoneFocusedPreview
+          screenshotUrl={monitor.screenshotUrl}
+          zone={monitor.zone}
+          selectionMode={monitor.selectionMode}
+          className="h-40 border-b-2 border-[#1a1a1a]"
+        />
 
         {/* Info */}
         <div className="p-4">
