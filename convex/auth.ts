@@ -41,6 +41,16 @@ export async function requireUser(ctx: QueryCtx | MutationCtx) {
   if (!user) {
     throw new Error("Not authenticated");
   }
+
+  // Check if user is blocked
+  const settings = await ctx.db
+    .query("userSettings")
+    .withIndex("by_userId", (q) => q.eq("userId", user.subject))
+    .unique();
+  if (settings?.blocked) {
+    throw new Error("Your account has been suspended. Contact support for assistance.");
+  }
+
   return user;
 }
 

@@ -17,7 +17,18 @@ export const getDueMonitors = internalQuery({
       )
       .take(BATCH_SIZE);
 
-    return monitors;
+    // Filter out monitors owned by blocked users
+    const filtered = [];
+    for (const monitor of monitors) {
+      const settings = await ctx.db
+        .query("userSettings")
+        .withIndex("by_userId", (q) => q.eq("userId", monitor.userId))
+        .unique();
+      if (!settings?.blocked) {
+        filtered.push(monitor);
+      }
+    }
+    return filtered;
   },
 });
 

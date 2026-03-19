@@ -107,7 +107,6 @@ export default defineSchema({
 
   userSettings: defineTable({
     userId: v.string(),
-    claudeApiKey: v.optional(v.string()),
     aiEnabled: v.optional(v.boolean()),
     /** Admin-assigned plan override (takes precedence over JWT claims) */
     planOverride: v.optional(
@@ -118,6 +117,8 @@ export default defineSchema({
         v.literal("special")
       )
     ),
+    /** Admin can block abusive users */
+    blocked: v.optional(v.boolean()),
   }).index("by_userId", ["userId"]),
 
   rateLimits: defineTable({

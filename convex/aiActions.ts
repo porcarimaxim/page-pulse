@@ -20,20 +20,22 @@ export const generateChangeSummary = internalAction({
     afterTextContent: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Get user's Claude API key
+    const apiKey = process.env.CLAUDE_API_KEY;
+    if (!apiKey) {
+      console.log("[AI] No CLAUDE_API_KEY configured");
+      return;
+    }
+
     const monitor = await ctx.runQuery(internal.schedulerHelpers.getMonitor, {
       monitorId: args.monitorId,
     });
     if (!monitor) return;
 
+    // Check if user has AI enabled
     const settings = await ctx.runQuery(internal.aiHelpers.getUserSettings, {
       userId: monitor.userId,
     });
-    if (!settings?.claudeApiKey) {
-      console.log(`[AI] No Claude API key configured for user ${monitor.userId}`);
-      return;
-    }
-    if (settings.aiEnabled === false) {
+    if (settings?.aiEnabled === false) {
       console.log(`[AI] AI summaries disabled for user ${monitor.userId}`);
       return;
     }
@@ -90,7 +92,7 @@ One sentence only. Never say you can't access the site.`;
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": settings.claudeApiKey,
+          "x-api-key": apiKey,
           "anthropic-version": "2023-06-01",
         },
         body: JSON.stringify({
@@ -166,11 +168,16 @@ export const generateSummaryOnDemand = action({
     });
     if (!monitor) throw new Error("Monitor not found");
 
+    if (!process.env.CLAUDE_API_KEY) {
+      throw new Error("AI summaries are not available — server API key not configured.");
+    }
+
+    // Check if user has AI enabled
     const settings = await ctx.runQuery(internal.aiHelpers.getUserSettings, {
       userId: monitor.userId,
     });
-    if (!settings?.claudeApiKey) {
-      throw new Error("No Claude API key configured. Add your key in Settings.");
+    if (settings?.aiEnabled === false) {
+      throw new Error("AI summaries are disabled. Enable them in Settings.");
     }
 
     // Trigger async generation

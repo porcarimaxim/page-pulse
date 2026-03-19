@@ -65,6 +65,7 @@ export const listAllUsers = query({
         email: string;
         monitorCount: number;
         planOverride?: string;
+        blocked?: boolean;
       }
     >();
 
@@ -87,12 +88,14 @@ export const listAllUsers = query({
       const existing = userMap.get(settings.userId);
       if (existing) {
         existing.planOverride = settings.planOverride;
+        existing.blocked = settings.blocked ?? false;
       } else {
         userMap.set(settings.userId, {
           userId: settings.userId,
           email: "",
           monitorCount: 0,
           planOverride: settings.planOverride,
+          blocked: settings.blocked ?? false,
         });
       }
     }
@@ -155,6 +158,44 @@ export const updateUserPlan = mutation({
         userId: args.userId,
         planOverride: override,
       });
+    }
+  },
+});
+
+/** Admin can block/unblock a user */
+export const toggleUserBlock = mutation({
+  args: {
+    userId: v.string(),
+    blocked: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+
+    const settings = await ctx.db
+      .query("userSettings")
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .unique();
+
+    if (settings) {
+      await ctx.db.patch(settings._id, { blocked: args.blocked });
+    } else {
+      await ctx.db.insert("userSettings", {
+        userId: args.userId,
+        blocked: args.blocked,
+      });
+    }
+
+    // If blocking, pause all their active monitors
+    if (args.blocked) {
+      const monitors = await ctx.db
+        .query("monitors")
+        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+        .collect();
+      for (const monitor of monitors) {
+        if (monitor.status === "active") {
+          await ctx.db.patch(monitor._id, { status: "paused" });
+        }
+      }
     }
   },
 });

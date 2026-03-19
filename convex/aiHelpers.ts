@@ -43,7 +43,6 @@ export const getMySettings = query({
 
 export const saveMySettings = mutation({
   args: {
-    claudeApiKey: v.optional(v.string()),
     aiEnabled: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -55,16 +54,14 @@ export const saveMySettings = mutation({
       .withIndex("by_userId", (q) => q.eq("userId", user.subject))
       .first();
 
-    const patch: Record<string, any> = {};
-    if (args.claudeApiKey !== undefined) patch.claudeApiKey = args.claudeApiKey;
-    if (args.aiEnabled !== undefined) patch.aiEnabled = args.aiEnabled;
-
     if (existing) {
-      await ctx.db.patch(existing._id, patch);
+      if (args.aiEnabled !== undefined) {
+        await ctx.db.patch(existing._id, { aiEnabled: args.aiEnabled });
+      }
     } else {
       await ctx.db.insert("userSettings", {
         userId: user.subject,
-        ...patch,
+        aiEnabled: args.aiEnabled,
       });
     }
   },

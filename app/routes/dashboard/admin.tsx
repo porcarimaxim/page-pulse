@@ -152,8 +152,10 @@ function StatsBar() {
 function UsersTable() {
   const users = useQuery(api.admin.listAllUsers);
   const updatePlan = useMutation(api.admin.updateUserPlan);
+  const toggleBlock = useMutation(api.admin.toggleUserBlock);
   const [savingUser, setSavingUser] = useState<string | null>(null);
   const [savedUser, setSavedUser] = useState<string | null>(null);
+  const [blockingUser, setBlockingUser] = useState<string | null>(null);
   const [pendingOverrides, setPendingOverrides] = useState<
     Record<string, string>
   >({});
@@ -190,10 +192,22 @@ function UsersTable() {
     }
   };
 
+  const handleToggleBlock = async (userId: string, currentlyBlocked: boolean) => {
+    const action = currentlyBlocked ? "unblock" : "block";
+    if (!window.confirm(`Are you sure you want to ${action} this user? ${!currentlyBlocked ? "All their active monitors will be paused." : ""}`)) return;
+
+    setBlockingUser(userId);
+    try {
+      await toggleBlock({ userId, blocked: !currentlyBlocked });
+    } finally {
+      setBlockingUser(null);
+    }
+  };
+
   return (
     <div className="border-2 border-[#1a1a1a]">
       {/* Header */}
-      <div className="grid grid-cols-[2fr_1fr_1fr_auto] gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8] items-center">
+      <div className="grid grid-cols-[2fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8] items-center">
         <span className="text-[10px] font-bold uppercase tracking-wider">
           User
         </span>
@@ -204,7 +218,10 @@ function UsersTable() {
           Plan Override
         </span>
         <span className="text-[10px] font-bold uppercase tracking-wider w-20 text-center">
-          Action
+          Plan
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider w-20 text-center">
+          Block
         </span>
       </div>
 
@@ -216,22 +233,31 @@ function UsersTable() {
             pendingOverrides[u.userId] ?? u.planOverride ?? "none";
           const hasChange = pendingOverrides[u.userId] !== undefined;
 
+          const isBlocked = u.blocked ?? false;
+
           return (
             <div
               key={u.userId}
-              className={`grid grid-cols-[2fr_1fr_1fr_auto] gap-4 px-4 py-3 items-center ${
+              className={`grid grid-cols-[2fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 items-center ${
                 i < users.length - 1 ? "border-b border-[#ccc]" : ""
-              } hover:bg-[#e8e8e0] transition-colors`}
+              } ${isBlocked ? "bg-[#fef2f2]" : "hover:bg-[#e8e8e0]"} transition-colors`}
             >
               {/* User info */}
-              <div className="min-w-0">
-                <p className="text-xs font-bold truncate">
-                  {u.email || u.userId}
-                </p>
-                {u.email && (
-                  <p className="text-[10px] text-[#888] font-mono truncate">
-                    {u.userId}
+              <div className="min-w-0 flex items-center gap-2">
+                <div className="min-w-0">
+                  <p className={`text-xs font-bold truncate ${isBlocked ? "line-through text-[#888]" : ""}`}>
+                    {u.email || u.userId}
                   </p>
+                  {u.email && (
+                    <p className="text-[10px] text-[#888] font-mono truncate">
+                      {u.userId}
+                    </p>
+                  )}
+                </div>
+                {isBlocked && (
+                  <span className="shrink-0 px-1.5 py-0.5 bg-[#dc2626] text-white text-[8px] font-bold uppercase tracking-wider">
+                    Blocked
+                  </span>
                 )}
               </div>
 
@@ -272,6 +298,27 @@ function UsersTable() {
                 ) : (
                   <span className="text-[10px] text-[#ccc]">—</span>
                 )}
+              </div>
+
+              {/* Block toggle */}
+              <div className="w-20 flex justify-center">
+                <button
+                  onClick={() => handleToggleBlock(u.userId, isBlocked)}
+                  disabled={blockingUser === u.userId}
+                  className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-2 transition-colors disabled:opacity-50 ${
+                    isBlocked
+                      ? "bg-[#e8e8e0] text-[#1a1a1a] border-[#1a1a1a] hover:bg-[#d8d8d0]"
+                      : "bg-[#dc2626] text-white border-[#dc2626] hover:bg-[#b91c1c]"
+                  }`}
+                >
+                  {blockingUser === u.userId ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : isBlocked ? (
+                    "Unblock"
+                  ) : (
+                    "Block"
+                  )}
+                </button>
               </div>
             </div>
           );

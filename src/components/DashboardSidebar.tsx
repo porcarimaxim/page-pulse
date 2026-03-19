@@ -1,7 +1,7 @@
 import { Link, useMatches } from "@tanstack/react-router";
 import { UserButton, useUser } from "@clerk/tanstack-react-start";
 import {
-  BarChart3,
+  Inbox,
   Eye,
   Settings,
   Shield,
@@ -12,7 +12,7 @@ import {
 import { useState, useEffect } from "react";
 
 const navItems = [
-  { to: "/dashboard", label: "Dashboard", icon: BarChart3, exact: true },
+  { to: "/dashboard", label: "Inbox", icon: Inbox, exact: true },
   { to: "/dashboard/monitors", label: "Monitors", icon: Eye, exact: false },
   { to: "/dashboard/settings", label: "Settings", icon: Settings, exact: true },
 ] as const;

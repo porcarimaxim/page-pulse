@@ -128,50 +128,38 @@ function MonitorsListPage() {
         </Button>
       </div>
 
-      {/* Plan usage bar */}
-      {usage && (
-        <div className="border-2 border-[#1a1a1a] p-4 mb-6 flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
-              Plan
-            </span>
-            <span className="text-xs font-black uppercase tracking-tighter bg-[#1a1a1a] text-[#f0f0e8] px-2 py-0.5">
-              {usage.planName}
-            </span>
-          </div>
+      {/* Plan usage bar — hidden for unlimited/special plans */}
+      {usage && usage.maxMonitors !== -1 && (
+        <div className="border-2 border-[#ccc] p-4 mb-6 flex items-center gap-6">
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-1.5">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
-                Monitors
+                {usage.planName} Plan — Monitors
               </span>
               <span className="text-xs font-black tracking-tighter">
                 {usage.monitorCount}
                 <span className="text-[#888] font-bold">
                   {" / "}
-                  {usage.maxMonitors === -1
-                    ? "∞"
-                    : usage.maxMonitors}
+                  {usage.maxMonitors}
                 </span>
               </span>
             </div>
-            {usage.maxMonitors !== -1 && (
-              <div className="h-1.5 bg-[#e8e8e0] border border-[#ccc] overflow-hidden">
-                <div
-                  className={`h-full transition-all ${
-                    usage.monitorCount >= usage.maxMonitors
-                      ? "bg-[#dc2626]"
-                      : usage.monitorCount >= usage.maxMonitors * 0.8
-                        ? "bg-[#ca8a04]"
-                        : "bg-[#2d5a2d]"
-                  }`}
-                  style={{
-                    width: `${Math.min(100, (usage.monitorCount / usage.maxMonitors) * 100)}%`,
-                  }}
-                />
-              </div>
-            )}
+            <div className="h-1.5 bg-[#e8e8e0] border border-[#ccc] overflow-hidden">
+              <div
+                className={`h-full transition-all ${
+                  usage.monitorCount >= usage.maxMonitors
+                    ? "bg-[#dc2626]"
+                    : usage.monitorCount >= usage.maxMonitors * 0.8
+                      ? "bg-[#ca8a04]"
+                      : "bg-[#2d5a2d]"
+                }`}
+                style={{
+                  width: `${Math.min(100, (usage.monitorCount / usage.maxMonitors) * 100)}%`,
+                }}
+              />
+            </div>
           </div>
-          {usage.monitorCount >= (usage.maxMonitors === -1 ? Infinity : usage.maxMonitors) && (
+          {usage.monitorCount >= usage.maxMonitors && (
             <Link
               to="/pricing"
               className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline underline-offset-4 shrink-0"
