@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useAction, useMutation, useConvexAuth } from "convex/react";
+import { useAction, useMutation, useQuery, useConvexAuth } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { ZoneSelector, type Zone } from "@/components/zone-selector/ZoneSelector";
@@ -13,6 +13,7 @@ import {
   MousePointer,
   Crop,
   Image as ImageIcon,
+  Lock,
 } from "lucide-react";
 import {
   INTERVALS,
@@ -32,6 +33,7 @@ function NewMonitorPage() {
   const navigate = useNavigate();
   const captureScreenshot = useAction(api.screenshotActions.captureScreenshot);
   const createMonitor = useMutation(api.monitors.create);
+  const usage = useQuery(api.monitors.usage, isSignedIn ? {} : "skip");
 
   if (isLoaded && !isSignedIn) {
     navigate({ to: "/auth/sign-in", search: { redirect_url: "/dashboard/new" } as any });
@@ -195,6 +197,24 @@ function NewMonitorPage() {
         </div>
       </div>
 
+      {/* Monitor limit warning */}
+      {usage && usage.maxMonitors !== -1 && usage.monitorCount >= usage.maxMonitors && (
+        <div className="mx-6 mt-4 border-2 border-[#ca8a04] bg-[#fefce8] p-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Lock className="w-4 h-4 text-[#ca8a04]" />
+            <p className="text-sm font-bold text-[#ca8a04]">
+              Monitor limit reached ({usage.monitorCount}/{usage.maxMonitors} on {usage.planName} plan)
+            </p>
+          </div>
+          <a
+            href="/pricing"
+            className="text-xs font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline shrink-0"
+          >
+            Upgrade →
+          </a>
+        </div>
+      )}
+
       {error && (
         <div className="mx-6 mt-4 border-2 border-[#dc2626] bg-[#dc2626]/10 p-3">
           <p className="text-sm text-[#dc2626] font-bold">{error}</p>
@@ -256,20 +276,38 @@ function NewMonitorPage() {
                   Check Frequency
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
-                  {INTERVALS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setInterval(opt.value)}
-                      className={`border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all ${
-                        interval === opt.value
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+                  {INTERVALS.map((opt) => {
+                    const allowed = usage?.allowedIntervals?.includes(opt.value) ?? true;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => allowed && setInterval(opt.value)}
+                        disabled={!allowed}
+                        className={`border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all relative ${
+                          !allowed
+                            ? "opacity-40 cursor-not-allowed bg-[#e8e8e0] text-[#888]"
+                            : interval === opt.value
+                              ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                              : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                        }`}
+                        title={!allowed ? `Upgrade to Pro for ${opt.label} checks` : ""}
+                      >
+                        {opt.label}
+                        {!allowed && (
+                          <Lock className="w-2.5 h-2.5 absolute top-0.5 right-0.5 text-[#888]" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
+                {usage && usage.planId === "free" && (
+                  <p className="text-[10px] text-[#888] mt-1.5">
+                    Free plan: daily checks only.{" "}
+                    <a href="/pricing" className="text-[#2d5a2d] hover:underline">
+                      Upgrade for faster checks →
+                    </a>
+                  </p>
+                )}
               </div>
 
               {/* Sensitivity */}

@@ -53,6 +53,7 @@ function severityLabel(s: "low" | "medium" | "high") {
 function DashboardOverview() {
   const { isSignedIn } = useAuth();
   const monitors = useQuery(api.monitors.list, isSignedIn ? {} : "skip");
+  const usage = useQuery(api.monitors.usage, isSignedIn ? {} : "skip");
   const recentChanges = useQuery(
     api.changes.recentAcrossMonitors,
     isSignedIn ? { limit: 30 } : "skip"
@@ -221,6 +222,30 @@ function DashboardOverview() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ─── Plan usage ─── */}
+      {usage && (
+        <div className="flex items-center gap-4 mb-6 text-[10px] font-bold uppercase tracking-wider text-[#888]">
+          <span className="bg-[#1a1a1a] text-[#f0f0e8] px-2 py-0.5 text-[10px] font-black tracking-tighter">
+            {usage.planName}
+          </span>
+          <span>
+            {usage.monitorCount}
+            {usage.maxMonitors !== -1
+              ? ` / ${usage.maxMonitors} monitors`
+              : " monitors"}
+          </span>
+          {usage.maxMonitors !== -1 &&
+            usage.monitorCount >= usage.maxMonitors && (
+              <Link
+                to="/pricing"
+                className="text-[#2d5a2d] hover:underline underline-offset-4"
+              >
+                Upgrade →
+              </Link>
+            )}
         </div>
       )}
 

@@ -3,6 +3,7 @@ import { query, mutation } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { getUser, requireUser, requireMonitorAccess, identityEmail } from "./auth";
 import { INTERVAL_MS } from "./intervals";
+import { getUserPlan, countUserMonitors } from "./plans";
 
 export const list = query({
   args: {},
@@ -36,6 +37,24 @@ export const get = query({
       ? await ctx.storage.getUrl(monitor.fullScreenshotStorageId)
       : null;
     return { ...monitor, screenshotUrl };
+  },
+});
+
+export const usage = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getUser(ctx);
+    if (!user) return null;
+    const { planId, limits } = await getUserPlan(ctx);
+    const monitorCount = await countUserMonitors(ctx, user.subject);
+    return {
+      planId,
+      planName: limits.name,
+      monitorCount,
+      maxMonitors: limits.maxMonitors,
+      monthlyChecks: limits.monthlyChecks,
+      allowedIntervals: limits.allowedIntervals,
+    };
   },
 });
 
@@ -85,6 +104,25 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireUser(ctx);
+
+    // ── Plan limit enforcement ──
+    const { limits } = await getUserPlan(ctx);
+
+    // Check monitor count
+    const currentCount = await countUserMonitors(ctx, user.subject);
+    if (limits.maxMonitors !== -1 && currentCount >= limits.maxMonitors) {
+      throw new Error(
+        `Monitor limit reached (${limits.maxMonitors} on ${limits.name} plan). Upgrade your plan to add more monitors.`
+      );
+    }
+
+    // Check interval restriction
+    if (!limits.allowedIntervals.includes(args.interval)) {
+      throw new Error(
+        `${args.interval} check frequency is not available on the ${limits.name} plan. Upgrade to Pro for faster checks.`
+      );
+    }
+
     const now = Date.now();
     const intervalMs = INTERVAL_MS[args.interval] ?? INTERVAL_MS.daily;
 
@@ -176,6 +214,16 @@ export const update = mutation({
   },
   handler: async (ctx, args) => {
     const { monitor } = await requireMonitorAccess(ctx, args.monitorId);
+
+    // ── Plan limit: interval restriction ──
+    if (args.interval !== undefined) {
+      const { limits } = await getUserPlan(ctx);
+      if (!limits.allowedIntervals.includes(args.interval)) {
+        throw new Error(
+          `${args.interval} check frequency is not available on the ${limits.name} plan. Upgrade to Pro for faster checks.`
+        );
+      }
+    }
 
     const updates: Record<string, unknown> = {};
     if (args.name !== undefined) updates.name = args.name;

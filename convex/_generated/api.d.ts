@@ -19,6 +19,7 @@ import type * as emailActions from "../emailActions.js";
 import type * as http from "../http.js";
 import type * as intervals from "../intervals.js";
 import type * as monitors from "../monitors.js";
+import type * as plans from "../plans.js";
 import type * as scheduler from "../scheduler.js";
 import type * as schedulerHelpers from "../schedulerHelpers.js";
 import type * as screenshotActions from "../screenshotActions.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   intervals: typeof intervals;
   monitors: typeof monitors;
+  plans: typeof plans;
   scheduler: typeof scheduler;
   schedulerHelpers: typeof schedulerHelpers;
   screenshotActions: typeof screenshotActions;

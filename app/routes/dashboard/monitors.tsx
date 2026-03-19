@@ -49,6 +49,7 @@ type Monitor = {
 function MonitorsListPage() {
   const { isSignedIn } = useAuth();
   const monitors = useQuery(api.monitors.list, isSignedIn ? {} : "skip");
+  const usage = useQuery(api.monitors.usage, isSignedIn ? {} : "skip");
   const pauseMonitor = useMutation(api.monitors.pause);
   const resumeMonitor = useMutation(api.monitors.resume);
   const [search, setSearch] = useState("");
@@ -126,6 +127,60 @@ function MonitorsListPage() {
           </Link>
         </Button>
       </div>
+
+      {/* Plan usage bar */}
+      {usage && (
+        <div className="border-2 border-[#1a1a1a] p-4 mb-6 flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+              Plan
+            </span>
+            <span className="text-xs font-black uppercase tracking-tighter bg-[#1a1a1a] text-[#f0f0e8] px-2 py-0.5">
+              {usage.planName}
+            </span>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+                Monitors
+              </span>
+              <span className="text-xs font-black tracking-tighter">
+                {usage.monitorCount}
+                <span className="text-[#888] font-bold">
+                  {" / "}
+                  {usage.maxMonitors === -1
+                    ? "∞"
+                    : usage.maxMonitors}
+                </span>
+              </span>
+            </div>
+            {usage.maxMonitors !== -1 && (
+              <div className="h-1.5 bg-[#e8e8e0] border border-[#ccc] overflow-hidden">
+                <div
+                  className={`h-full transition-all ${
+                    usage.monitorCount >= usage.maxMonitors
+                      ? "bg-[#dc2626]"
+                      : usage.monitorCount >= usage.maxMonitors * 0.8
+                        ? "bg-[#ca8a04]"
+                        : "bg-[#2d5a2d]"
+                  }`}
+                  style={{
+                    width: `${Math.min(100, (usage.monitorCount / usage.maxMonitors) * 100)}%`,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          {usage.monitorCount >= (usage.maxMonitors === -1 ? Infinity : usage.maxMonitors) && (
+            <Link
+              to="/pricing"
+              className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline underline-offset-4 shrink-0"
+            >
+              Upgrade →
+            </Link>
+          )}
+        </div>
+      )}
 
       {monitors === undefined ? (
         <div className="text-center py-20 text-[#888]">Loading...</div>
