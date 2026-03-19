@@ -110,4 +110,11 @@ export default defineSchema({
     claudeApiKey: v.optional(v.string()),
     aiEnabled: v.optional(v.boolean()),
   }).index("by_userId", ["userId"]),
+
+  rateLimits: defineTable({
+    /** Composite key: userId + ":" + action */
+    key: v.string(),
+    /** Timestamps of recent actions (sliding window) */
+    timestamps: v.array(v.number()),
+  }).index("by_key", ["key"]),
 });

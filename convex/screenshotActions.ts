@@ -5,6 +5,18 @@ import { action, internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { getIdentity } from "./auth";
 
+/** Helper: enforce rate limit from within an action */
+async function enforceActionRateLimit(
+  ctx: { runMutation: (ref: any, args: any) => Promise<any> },
+  userId: string,
+  actionName: string
+) {
+  await ctx.runMutation(internal.rateLimitMutations.check, {
+    userId,
+    action: actionName,
+  });
+}
+
 const SCREENSHOTONE_API = "https://api.screenshotone.com/take";
 
 type ScreenshotProvider = "pagess" | "screenshotone";
@@ -133,7 +145,8 @@ export const captureScreenshot = action({
     fullPage: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await getIdentity(ctx);
+    const identity = await getIdentity(ctx);
+    await enforceActionRateLimit(ctx, identity.subject, "screenshot:capture");
 
     const t0 = Date.now();
     const imageBlob = await fetchScreenshot({
@@ -270,7 +283,8 @@ export const resolveElementFromClick = action({
     mobileViewport: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await getIdentity(ctx);
+    const identity = await getIdentity(ctx);
+    await enforceActionRateLimit(ctx, identity.subject, "screenshot:resolveElement");
     const totalStart = Date.now();
     const label = `[resolveElementFromClick] url=${args.url} click=(${args.clickX.toFixed(1)}%,${args.clickY.toFixed(1)}%)`;
     console.log(`${label} — starting`);
@@ -500,7 +514,8 @@ export const getPageElementMap = action({
     mobileViewport: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    await getIdentity(ctx);
+    const identity = await getIdentity(ctx);
+    await enforceActionRateLimit(ctx, identity.subject, "screenshot:elementMap");
 
     const vw = args.mobileViewport ? 375 : 1280;
     const vh = args.mobileViewport ? 812 : 800;

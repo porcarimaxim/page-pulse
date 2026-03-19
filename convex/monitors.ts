@@ -4,6 +4,7 @@ import { internal } from "./_generated/api";
 import { getUser, requireUser, requireMonitorAccess, identityEmail } from "./auth";
 import { INTERVAL_MS } from "./intervals";
 import { getUserPlan, countUserMonitors } from "./plans";
+import { enforceRateLimit } from "./rateLimiter";
 
 export const list = query({
   args: {},
@@ -104,6 +105,9 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireUser(ctx);
+
+    // ── Rate limit ──
+    await enforceRateLimit(ctx, user.subject, "monitor:create");
 
     // ── Plan limit enforcement ──
     const { limits } = await getUserPlan(ctx);
@@ -295,7 +299,8 @@ export const resume = mutation({
 export const checkNow = mutation({
   args: { monitorId: v.id("monitors") },
   handler: async (ctx, args) => {
-    const { monitor } = await requireMonitorAccess(ctx, args.monitorId);
+    const { user, monitor } = await requireMonitorAccess(ctx, args.monitorId);
+    await enforceRateLimit(ctx, user.subject, "monitor:checkNow");
     // Recover from paused or error state
     if (monitor.status !== "active") {
       const intervalMs = INTERVAL_MS[monitor.interval] ?? INTERVAL_MS.daily;

@@ -20,6 +20,8 @@ import type * as http from "../http.js";
 import type * as intervals from "../intervals.js";
 import type * as monitors from "../monitors.js";
 import type * as plans from "../plans.js";
+import type * as rateLimitMutations from "../rateLimitMutations.js";
+import type * as rateLimiter from "../rateLimiter.js";
 import type * as scheduler from "../scheduler.js";
 import type * as schedulerHelpers from "../schedulerHelpers.js";
 import type * as screenshotActions from "../screenshotActions.js";
@@ -46,6 +48,8 @@ declare const fullApi: ApiFromModules<{
   intervals: typeof intervals;
   monitors: typeof monitors;
   plans: typeof plans;
+  rateLimitMutations: typeof rateLimitMutations;
+  rateLimiter: typeof rateLimiter;
   scheduler: typeof scheduler;
   schedulerHelpers: typeof schedulerHelpers;
   screenshotActions: typeof screenshotActions;
