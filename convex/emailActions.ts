@@ -13,6 +13,7 @@ export const sendChangeNotification = internalAction({
     beforeUrl: v.optional(v.string()),
     afterUrl: v.optional(v.string()),
     diffUrl: v.optional(v.string()),
+    aiSummary: v.optional(v.string()),
     dashboardUrl: v.string(),
   },
   handler: async (ctx, args) => {
@@ -45,6 +46,17 @@ export const sendChangeNotification = internalAction({
               ${args.monitorUrl}
             </a>
           </div>
+
+          ${args.aiSummary ? `
+            <div style="border: 2px solid #7c3aed; padding: 16px; margin-bottom: 24px; background: #faf5ff;">
+              <p style="font-size: 12px; text-transform: uppercase; font-weight: bold; color: #7c3aed; margin: 0 0 8px 0;">
+                &#10024; AI Summary
+              </p>
+              <p style="font-size: 14px; color: #1a1a1a; margin: 0; line-height: 1.5;">
+                ${args.aiSummary}
+              </p>
+            </div>
+          ` : ""}
 
           ${args.beforeUrl && args.afterUrl ? `
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">

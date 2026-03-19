@@ -4,6 +4,7 @@ import { v } from "convex/values";
 import { internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { createTwoFilesPatch } from "diff";
+import { callClaudeForSummary } from "./aiActions";
 
 /**
  * Check if keyword conditions are met for triggering a change alert.
@@ -229,7 +230,7 @@ export const processOneMonitor = internalAction({
           }
         }
 
-        await ctx.runMutation(internal.schedulerHelpers.recordChange, {
+        const changeId = await ctx.runMutation(internal.schedulerHelpers.recordChange, {
           monitorId: monitor._id,
           beforeSnapshotId: monitor.lastSnapshotId!,
           afterSnapshotId: snapshotId,
@@ -245,6 +246,37 @@ export const processOneMonitor = internalAction({
         const diffUrl = result.diffStorageId
           ? await ctx.storage.getUrl(result.diffStorageId)
           : null;
+
+        // Generate AI summary inline (before email so we can include it)
+        let aiSummary: string | undefined;
+        const tAi = Date.now();
+        try {
+          // Check if user has AI enabled
+          const userSettings = await ctx.runQuery(internal.aiHelpers.getUserSettings, {
+            userId: monitor.userId,
+          });
+          if (userSettings?.aiEnabled !== false) {
+            const summary = await callClaudeForSummary({
+              monitorName: monitor.name,
+              monitorUrl: monitor.url,
+              diffPercentage: result.diffPercentage,
+              textDiff,
+              beforeTextContent: lastSnapshot?.textContent,
+              afterTextContent: textContent,
+            });
+            if (summary) {
+              aiSummary = summary;
+              // Save to the change record
+              await ctx.runMutation(internal.aiHelpers.saveAiSummary, {
+                changeId: changeId!,
+                summary,
+              });
+              console.log(`${label} — AI summary: ${Date.now() - tAi}ms "${summary.slice(0, 60)}..."`);
+            }
+          }
+        } catch (e) {
+          console.error(`${label} — AI summary FAILED in ${Date.now() - tAi}ms:`, e);
+        }
 
         // Email notification
         const tEmail = Date.now();
@@ -263,6 +295,7 @@ export const processOneMonitor = internalAction({
               beforeUrl: beforeUrl ?? undefined,
               afterUrl: afterUrl ?? undefined,
               diffUrl: diffUrl ?? undefined,
+              aiSummary,
               dashboardUrl: `${process.env.SITE_URL ?? "https://pagepulse.dev"}/dashboard/${monitor._id}`,
             });
             console.log(`${label} — email notification: ${Date.now() - tEmail}ms`);

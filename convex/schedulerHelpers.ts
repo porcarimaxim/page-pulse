@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { internalQuery, internalMutation } from "./_generated/server";
-import { internal } from "./_generated/api";
 import { INTERVAL_MS } from "./intervals";
 
 const MAX_CONSECUTIVE_ERRORS = 5;
@@ -92,27 +91,9 @@ export const recordChange = internalMutation({
       await ctx.db.patch(args.monitorId, {
         changeCount: monitor.changeCount + 1,
       });
-
-      // Get before/after text content for AI summary
-      const beforeSnapshot = await ctx.db.get(args.beforeSnapshotId);
-      const afterSnapshot = await ctx.db.get(args.afterSnapshotId);
-
-      // Schedule AI summary generation (async, non-blocking)
-      await ctx.scheduler.runAfter(
-        0,
-        internal.aiActions.generateChangeSummary,
-        {
-          changeId,
-          monitorId: args.monitorId,
-          monitorName: monitor.name,
-          monitorUrl: monitor.url,
-          diffPercentage: args.diffPercentage,
-          textDiff: args.textDiff,
-          beforeTextContent: beforeSnapshot?.textContent,
-          afterTextContent: afterSnapshot?.textContent,
-        }
-      );
     }
+
+    return changeId;
   },
 });
 

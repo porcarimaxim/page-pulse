@@ -7,6 +7,13 @@ import { ElementPicker } from "@/components/element-picker/ElementPicker";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import {
   ArrowLeft,
   Loader2,
   Save,
@@ -14,6 +21,7 @@ import {
   Crop,
   MousePointer,
   RefreshCw,
+  ChevronDown,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { Id } from "@convex/_generated/dataModel";
@@ -84,6 +92,8 @@ function MonitorSettingsPage() {
   const [testResult, setTestResult] = useState<string | null>(null);
   const [isRecapturing, setIsRecapturing] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showWebhook, setShowWebhook] = useState(false);
 
   useEffect(() => {
     if (monitor && !initialized) {
@@ -319,7 +329,7 @@ function MonitorSettingsPage() {
         </div>
 
         {/* Right: Config sidebar — sticky */}
-        <div className="w-80 shrink-0 border-l-2 border-[#1a1a1a]">
+        <div className="w-80 shrink-0 border-l-2 border-[#1a1a1a] bg-[#e4e4dc]">
           <div className="sticky top-[105px] h-[calc(100vh-105px)] overflow-y-auto">
             <div className="p-6 space-y-6">
               <h2 className="font-black text-lg uppercase tracking-tighter">
@@ -342,21 +352,18 @@ function MonitorSettingsPage() {
                 <label className="block text-xs font-bold uppercase text-[#888] mb-2">
                   Check Frequency
                 </label>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {INTERVALS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setInterval(opt.value)}
-                      className={`border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all ${
-                        interval === opt.value
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
+                <Select value={interval} onValueChange={setInterval}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {INTERVALS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Sensitivity */}
@@ -364,30 +371,24 @@ function MonitorSettingsPage() {
                 <label className="block text-xs font-bold uppercase text-[#888] mb-2">
                   Sensitivity
                 </label>
-                <div className="space-y-1.5">
-                  {SENSITIVITY_PRESETS.map((preset) => (
-                    <button
-                      key={preset.value}
-                      onClick={() => setSensitivityThreshold(preset.value)}
-                      className={`w-full border-2 border-[#1a1a1a] px-2 py-1.5 text-left transition-all ${
-                        sensitivityThreshold === preset.value
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                      }`}
-                    >
-                      <span className="text-xs font-bold uppercase">
-                        {preset.label}
-                      </span>
-                      <span className={`text-[10px] ml-2 ${
-                        sensitivityThreshold === preset.value
-                          ? "text-[#ccc]"
-                          : "text-[#888]"
-                      }`}>
-                        {preset.description}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                <Select
+                  value={String(sensitivityThreshold)}
+                  onValueChange={(val) => setSensitivityThreshold(Number(val))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SENSITIVITY_PRESETS.map((preset) => (
+                      <SelectItem key={preset.value} value={String(preset.value)}>
+                        <span>{preset.label}</span>
+                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                          {preset.description}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Compare Type */}
@@ -395,26 +396,24 @@ function MonitorSettingsPage() {
                 <label className="block text-xs font-bold uppercase text-[#888] mb-2">
                   Compare Type
                 </label>
-                <div className="flex gap-0">
-                  {COMPARE_TYPES.map((t, i) => (
-                    <button
-                      key={t.value}
-                      onClick={() => setCompareType(t.value as typeof compareType)}
-                      className={`flex-1 border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all ${
-                        i > 0 ? "border-l-0" : ""
-                      } ${
-                        compareType === t.value
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                      }`}
-                    >
-                      <div>{t.label}</div>
-                      <div className={`text-[10px] font-normal ${
-                        compareType === t.value ? "text-[#ccc]" : "text-[#888]"
-                      }`}>{t.description}</div>
-                    </button>
-                  ))}
-                </div>
+                <Select
+                  value={compareType}
+                  onValueChange={(val) => setCompareType(val as typeof compareType)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COMPARE_TYPES.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>
+                        <span>{t.label}</span>
+                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                          {t.description}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Keywords */}
@@ -468,10 +467,21 @@ function MonitorSettingsPage() {
 
               {/* Advanced Settings */}
               <div className="border-t-2 border-[#ccc] pt-4 space-y-4">
-                <h3 className="font-black text-xs uppercase tracking-tighter">
-                  Advanced
-                </h3>
+                <button
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  className="w-full flex items-center justify-between group"
+                >
+                  <h3 className="font-black text-xs uppercase tracking-tighter group-hover:text-[#2d5a2d] transition-colors">
+                    Advanced
+                  </h3>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#888] transition-transform duration-200 ${
+                      showAdvanced ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
+                {showAdvanced && (<>
                 {/* Active Days */}
                 <div>
                   <label className="block text-xs font-bold uppercase text-[#888] mb-2">
@@ -594,14 +604,26 @@ function MonitorSettingsPage() {
                     </span>
                   </label>
                 </div>
+                </>)}
               </div>
 
               {/* Webhook */}
               <div className="border-t-2 border-[#ccc] pt-4 space-y-3">
-                <h3 className="font-black text-xs uppercase tracking-tighter">
-                  Webhook Notifications
-                </h3>
+                <button
+                  onClick={() => setShowWebhook(!showWebhook)}
+                  className="w-full flex items-center justify-between group"
+                >
+                  <h3 className="font-black text-xs uppercase tracking-tighter group-hover:text-[#2d5a2d] transition-colors">
+                    Webhook Notifications
+                  </h3>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#888] transition-transform duration-200 ${
+                      showWebhook ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
+                {showWebhook && (<>
                 <div>
                   <label className="block text-xs font-bold uppercase text-[#888] mb-1.5">
                     Type
@@ -665,6 +687,7 @@ function MonitorSettingsPage() {
                     )}
                   </div>
                 </div>
+                </>)}
               </div>
 
               {/* Selection info */}
@@ -689,7 +712,7 @@ function MonitorSettingsPage() {
             </div>
 
             {/* Bottom actions — pinned to bottom of sidebar */}
-            <div className="sticky bottom-0 bg-[#f0f0e8] border-t-2 border-[#1a1a1a] p-4 flex items-center gap-3">
+            <div className="sticky bottom-0 bg-[#e4e4dc] border-t-2 border-[#1a1a1a] p-4 flex items-center gap-3">
               <div className="flex-1">
                 {saved && (
                   <span className="text-sm text-[#2d5a2d] font-bold">
