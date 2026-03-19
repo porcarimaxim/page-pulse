@@ -1,10 +1,12 @@
 import { v } from "convex/values";
 import { internalMutation, mutation } from "./_generated/server";
 import { checkRateLimit } from "./rateLimiter";
+import { getUserPlan } from "./plans";
 
 /**
  * Internal mutation to check and record a rate-limited action.
  * Called from actions (which can't access the DB directly).
+ * Automatically skips for users on the "special" plan.
  */
 export const check = internalMutation({
   args: {
@@ -12,6 +14,10 @@ export const check = internalMutation({
     action: v.string(),
   },
   handler: async (ctx, args) => {
+    // Check if user's plan skips rate limits
+    const { limits } = await getUserPlan(ctx);
+    if (limits.skipRateLimit) return;
+
     const result = await checkRateLimit(ctx, args.userId, args.action);
     if (result.allowed === false) {
       const seconds = Math.ceil(result.retryAfterMs / 1000);
@@ -23,9 +29,7 @@ export const check = internalMutation({
 });
 
 /**
- * Public mutation for client-side pre-checks (e.g. before starting
- * an expensive screenshot action, the client can check if it'll be
- * rate-limited and show a message instead of waiting for the action to fail).
+ * Public mutation for client-side pre-checks.
  */
 export const preCheck = mutation({
   args: {

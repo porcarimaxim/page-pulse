@@ -22,6 +22,7 @@ import { Route as UseCasesSlugRouteImport } from './routes/use-cases/$slug'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardNewRouteImport } from './routes/dashboard/new'
 import { Route as DashboardMonitorsRouteImport } from './routes/dashboard/monitors'
+import { Route as DashboardAdminRouteImport } from './routes/dashboard/admin'
 import { Route as CompareVisualpingAlternativeRouteImport } from './routes/compare/visualping-alternative'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
@@ -96,6 +97,11 @@ const DashboardMonitorsRoute = DashboardMonitorsRouteImport.update({
   path: '/monitors',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAdminRoute = DashboardAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const CompareVisualpingAlternativeRoute =
   CompareVisualpingAlternativeRouteImport.update({
     id: '/compare/visualping-alternative',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/compare/visualping-alternative': typeof CompareVisualpingAlternativeRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/compare/visualping-alternative': typeof CompareVisualpingAlternativeRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/auth/sign-up': typeof AuthSignUpRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/compare/visualping-alternative': typeof CompareVisualpingAlternativeRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/monitors': typeof DashboardMonitorsRoute
   '/dashboard/new': typeof DashboardNewRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/blog/$slug'
     | '/compare/visualping-alternative'
+    | '/dashboard/admin'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/blog/$slug'
     | '/compare/visualping-alternative'
+    | '/dashboard/admin'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/blog/$slug'
     | '/compare/visualping-alternative'
+    | '/dashboard/admin'
     | '/dashboard/monitors'
     | '/dashboard/new'
     | '/dashboard/settings'
@@ -373,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardNewRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/monitors': {
       id: '/dashboard/monitors'
       path: '/monitors'
@@ -452,6 +471,7 @@ const BlogRouteChildren: BlogRouteChildren = {
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardAdminRoute: typeof DashboardAdminRoute
   DashboardMonitorsRoute: typeof DashboardMonitorsRoute
   DashboardNewRoute: typeof DashboardNewRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
@@ -461,6 +481,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAdminRoute: DashboardAdminRoute,
   DashboardMonitorsRoute: DashboardMonitorsRoute,
   DashboardNewRoute: DashboardNewRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,

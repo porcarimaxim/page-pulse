@@ -109,6 +109,15 @@ export default defineSchema({
     userId: v.string(),
     claudeApiKey: v.optional(v.string()),
     aiEnabled: v.optional(v.boolean()),
+    /** Admin-assigned plan override (takes precedence over JWT claims) */
+    planOverride: v.optional(
+      v.union(
+        v.literal("free"),
+        v.literal("pro"),
+        v.literal("business"),
+        v.literal("special")
+      )
+    ),
   }).index("by_userId", ["userId"]),
 
   rateLimits: defineTable({

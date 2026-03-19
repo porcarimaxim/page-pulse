@@ -2,16 +2,18 @@ import { QueryCtx, MutationCtx } from "./_generated/server";
 
 /* ─── Plan definitions ─── */
 
-export type PlanId = "free" | "pro" | "business";
+export type PlanId = "free" | "pro" | "business" | "special";
 
 export interface PlanLimits {
   name: string;
   maxMonitors: number; // -1 = unlimited
-  monthlyChecks: number;
+  monthlyChecks: number; // -1 = unlimited
   /** Minimum allowed interval key — intervals faster than this are gated */
   minInterval: string;
   /** All interval keys this plan can use */
   allowedIntervals: string[];
+  /** Whether rate limits are skipped for this plan */
+  skipRateLimit: boolean;
 }
 
 const FREE_INTERVALS = [
@@ -44,6 +46,7 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     monthlyChecks: 500,
     minInterval: "daily",
     allowedIntervals: FREE_INTERVALS,
+    skipRateLimit: false,
   },
   pro: {
     name: "Pro",
@@ -51,6 +54,7 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     monthlyChecks: 10_000,
     minInterval: "5min",
     allowedIntervals: ALL_INTERVALS,
+    skipRateLimit: false,
   },
   business: {
     name: "Business",
@@ -58,6 +62,15 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     monthlyChecks: 50_000,
     minInterval: "5min",
     allowedIntervals: ALL_INTERVALS,
+    skipRateLimit: false,
+  },
+  special: {
+    name: "Special",
+    maxMonitors: -1, // unlimited
+    monthlyChecks: -1, // unlimited
+    allowedIntervals: ALL_INTERVALS,
+    minInterval: "5min",
+    skipRateLimit: true,
   },
 };
 
@@ -72,6 +85,7 @@ export function getPlanFromIdentity(
 ): PlanId {
   // Check for Clerk custom claims (set via billing or metadata)
   const plan = identity["plan"] ?? identity["subscription"] ?? identity["org_plan"];
+  if (plan === "special") return "special";
   if (plan === "pro") return "pro";
   if (plan === "business") return "business";
   return "free";
@@ -79,6 +93,8 @@ export function getPlanFromIdentity(
 
 /**
  * Get the current user's plan limits.
+ *
+ * Priority: planOverride in userSettings > admin status > JWT claims > "free"
  */
 export async function getUserPlan(
   ctx: QueryCtx | MutationCtx
@@ -87,6 +103,27 @@ export async function getUserPlan(
   if (!identity) {
     return { planId: "free", limits: PLAN_LIMITS.free };
   }
+
+  // 1. Check for admin-assigned plan override in userSettings
+  const settings = await ctx.db
+    .query("userSettings")
+    .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
+    .unique();
+
+  if (settings?.planOverride) {
+    const overrideId = settings.planOverride as PlanId;
+    if (overrideId in PLAN_LIMITS) {
+      return { planId: overrideId, limits: PLAN_LIMITS[overrideId] };
+    }
+  }
+
+  // 2. Check admin status → auto-assign "special"
+  const adminIds = (process.env.ADMIN_USER_IDS ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  if (adminIds.includes(identity.subject)) {
+    return { planId: "special", limits: PLAN_LIMITS.special };
+  }
+
+  // 3. Fall back to JWT claims
   const planId = getPlanFromIdentity(identity as any);
   return { planId, limits: PLAN_LIMITS[planId] };
 }

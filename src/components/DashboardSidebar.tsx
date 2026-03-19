@@ -4,6 +4,7 @@ import {
   BarChart3,
   Eye,
   Settings,
+  Shield,
   Zap,
   Menu,
   X,
@@ -41,7 +42,16 @@ function UserInfo() {
   );
 }
 
+const ADMIN_USER_IDS = (
+  import.meta.env.VITE_ADMIN_USER_IDS ?? ""
+)
+  .split(",")
+  .map((s: string) => s.trim())
+  .filter(Boolean);
+
 export function DashboardSidebar() {
+  const { user } = useUser();
+  const isAdmin = user?.id && ADMIN_USER_IDS.includes(user.id);
   const matches = useMatches();
   const currentPath = matches[matches.length - 1]?.fullPath ?? "";
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -111,6 +121,20 @@ export function DashboardSidebar() {
             </Link>
           );
         })}
+        {isAdmin && (
+          <Link
+            to="/dashboard/admin"
+            onClick={onClose}
+            className={`flex items-center gap-3 px-3 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+              isActive("/dashboard/admin", true)
+                ? "text-[#2d5a2d] bg-[#2d5a2d]/5"
+                : "text-[#666] hover:text-[#1a1a1a] hover:bg-[#e8e8e0]"
+            }`}
+          >
+            <Shield className="w-4 h-4 shrink-0" />
+            Admin
+          </Link>
+        )}
       </nav>
 
       <Link

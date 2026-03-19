@@ -1,4 +1,5 @@
 import { MutationCtx } from "./_generated/server";
+import { getUserPlan } from "./plans";
 
 /* ─── Rate limit definitions ─── */
 
@@ -84,13 +85,17 @@ export async function checkRateLimit(
 
 /**
  * Convenience: throws an Error if rate limited.
- * Use in mutations where you want a simple throw-on-limit pattern.
+ * Automatically skips rate limiting for users on the "special" plan.
  */
 export async function enforceRateLimit(
   ctx: MutationCtx,
   userId: string,
   action: string
 ): Promise<void> {
+  // Check if user's plan skips rate limits
+  const { limits } = await getUserPlan(ctx);
+  if (limits.skipRateLimit) return;
+
   const result = await checkRateLimit(ctx, userId, action);
   if (result.allowed === false) {
     const seconds = Math.ceil(result.retryAfterMs / 1000);
