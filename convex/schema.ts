@@ -108,6 +108,8 @@ export default defineSchema({
   userSettings: defineTable({
     userId: v.string(),
     aiEnabled: v.optional(v.boolean()),
+    /** @deprecated — migrated to server env var, kept for schema compat */
+    claudeApiKey: v.optional(v.string()),
     /** Admin-assigned plan override (takes precedence over JWT claims) */
     planOverride: v.optional(
       v.union(
