@@ -178,7 +178,7 @@ function UsersTable() {
     try {
       await updatePlan({
         userId,
-        planOverride: override as any,
+        planOverride: override as "free" | "pro" | "business" | "special" | "none",
       });
       setSavedUser(userId);
       setPendingOverrides((prev) => {

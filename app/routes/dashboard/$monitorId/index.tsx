@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatRelativeTime, intervalLabel } from "@/lib/utils";
 import { toCSV, toJSON, downloadFile } from "@/lib/export";
+import { diffSeverity, severityColor } from "@/lib/severity-utils";
 import {
   ArrowLeft,
   RefreshCw,
@@ -30,25 +31,6 @@ import type { Id } from "@convex/_generated/dataModel";
 export const Route = createFileRoute("/dashboard/$monitorId/")({
   component: MonitorDetailPage,
 });
-
-/* ─── Severity helpers ─── */
-
-function diffSeverity(pct: number): "low" | "medium" | "high" {
-  if (pct < 5) return "low";
-  if (pct < 20) return "medium";
-  return "high";
-}
-
-function severityColor(severity: "low" | "medium" | "high") {
-  switch (severity) {
-    case "low":
-      return { bg: "bg-[#2d5a2d]", text: "text-[#2d5a2d]", border: "border-[#2d5a2d]" };
-    case "medium":
-      return { bg: "bg-[#ca8a04]", text: "text-[#ca8a04]", border: "border-[#ca8a04]" };
-    case "high":
-      return { bg: "bg-[#dc2626]", text: "text-[#dc2626]", border: "border-[#dc2626]" };
-  }
-}
 
 /* ─── Mini sparkline from check history ─── */
 
@@ -347,8 +329,10 @@ function MonitorDetailPage() {
         {/* Left: Tabs content */}
         <div className="flex-1 min-w-0">
           {/* Tabs */}
-          <div className="flex items-center gap-0 border-b-2 border-[#ccc] mb-6">
+          <div role="tablist" className="flex items-center gap-0 border-b-2 border-[#ccc] mb-6">
             <button
+              role="tab"
+              aria-selected={activeTab === "changes"}
               onClick={() => setActiveTab("changes")}
               className={`px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors relative ${
                 activeTab === "changes"
@@ -367,6 +351,8 @@ function MonitorDetailPage() {
               )}
             </button>
             <button
+              role="tab"
+              aria-selected={activeTab === "activity"}
               onClick={() => setActiveTab("activity")}
               className={`px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors relative ${
                 activeTab === "activity"

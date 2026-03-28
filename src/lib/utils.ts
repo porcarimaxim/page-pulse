@@ -9,8 +9,10 @@ export function formatRelativeTime(date: Date | number): string {
   const now = new Date();
   const d = typeof date === "number" ? new Date(date) : date;
   const diff = now.getTime() - d.getTime();
+  const absDiff = Math.abs(diff);
+  const isFuture = diff < 0;
 
-  const seconds = Math.floor(diff / 1000);
+  const seconds = Math.floor(absDiff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
@@ -19,15 +21,15 @@ export function formatRelativeTime(date: Date | number): string {
     return d.toLocaleDateString();
   }
   if (days > 0) {
-    return `${days}d ago`;
+    return isFuture ? `in ${days}d` : `${days}d ago`;
   }
   if (hours > 0) {
-    return `${hours}h ago`;
+    return isFuture ? `in ${hours}h` : `${hours}h ago`;
   }
   if (minutes > 0) {
-    return `${minutes}m ago`;
+    return isFuture ? `in ${minutes}m` : `${minutes}m ago`;
   }
-  return "Just now";
+  return isFuture ? "in <1m" : "Just now";
 }
 
 export function intervalToMs(interval: string): number {

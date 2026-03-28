@@ -13,6 +13,8 @@ export const INTERVALS = [
   { value: "monthly", label: "Monthly" },
 ] as const;
 
+export type MonitorInterval = (typeof INTERVALS)[number]["value"];
+
 export const SENSITIVITY_PRESETS = [
   { value: 0, label: "Any", description: "Any change at all" },
   { value: 1, label: "Tiny", description: "1% pixel diff" },

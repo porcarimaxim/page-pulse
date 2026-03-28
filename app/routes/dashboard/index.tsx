@@ -4,16 +4,16 @@ import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { formatRelativeTime, intervalLabel } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { InboxRow } from "@/components/monitor/InboxRow";
+import { PlanUsageCard } from "@/components/monitor/PlanUsageCard";
 import {
   Eye,
   AlertTriangle,
   Plus,
   ArrowRight,
   CheckCheck,
-  Check,
   Activity,
   Clock,
-  Zap,
 } from "lucide-react";
 import { useMemo } from "react";
 import type { Id } from "@convex/_generated/dataModel";
@@ -21,28 +21,6 @@ import type { Id } from "@convex/_generated/dataModel";
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardOverview,
 });
-
-/* ─── Helpers ─── */
-
-function diffSeverity(pct: number): "low" | "medium" | "high" {
-  if (pct < 5) return "low";
-  if (pct < 20) return "medium";
-  return "high";
-}
-function severityBg(s: "low" | "medium" | "high") {
-  return s === "low"
-    ? "bg-[#2d5a2d]"
-    : s === "medium"
-      ? "bg-[#ca8a04]"
-      : "bg-[#dc2626]";
-}
-function severityText(s: "low" | "medium" | "high") {
-  return s === "low"
-    ? "text-[#2d5a2d]"
-    : s === "medium"
-      ? "text-[#ca8a04]"
-      : "text-[#dc2626]";
-}
 
 /* ─── Page ─── */
 
@@ -90,7 +68,7 @@ function DashboardOverview() {
   // Most active monitors (by change count)
   const topMonitors = useMemo(() => {
     if (!monitors) return [];
-    return [...monitors]
+    return monitors.slice()
       .filter((m) => m.changeCount > 0)
       .sort((a, b) => b.changeCount - a.changeCount)
       .slice(0, 5);
@@ -111,7 +89,7 @@ function DashboardOverview() {
   // Recently checked monitors (last 3 checked)
   const recentlyChecked = useMemo(() => {
     if (!monitors) return [];
-    return [...monitors]
+    return monitors.slice()
       .filter((m) => m.lastCheckedAt)
       .sort((a, b) => (b.lastCheckedAt ?? 0) - (a.lastCheckedAt ?? 0))
       .slice(0, 4);
@@ -365,83 +343,7 @@ function DashboardOverview() {
           </div>
 
           {/* Plan usage */}
-          {usage && (
-            <div className="border-2 border-[#ccc] p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-3.5 h-3.5 text-[#2d5a2d]" />
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
-                  {usage.planName} Plan
-                </span>
-              </div>
-
-              {/* Monitors */}
-              <div className="mb-3">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold uppercase text-[#888]">
-                    Monitors
-                  </span>
-                  <span className="text-[10px] font-bold text-[#888]">
-                    {usage.monitorCount}{usage.maxMonitors === -1 ? " / Unlimited" : ` / ${usage.maxMonitors}`}
-                  </span>
-                </div>
-                {usage.maxMonitors !== -1 && (
-                  <div className="w-full h-1.5 bg-[#e8e8e0] border border-[#ccc]">
-                    <div
-                      className={`h-full transition-all ${
-                        usage.monitorCount >= usage.maxMonitors
-                          ? "bg-[#dc2626]"
-                          : usage.monitorCount >= usage.maxMonitors * 0.8
-                            ? "bg-[#ca8a04]"
-                            : "bg-[#2d5a2d]"
-                      }`}
-                      style={{
-                        width: `${Math.min(100, (usage.monitorCount / usage.maxMonitors) * 100)}%`,
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Monthly Checks */}
-              <div className="mb-3">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold uppercase text-[#888]">
-                    Monthly Checks
-                  </span>
-                  <span className="text-[10px] font-bold text-[#888]">
-                    {(usage.monthlyChecksUsed ?? 0).toLocaleString()}{usage.monthlyChecks === -1 ? " / Unlimited" : ` / ${usage.monthlyChecks.toLocaleString()}`}
-                  </span>
-                </div>
-                {usage.monthlyChecks !== -1 && (
-                  <div className="w-full h-1.5 bg-[#e8e8e0] border border-[#ccc]">
-                    <div
-                      className={`h-full transition-all ${
-                        (usage.monthlyChecksUsed ?? 0) >= usage.monthlyChecks
-                          ? "bg-[#dc2626]"
-                          : (usage.monthlyChecksUsed ?? 0) >= usage.monthlyChecks * 0.8
-                            ? "bg-[#ca8a04]"
-                            : "bg-[#2d5a2d]"
-                      }`}
-                      style={{
-                        width: `${Math.min(100, ((usage.monthlyChecksUsed ?? 0) / usage.monthlyChecks) * 100)}%`,
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {usage.maxMonitors !== -1 &&
-                (usage.monitorCount >= usage.maxMonitors ||
-                  (usage.monthlyChecks !== -1 && (usage.monthlyChecksUsed ?? 0) >= usage.monthlyChecks)) && (
-                <Link
-                  to="/pricing"
-                  className="block text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline underline-offset-4"
-                >
-                  Upgrade →
-                </Link>
-              )}
-            </div>
-          )}
+          {usage && <PlanUsageCard usage={usage} />}
 
           {/* Recently checked */}
           {recentlyChecked.length > 0 && (
@@ -516,98 +418,5 @@ function DashboardOverview() {
         </div>
       </div>
     </main>
-  );
-}
-
-/* ─── Inbox Row ─── */
-
-function InboxRow({
-  change,
-  onMarkReviewed,
-  isLast,
-  muted,
-}: {
-  change: {
-    _id: string;
-    monitorId: string;
-    monitorName: string;
-    monitorUrl: string;
-    diffPercentage: number;
-    detectedAt: number;
-    aiSummary?: string;
-    reviewed?: boolean;
-  };
-  onMarkReviewed: () => void;
-  isLast: boolean;
-  muted?: boolean;
-}) {
-  const severity = diffSeverity(change.diffPercentage);
-
-  return (
-    <div
-      className={`flex items-start gap-3 px-4 py-3 ${
-        !isLast ? "border-b border-[#ccc]" : ""
-      } ${muted ? "opacity-60" : ""} hover:bg-[#e8e8e0] transition-colors`}
-    >
-      {/* Severity dot */}
-      <div
-        className={`w-2.5 h-2.5 ${severityBg(severity)} mt-1.5 shrink-0 ${
-          !change.reviewed ? "" : "opacity-40"
-        }`}
-      />
-
-      {/* Content */}
-      <Link
-        to="/dashboard/$monitorId"
-        params={{ monitorId: change.monitorId } as any}
-        className="flex-1 min-w-0"
-      >
-        <div className="flex items-center gap-2 mb-0.5">
-          <span
-            className={`text-sm font-black uppercase tracking-tighter truncate ${
-              muted ? "text-[#888]" : ""
-            }`}
-          >
-            {change.monitorName}
-          </span>
-          <span
-            className={`text-[10px] font-bold uppercase tracking-wider ${severityText(severity)}`}
-          >
-            {change.diffPercentage.toFixed(1)}%
-          </span>
-          <span className="text-[10px] text-[#888] ml-auto shrink-0">
-            {formatRelativeTime(change.detectedAt)}
-          </span>
-        </div>
-
-        {/* AI summary */}
-        {change.aiSummary && !change.aiSummary.startsWith("[Error]") ? (
-          <p className="text-xs text-[#555] leading-snug line-clamp-1">
-            {change.aiSummary}
-          </p>
-        ) : (
-          <p className="text-[10px] text-[#888] font-mono truncate">
-            {change.monitorUrl}
-          </p>
-        )}
-      </Link>
-
-      {/* Action button */}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onMarkReviewed();
-        }}
-        className={`shrink-0 mt-1 p-1.5 border transition-all ${
-          change.reviewed
-            ? "border-[#ccc] text-[#888] hover:border-[#1a1a1a] hover:text-[#1a1a1a]"
-            : "border-[#2d5a2d] text-[#2d5a2d] hover:bg-[#2d5a2d] hover:text-[#f0f0e8]"
-        }`}
-        title={change.reviewed ? "Mark as unreviewed" : "Mark as reviewed"}
-      >
-        <Check className="w-3.5 h-3.5" />
-      </button>
-    </div>
   );
 }

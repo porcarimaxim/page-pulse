@@ -4,6 +4,8 @@ import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { StatusBadge } from "@/components/ui/StatusBadge";
+import { ZoneFocusedPreview } from "@/components/monitor/ZoneFocusedPreview";
 import { formatRelativeTime, intervalLabel } from "@/lib/utils";
 import {
   Plus,
@@ -222,6 +224,8 @@ function MonitorsListPage() {
             <div className="flex border-2 border-[#1a1a1a]">
               <button
                 onClick={() => setAndPersistViewMode("cards")}
+                aria-pressed={viewMode === "cards"}
+                aria-label="Card view"
                 className={`p-2 transition-colors ${
                   viewMode === "cards"
                     ? "bg-[#1a1a1a] text-[#f0f0e8]"
@@ -233,6 +237,8 @@ function MonitorsListPage() {
               </button>
               <button
                 onClick={() => setAndPersistViewMode("list")}
+                aria-pressed={viewMode === "list"}
+                aria-label="List view"
                 className={`p-2 border-l-2 border-[#1a1a1a] transition-colors ${
                   viewMode === "list"
                     ? "bg-[#1a1a1a] text-[#f0f0e8]"
@@ -306,29 +312,19 @@ function CardGrid({
           <Link
             to="/dashboard/$monitorId"
             params={{ monitorId: monitor._id } as any}
-            className="block relative h-36 bg-[#e8e8e0] border-b-2 border-[#1a1a1a] overflow-hidden"
+            className="block relative h-36 border-b-2 border-[#1a1a1a] overflow-hidden"
           >
-            {monitor.screenshotUrl ? (
-              <img
-                src={monitor.screenshotUrl}
-                alt={monitor.name}
-                className="w-full h-full object-cover object-top"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-[#888] text-xs">
-                No screenshot yet
-              </div>
-            )}
-            <StatusBadge status={monitor.status} position="absolute top-2 right-2" />
+            <ZoneFocusedPreview
+              screenshotUrl={monitor.screenshotUrl}
+              zone={monitor.zone}
+              selectionMode={monitor.selectionMode}
+              className="h-full"
+            />
+            <StatusBadge status={monitor.status} className="absolute top-2 right-2 z-10" />
             {monitor.changeCount > 0 && (
-              <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1a1a1a] text-[#f0f0e8] px-1.5 py-0.5">
+              <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1a1a1a] text-[#f0f0e8] px-1.5 py-0.5 z-10">
                 <Zap className="w-2.5 h-2.5" />
                 <span className="text-[9px] font-bold">{monitor.changeCount}</span>
-              </div>
-            )}
-            {monitor.selectionMode === "element" && (
-              <div className="absolute bottom-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5">
-                Element
               </div>
             )}
           </Link>
@@ -483,7 +479,7 @@ function ListView({
           </div>
 
           {/* Status */}
-          <StatusBadge status={monitor.status} position="" />
+          <StatusBadge status={monitor.status} />
 
           {/* Toggle */}
           <ToggleSwitch
@@ -497,28 +493,6 @@ function ListView({
 }
 
 /* ─── Shared Components ─── */
-
-function StatusBadge({
-  status,
-  position,
-}: {
-  status: string;
-  position: string;
-}) {
-  return (
-    <div
-      className={`${position} px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider border ${
-        status === "active"
-          ? "bg-[#2d5a2d] text-[#f0f0e8] border-[#2d5a2d]"
-          : status === "error"
-            ? "bg-[#dc2626] text-white border-[#dc2626] animate-pulse"
-            : "bg-[#f0f0e8] text-[#888] border-[#ccc]"
-      }`}
-    >
-      {status}
-    </div>
-  );
-}
 
 function ToggleSwitch({
   active,
@@ -534,6 +508,9 @@ function ToggleSwitch({
         e.stopPropagation();
         onToggle();
       }}
+      role="switch"
+      aria-checked={active}
+      aria-label={active ? "Pause monitor" : "Resume monitor"}
       className={`w-9 h-5 relative transition-colors shrink-0 ${
         active ? "bg-[#2d5a2d]" : "bg-[#ccc]"
       }`}

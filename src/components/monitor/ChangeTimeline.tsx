@@ -3,6 +3,7 @@ import { useAction } from "convex/react";
 import { useAuth } from "@clerk/tanstack-react-start";
 import { api } from "@convex/_generated/api";
 import { formatRelativeTime } from "@/lib/utils";
+import { diffSeverity } from "@/lib/severity-utils";
 import { DiffViewer } from "@/components/diff/DiffViewer";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,12 +32,6 @@ interface Change {
 
 interface ChangeTimelineProps {
   changes: Change[];
-}
-
-function diffSeverity(pct: number): "low" | "medium" | "high" {
-  if (pct < 5) return "low";
-  if (pct < 20) return "medium";
-  return "high";
 }
 
 function severityConfig(severity: "low" | "medium" | "high") {
