@@ -17,7 +17,7 @@ interface ElementPickerProps {
   url: string;
   screenshotUrl: string;
   mobileViewport?: boolean;
-  onElementSelect: (selector: string) => void;
+  onElementSelect: (selector: string, box?: { x: number; y: number; w: number; h: number }) => void;
 }
 
 export function ElementPicker({
@@ -114,9 +114,10 @@ export function ElementPicker({
   const handleElementClick = useCallback(
     (selector: string) => {
       setSelectedSelector(selector);
-      onElementSelect(selector);
+      const el = elements.find((e) => e.selector === selector);
+      onElementSelect(selector, el ? { x: el.x, y: el.y, w: el.w, h: el.h } : undefined);
     },
-    [onElementSelect]
+    [onElementSelect, elements]
   );
 
   const handleReset = useCallback(() => {

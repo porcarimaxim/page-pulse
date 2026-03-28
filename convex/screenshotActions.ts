@@ -592,6 +592,69 @@ export const getPageElementMap = action({
   },
 });
 
+/** Internal version of getPageElementMap — no auth, for scheduler use */
+export const getPageElementMapInternal = internalAction({
+  args: {
+    url: v.string(),
+    mobileViewport: v.optional(v.boolean()),
+  },
+  handler: async (_ctx, args) => {
+    const vw = args.mobileViewport ? 375 : 1280;
+    const vh = args.mobileViewport ? 812 : 800;
+    const script = buildElementMapScript();
+
+    const provider = getProvider();
+    let apiKey: string;
+    let baseUrl: string;
+
+    if (provider === "pagess") {
+      const pagessUrl = process.env.PAGESS_URL;
+      const pagessKey = process.env.PAGESS_API_KEY;
+      if (!pagessUrl) throw new Error("Missing PAGESS_URL");
+      if (!pagessKey) throw new Error("Missing PAGESS_API_KEY");
+      apiKey = pagessKey;
+      baseUrl = `${pagessUrl}/take`;
+    } else {
+      const ssKey = process.env.SCREENSHOTONE_API_KEY;
+      if (!ssKey) throw new Error("Missing SCREENSHOTONE_API_KEY");
+      apiKey = ssKey;
+      baseUrl = SCREENSHOTONE_API;
+    }
+
+    const params = new URLSearchParams({
+      access_key: apiKey,
+      url: args.url,
+      full_page: "true",
+      viewport_width: String(vw),
+      viewport_height: String(vh),
+      format: "png",
+      block_ads: "true",
+      block_cookie_banners: "true",
+      delay: "3",
+      scripts: script,
+      response_type: "json",
+      metadata_page_title: "true",
+    });
+
+    const response = await fetch(`${baseUrl}?${params.toString()}`);
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Element map failed: ${response.status} — ${errorBody}`);
+    }
+
+    const json = await response.json();
+    const pageTitle: string = json?.metadata?.page_title ?? "";
+
+    const match = pageTitle.match(/__PP_MAP__(.+)__PP_MAP__/);
+    if (!match) return [];
+
+    return match[1].split(";").filter(Boolean).map((entry: string) => {
+      const [selector, x, y, w, h] = entry.split("|");
+      return { selector, x: parseFloat(x), y: parseFloat(y), w: parseFloat(w), h: parseFloat(h) };
+    });
+  },
+});
+
 export const captureForMonitor = internalAction({
   args: {
     monitorId: v.id("monitors"),

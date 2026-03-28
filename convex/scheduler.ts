@@ -329,12 +329,35 @@ export const processOneMonitor = internalAction({
         console.log(`${label} — step 5 change recording + notifications: ${Date.now() - t5}ms`);
       }
 
+      // 5.5 Look up element bounding box for element monitors missing zone data
+      let elementZone: { x: number; y: number; width: number; height: number } | undefined;
+      if (
+        isElementMode &&
+        monitor.zone.x === 0 && monitor.zone.y === 0 &&
+        monitor.zone.width === 100 && monitor.zone.height === 100
+      ) {
+        try {
+          const elements = await ctx.runAction(
+            internal.screenshotActions.getPageElementMapInternal,
+            { url: monitor.url, mobileViewport: monitor.mobileViewport }
+          ) as Array<{ selector: string; x: number; y: number; w: number; h: number }>;
+          const match = elements.find((el) => el.selector === monitor.cssSelector);
+          if (match) {
+            elementZone = { x: match.x, y: match.y, width: match.w, height: match.h };
+            console.log(`${label} — resolved element zone: ${JSON.stringify(elementZone)}`);
+          }
+        } catch (e) {
+          console.error(`${label} — element zone lookup failed (non-fatal):`, e);
+        }
+      }
+
       // 6. Update monitor
       const t6 = Date.now();
       await ctx.runMutation(internal.schedulerHelpers.updateMonitorAfterCheck, {
         monitorId: monitor._id,
         snapshotId,
         changed: result.changed,
+        elementZone,
       });
       console.log(`${label} — step 6 update monitor: ${Date.now() - t6}ms`);
       console.log(`${label} — PIPELINE COMPLETE: ${Date.now() - pipelineStart}ms (screenshot: ${screenshotMs}ms, compare: ${compareMs}ms, changed: ${result.changed})`);

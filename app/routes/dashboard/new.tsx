@@ -115,8 +115,11 @@ function NewMonitorPage() {
     }
   };
 
-  const handleElementSelect = (selector: string) => {
+  const handleElementSelect = (selector: string, box?: { x: number; y: number; w: number; h: number }) => {
     setCssSelector(selector);
+    if (box) {
+      setZone({ x: box.x, y: box.y, width: box.w, height: box.h });
+    }
   };
 
   const isSelectionComplete =
@@ -144,9 +147,7 @@ function NewMonitorPage() {
       const monitorId = await createMonitor({
         url,
         name,
-        zone: selectionMode === "zone" && zone
-          ? zone
-          : { x: 0, y: 0, width: 100, height: 100 },
+        zone: zone ?? { x: 0, y: 0, width: 100, height: 100 },
         interval: interval as MonitorInterval,
         fullScreenshotStorageId: screenshotStorageId as Id<"_storage">,
         cssSelector: selectionMode === "element" ? (cssSelector ?? undefined) : undefined,

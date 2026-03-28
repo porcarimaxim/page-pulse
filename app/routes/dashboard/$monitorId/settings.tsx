@@ -151,8 +151,11 @@ function MonitorSettingsPage() {
     }
   };
 
-  const handleElementSelect = (selector: string) => {
+  const handleElementSelect = (selector: string, box?: { x: number; y: number; w: number; h: number }) => {
     setCssSelector(selector);
+    if (box) {
+      setZone({ x: box.x, y: box.y, width: box.w, height: box.h });
+    }
   };
 
   const handleSave = async () => {

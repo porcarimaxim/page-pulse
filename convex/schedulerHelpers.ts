@@ -102,6 +102,9 @@ export const updateMonitorAfterCheck = internalMutation({
     monitorId: v.id("monitors"),
     snapshotId: v.id("snapshots"),
     changed: v.boolean(),
+    elementZone: v.optional(
+      v.object({ x: v.number(), y: v.number(), width: v.number(), height: v.number() })
+    ),
   },
   handler: async (ctx, args) => {
     const monitor = await ctx.db.get(args.monitorId);
@@ -109,13 +112,20 @@ export const updateMonitorAfterCheck = internalMutation({
 
     const intervalMs = INTERVAL_MS[monitor.interval] ?? INTERVAL_MS.daily;
 
-    await ctx.db.patch(args.monitorId, {
+    const patch: Record<string, unknown> = {
       lastCheckedAt: Date.now(),
       nextCheckAt: Date.now() + intervalMs,
       lastSnapshotId: args.snapshotId,
       consecutiveErrors: 0,
       isChecking: false,
-    });
+    };
+
+    // Update zone for element monitors that have a real bounding box
+    if (args.elementZone) {
+      patch.zone = args.elementZone;
+    }
+
+    await ctx.db.patch(args.monitorId, patch);
   },
 });
 

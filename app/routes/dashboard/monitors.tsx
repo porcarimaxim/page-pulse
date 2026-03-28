@@ -349,6 +349,11 @@ function CardGrid({
                 onToggle={() => onToggle(monitor._id, monitor.status)}
               />
             </div>
+            {monitor.selectionMode === "element" && monitor.cssSelector && (
+              <p className="text-[10px] font-mono text-[#2d5a2d] truncate mb-1">
+                {monitor.cssSelector}
+              </p>
+            )}
             <div className="flex items-center gap-3 text-[10px] text-[#888]">
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" />
@@ -450,6 +455,11 @@ function ListView({
             <p className="text-[10px] text-[#888] font-mono truncate">
               {monitor.url}
             </p>
+            {monitor.selectionMode === "element" && monitor.cssSelector && (
+              <p className="text-[10px] font-mono text-[#2d5a2d] truncate">
+                {monitor.cssSelector}
+              </p>
+            )}
           </div>
 
           {/* Interval */}

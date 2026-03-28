@@ -41,6 +41,9 @@ export function ZoneFocusedPreview({
   }
 
   const isElement = selectionMode === "element";
+  // Full-page zone means no real bounding box stored (legacy element monitors)
+  const isFullPage = zone.x === 0 && zone.y === 0 && zone.width === 100 && zone.height === 100;
+  const hasZoneOverlay = !isFullPage;
 
   // Padding around the zone (percentage of image)
   const padX = Math.max(zone.width * 0.3, 5);
@@ -56,13 +59,30 @@ export function ZoneFocusedPreview({
   // We scale based on width: container shows vw% of the image width
   const scale = 100 / vw;
 
+  // For element monitors with legacy full-page zone, the screenshot from the
+  // capture API is already cropped to the element — just show it without zoom.
+  if (isElement && isFullPage) {
+    return (
+      <div ref={containerRef} className={`relative bg-[#e8e8e0] overflow-hidden ${className}`}>
+        {ready && (
+          <img
+            src={screenshotUrl}
+            alt="Screenshot preview"
+            style={{ display: "block", width: "100%", height: "auto" }}
+          />
+        )}
+        <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5 z-10">
+          Element
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className={`relative bg-[#e8e8e0] overflow-hidden ${className}`}>
       {ready && (
         <div
           style={{
-            // This wrapper is 100% of the image at container width
-            // We scale it up and translate so the zone area is visible
             position: "absolute",
             top: 0,
             left: 0,
@@ -71,7 +91,6 @@ export function ZoneFocusedPreview({
             transform: `scale(${scale}) translate(-${vx}%, -${vy}%)`,
           }}
         >
-          {/* Image fills the wrapper width, height is natural */}
           <img
             src={screenshotUrl}
             alt="Screenshot preview"
@@ -79,20 +98,18 @@ export function ZoneFocusedPreview({
           />
 
           {/* Zone overlay — same coordinate space as the image */}
-          {!isElement && (
-            <div
-              style={{
-                position: "absolute",
-                left: `${zone.x}%`,
-                top: `${zone.y}%`,
-                width: `${zone.width}%`,
-                height: `${zone.height}%`,
-                border: "2px solid #2d5a2d",
-                backgroundColor: "rgba(45, 90, 45, 0.1)",
-                pointerEvents: "none",
-              }}
-            />
-          )}
+          <div
+            style={{
+              position: "absolute",
+              left: `${zone.x}%`,
+              top: `${zone.y}%`,
+              width: `${zone.width}%`,
+              height: `${zone.height}%`,
+              border: isElement ? "2px dashed #2d5a2d" : "2px solid #2d5a2d",
+              backgroundColor: "rgba(45, 90, 45, 0.1)",
+              pointerEvents: "none",
+            }}
+          />
         </div>
       )}
 
