@@ -357,8 +357,12 @@ export const remove = mutation({
       .withIndex("by_monitorId", (q) => q.eq("monitorId", args.monitorId))
       .collect();
     for (const snapshot of snapshots) {
-      await ctx.storage.delete(snapshot.storageId);
-      await ctx.storage.delete(snapshot.fullStorageId);
+      if (snapshot.storageId) {
+        try { await ctx.storage.delete(snapshot.storageId); } catch {}
+      }
+      if (snapshot.fullStorageId) {
+        try { await ctx.storage.delete(snapshot.fullStorageId); } catch {}
+      }
       await ctx.db.delete(snapshot._id);
     }
 
@@ -368,14 +372,16 @@ export const remove = mutation({
       .withIndex("by_monitorId", (q) => q.eq("monitorId", args.monitorId))
       .collect();
     for (const change of changes) {
-      await ctx.storage.delete(change.diffStorageId);
+      if (change.diffStorageId) {
+        try { await ctx.storage.delete(change.diffStorageId); } catch {}
+      }
       await ctx.db.delete(change._id);
     }
 
     // Delete the full screenshot
     const monitor = await ctx.db.get(args.monitorId);
     if (monitor?.fullScreenshotStorageId) {
-      await ctx.storage.delete(monitor.fullScreenshotStorageId);
+      try { await ctx.storage.delete(monitor.fullScreenshotStorageId); } catch {}
     }
 
     await ctx.db.delete(args.monitorId);

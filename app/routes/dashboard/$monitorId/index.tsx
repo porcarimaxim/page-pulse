@@ -26,6 +26,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import type { Id } from "@convex/_generated/dataModel";
 
 export const Route = createFileRoute("/dashboard/$monitorId/")({
@@ -87,6 +88,7 @@ function MonitorDetailPage() {
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showExport, setShowExport] = useState(false);
   const [activeTab, setActiveTab] = useState<"changes" | "activity">(
     "changes"
@@ -122,10 +124,13 @@ function MonitorDetailPage() {
 
   const handleDelete = async () => {
     setIsDeleting(true);
+    setDeleteError(null);
     try {
       await removeMonitor({ monitorId: monitorId as Id<"monitors"> });
       navigate({ to: "/dashboard/monitors" });
-    } catch {
+    } catch (err) {
+      console.error("Delete failed:", err);
+      setDeleteError(err instanceof Error ? err.message : "Failed to delete monitor");
       setIsDeleting(false);
     }
   };
@@ -233,33 +238,54 @@ function MonitorDetailPage() {
         </div>
       </div>
 
-      {/* Delete confirm */}
-      {showDeleteConfirm && (
-        <div className="border-2 border-[#dc2626] p-4 mb-6 flex items-center gap-3">
-          <p className="text-sm text-[#888] flex-1">
-            Are you sure? This cannot be undone.
-          </p>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              "Yes, Delete"
+      {/* Delete confirm dialog */}
+      <Dialog.Root open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-[#1a1a1a]/50 z-50" />
+          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-[#f0f0e8] border-2 border-[#1a1a1a] shadow-[8px_8px_0px_0px_#1a1a1a] p-6 w-full max-w-sm">
+            <Dialog.Title className="text-lg font-black uppercase tracking-tighter mb-2">
+              Delete Monitor
+            </Dialog.Title>
+            <Dialog.Description className="text-sm text-[#888] mb-6">
+              This will permanently delete <span className="font-bold text-[#1a1a1a]">{monitor.name}</span> and
+              all its snapshots and change history. This cannot be undone.
+            </Dialog.Description>
+            {deleteError && (
+              <div className="border-2 border-[#dc2626] bg-[#dc2626]/10 p-3 mb-4">
+                <p className="text-sm text-[#dc2626] font-bold">{deleteError}</p>
+              </div>
             )}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowDeleteConfirm(false)}
-          >
-            Cancel
-          </Button>
-        </div>
-      )}
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </>
+                )}
+              </Button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
       {/* ─── Stats Banner ─── */}
       <div className="border-2 border-[#1a1a1a] mb-6">
