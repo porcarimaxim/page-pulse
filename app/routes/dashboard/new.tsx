@@ -7,6 +7,13 @@ import { ZoneSelector, type Zone } from "@/components/zone-selector/ZoneSelector
 import { ElementPicker } from "@/components/element-picker/ElementPicker";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import {
   ArrowLeft,
   Loader2,
   Check,
@@ -14,11 +21,16 @@ import {
   Crop,
   Image as ImageIcon,
   Lock,
+  ChevronDown,
+  Send,
 } from "lucide-react";
 import {
   INTERVALS,
   SENSITIVITY_PRESETS,
   COMPARE_TYPES,
+  KEYWORD_MODES,
+  DAYS_OF_WEEK,
+  DELAY_OPTIONS,
 } from "@/lib/monitor-constants";
 
 export const Route = createFileRoute("/dashboard/new")({
@@ -33,6 +45,7 @@ function NewMonitorPage() {
   const navigate = useNavigate();
   const captureScreenshot = useAction(api.screenshotActions.captureScreenshot);
   const createMonitor = useMutation(api.monitors.create);
+  const testWebhook = useAction(api.webhookActions.testWebhook);
   const usage = useQuery(api.monitors.usage, isSignedIn ? {} : "skip");
 
   if (isLoaded && !isSignedIn) {
@@ -51,8 +64,21 @@ function NewMonitorPage() {
   const [tags, setTags] = useState("");
   const [sensitivityThreshold, setSensitivityThreshold] = useState(0);
   const [compareType, setCompareType] = useState<"all" | "visual" | "text">("all");
+  const [keywords, setKeywords] = useState("");
+  const [keywordMode, setKeywordMode] = useState<"added" | "deleted" | "any">("any");
+  const [activeDays, setActiveDays] = useState<number[]>([]);
+  const [delay, setDelay] = useState(3);
+  const [mobileViewport, setMobileViewport] = useState(false);
+  const [blockAds, setBlockAds] = useState(true);
+  const [alertOnError, setAlertOnError] = useState(false);
+  const [webhookUrl, setWebhookUrl] = useState("");
+  const [webhookType, setWebhookType] = useState<"generic" | "slack" | "discord">("generic");
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showWebhook, setShowWebhook] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
+  const [testResult, setTestResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleCapture = async () => {
@@ -97,6 +123,21 @@ function NewMonitorPage() {
 
   const canCreate = !!name && !!screenshotStorageId && isSelectionComplete && !isCreating && isConvexAuthed;
 
+  const handleTestWebhook = async () => {
+    if (!webhookUrl) return;
+    setIsTesting(true);
+    setTestResult(null);
+    try {
+      await testWebhook({ webhookUrl, webhookType });
+      setTestResult("success");
+    } catch {
+      setTestResult("error");
+    } finally {
+      setIsTesting(false);
+      setTimeout(() => setTestResult(null), 3000);
+    }
+  };
+
   const handleCreate = async () => {
     if (!name || !screenshotStorageId) return;
     if (selectionMode === "zone" && !zone) return;
@@ -107,6 +148,11 @@ function NewMonitorPage() {
       const parsedTags = tags
         .split(",")
         .map((t) => t.trim())
+        .filter(Boolean);
+
+      const parsedKeywords = keywords
+        .split(",")
+        .map((k) => k.trim())
         .filter(Boolean);
 
       const monitorId = await createMonitor({
@@ -122,6 +168,15 @@ function NewMonitorPage() {
         tags: parsedTags.length > 0 ? parsedTags : undefined,
         sensitivityThreshold,
         compareType,
+        keywords: parsedKeywords.length > 0 ? parsedKeywords : undefined,
+        keywordMode: parsedKeywords.length > 0 ? keywordMode : undefined,
+        activeDays: activeDays.length > 0 ? activeDays : undefined,
+        delay,
+        mobileViewport,
+        blockAds,
+        alertOnError,
+        webhookUrl: webhookUrl || undefined,
+        webhookType: webhookUrl ? webhookType : undefined,
       });
 
       navigate({
@@ -315,30 +370,24 @@ function NewMonitorPage() {
                 <label className="block text-xs font-bold uppercase text-[#888] mb-2">
                   Sensitivity
                 </label>
-                <div className="space-y-1.5">
-                  {SENSITIVITY_PRESETS.map((preset) => (
-                    <button
-                      key={preset.value}
-                      onClick={() => setSensitivityThreshold(preset.value)}
-                      className={`w-full border-2 border-[#1a1a1a] px-2 py-1.5 text-left transition-all ${
-                        sensitivityThreshold === preset.value
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                      }`}
-                    >
-                      <span className="text-xs font-bold uppercase">
-                        {preset.label}
-                      </span>
-                      <span className={`text-[10px] ml-2 ${
-                        sensitivityThreshold === preset.value
-                          ? "text-[#ccc]"
-                          : "text-[#888]"
-                      }`}>
-                        {preset.description}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+                <Select
+                  value={String(sensitivityThreshold)}
+                  onValueChange={(val) => setSensitivityThreshold(Number(val))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SENSITIVITY_PRESETS.map((preset) => (
+                      <SelectItem key={preset.value} value={String(preset.value)}>
+                        <span>{preset.label}</span>
+                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                          {preset.description}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Compare Type */}
@@ -346,26 +395,24 @@ function NewMonitorPage() {
                 <label className="block text-xs font-bold uppercase text-[#888] mb-2">
                   Compare Type
                 </label>
-                <div className="flex gap-0">
-                  {COMPARE_TYPES.map((t, i) => (
-                    <button
-                      key={t.value}
-                      onClick={() => setCompareType(t.value as typeof compareType)}
-                      className={`flex-1 border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all ${
-                        i > 0 ? "border-l-0" : ""
-                      } ${
-                        compareType === t.value
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
-                      }`}
-                    >
-                      <div>{t.label}</div>
-                      <div className={`text-[10px] font-normal ${
-                        compareType === t.value ? "text-[#ccc]" : "text-[#888]"
-                      }`}>{t.description}</div>
-                    </button>
-                  ))}
-                </div>
+                <Select
+                  value={compareType}
+                  onValueChange={(val) => setCompareType(val as typeof compareType)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COMPARE_TYPES.map((t) => (
+                      <SelectItem key={t.value} value={t.value}>
+                        <span>{t.label}</span>
+                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                          {t.description}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Tags */}
@@ -381,6 +428,269 @@ function NewMonitorPage() {
                 <p className="text-xs text-[#888] mt-1">
                   Comma-separated
                 </p>
+              </div>
+
+              {/* Keywords */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                  Keyword Alerts
+                </label>
+                <Input
+                  value={keywords}
+                  onChange={(e) => setKeywords(e.target.value)}
+                  placeholder="price, sale, out of stock"
+                />
+                <p className="text-xs text-[#888] mt-1">
+                  Comma-separated — only alert when these words change
+                </p>
+                {keywords.trim() && (
+                  <div className="mt-2 flex gap-0">
+                    {KEYWORD_MODES.map((m, i) => (
+                      <button
+                        key={m.value}
+                        onClick={() => setKeywordMode(m.value as typeof keywordMode)}
+                        className={`flex-1 border-2 border-[#1a1a1a] px-2 py-1.5 text-[10px] font-bold uppercase transition-all ${
+                          i > 0 ? "border-l-0" : ""
+                        } ${
+                          keywordMode === m.value
+                            ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                            : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                        }`}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Advanced Settings */}
+              <div className="border-t-2 border-[#ccc] pt-4 space-y-4">
+                <button
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  className="w-full flex items-center justify-between group"
+                >
+                  <h3 className="font-black text-xs uppercase tracking-tighter group-hover:text-[#2d5a2d] transition-colors">
+                    Advanced
+                  </h3>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#888] transition-transform duration-200 ${
+                      showAdvanced ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {showAdvanced && (<>
+                {/* Active Days */}
+                <div>
+                  <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                    Active Days
+                  </label>
+                  <div className="flex gap-1">
+                    {DAYS_OF_WEEK.map((d) => (
+                      <button
+                        key={d.value}
+                        onClick={() =>
+                          setActiveDays((prev) =>
+                            prev.includes(d.value)
+                              ? prev.filter((v) => v !== d.value)
+                              : [...prev, d.value]
+                          )
+                        }
+                        className={`flex-1 border-2 border-[#1a1a1a] px-1 py-1.5 text-[10px] font-bold uppercase transition-all ${
+                          activeDays.includes(d.value)
+                            ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                            : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                        }`}
+                      >
+                        {d.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#888] mt-1">
+                    {activeDays.length === 0
+                      ? "All days (default)"
+                      : `${activeDays.length} day${activeDays.length > 1 ? "s" : ""} selected`}
+                  </p>
+                </div>
+
+                {/* Delay */}
+                <div>
+                  <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                    Page Load Delay
+                  </label>
+                  <div className="flex gap-0">
+                    {DELAY_OPTIONS.map((d, i) => (
+                      <button
+                        key={d.value}
+                        onClick={() => setDelay(d.value)}
+                        className={`flex-1 border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all ${
+                          i > 0 ? "border-l-0" : ""
+                        } ${
+                          delay === d.value
+                            ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                            : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                        }`}
+                      >
+                        {d.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#888] mt-1">
+                    Wait before capturing
+                  </p>
+                </div>
+
+                {/* Toggles */}
+                <div className="space-y-2">
+                  <label
+                    className="flex items-center justify-between cursor-pointer group"
+                    onClick={() => setMobileViewport(!mobileViewport)}
+                  >
+                    <span className="text-xs font-bold uppercase text-[#888] group-hover:text-[#1a1a1a] transition-colors">
+                      Mobile Viewport
+                    </span>
+                    <span
+                      className={`w-8 h-5 border-2 border-[#1a1a1a] flex items-center transition-colors ${
+                        mobileViewport ? "bg-[#2d5a2d]" : "bg-transparent"
+                      }`}
+                    >
+                      <span
+                        className={`w-3 h-3 bg-[#1a1a1a] transition-transform ${
+                          mobileViewport ? "translate-x-3" : "translate-x-0.5"
+                        } ${mobileViewport ? "!bg-[#f0f0e8]" : ""}`}
+                      />
+                    </span>
+                  </label>
+
+                  <label
+                    className="flex items-center justify-between cursor-pointer group"
+                    onClick={() => setBlockAds(!blockAds)}
+                  >
+                    <span className="text-xs font-bold uppercase text-[#888] group-hover:text-[#1a1a1a] transition-colors">
+                      Block Ads
+                    </span>
+                    <span
+                      className={`w-8 h-5 border-2 border-[#1a1a1a] flex items-center transition-colors ${
+                        blockAds ? "bg-[#2d5a2d]" : "bg-transparent"
+                      }`}
+                    >
+                      <span
+                        className={`w-3 h-3 bg-[#1a1a1a] transition-transform ${
+                          blockAds ? "translate-x-3" : "translate-x-0.5"
+                        } ${blockAds ? "!bg-[#f0f0e8]" : ""}`}
+                      />
+                    </span>
+                  </label>
+
+                  <label
+                    className="flex items-center justify-between cursor-pointer group"
+                    onClick={() => setAlertOnError(!alertOnError)}
+                  >
+                    <span className="text-xs font-bold uppercase text-[#888] group-hover:text-[#1a1a1a] transition-colors">
+                      Alert on Error
+                    </span>
+                    <span
+                      className={`w-8 h-5 border-2 border-[#1a1a1a] flex items-center transition-colors ${
+                        alertOnError ? "bg-[#2d5a2d]" : "bg-transparent"
+                      }`}
+                    >
+                      <span
+                        className={`w-3 h-3 bg-[#1a1a1a] transition-transform ${
+                          alertOnError ? "translate-x-3" : "translate-x-0.5"
+                        } ${alertOnError ? "!bg-[#f0f0e8]" : ""}`}
+                      />
+                    </span>
+                  </label>
+                </div>
+                </>)}
+              </div>
+
+              {/* Webhook */}
+              <div className="border-t-2 border-[#ccc] pt-4 space-y-3">
+                <button
+                  onClick={() => setShowWebhook(!showWebhook)}
+                  className="w-full flex items-center justify-between group"
+                >
+                  <h3 className="font-black text-xs uppercase tracking-tighter group-hover:text-[#2d5a2d] transition-colors">
+                    Webhook Notifications
+                  </h3>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#888] transition-transform duration-200 ${
+                      showWebhook ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {showWebhook && (<>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-[#888] mb-1.5">
+                    Type
+                  </label>
+                  <div className="flex gap-0">
+                    {([
+                      { value: "generic", label: "Webhook" },
+                      { value: "slack", label: "Slack" },
+                      { value: "discord", label: "Discord" },
+                    ] as const).map((t) => (
+                      <button
+                        key={t.value}
+                        onClick={() => setWebhookType(t.value as typeof webhookType)}
+                        className={`border-2 border-[#1a1a1a] px-3 py-1.5 text-xs font-bold uppercase transition-all ${
+                          t.value !== "generic" ? "border-l-0" : ""
+                        } ${
+                          webhookType === t.value
+                            ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                            : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                        }`}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase text-[#888] mb-1.5">
+                    URL
+                  </label>
+                  <Input
+                    value={webhookUrl}
+                    onChange={(e) => setWebhookUrl(e.target.value)}
+                    placeholder={
+                      webhookType === "slack"
+                        ? "https://hooks.slack.com/..."
+                        : webhookType === "discord"
+                          ? "https://discord.com/api/..."
+                          : "https://your-server.com/webhook"
+                    }
+                  />
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <button
+                      onClick={handleTestWebhook}
+                      disabled={!webhookUrl || isTesting}
+                      className="text-xs font-bold uppercase text-[#888] hover:text-[#1a1a1a] disabled:opacity-50 transition-colors flex items-center gap-1"
+                    >
+                      {isTesting ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Send className="w-3 h-3" />
+                      )}
+                      Test
+                    </button>
+                    {testResult === "success" && (
+                      <span className="text-xs text-[#2d5a2d] font-bold">
+                        Sent!
+                      </span>
+                    )}
+                    {testResult === "error" && (
+                      <span className="text-xs text-[#dc2626] font-bold">
+                        Failed
+                      </span>
+                    )}
+                  </div>
+                </div>
+                </>)}
               </div>
 
               {/* Selection info */}

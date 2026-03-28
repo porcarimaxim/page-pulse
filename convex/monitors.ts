@@ -48,12 +48,32 @@ export const usage = query({
     if (!user) return null;
     const { planId, limits } = await getUserPlan(ctx);
     const monitorCount = await countUserMonitors(ctx, user.subject);
+
+    // Count checks (snapshots) this calendar month
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+    const userMonitors = await ctx.db
+      .query("monitors")
+      .withIndex("by_userId", (q) => q.eq("userId", user.subject))
+      .collect();
+    let monthlyChecksUsed = 0;
+    for (const monitor of userMonitors) {
+      const snapshots = await ctx.db
+        .query("snapshots")
+        .withIndex("by_monitorId_capturedAt", (q) =>
+          q.eq("monitorId", monitor._id).gte("capturedAt", startOfMonth)
+        )
+        .collect();
+      monthlyChecksUsed += snapshots.length;
+    }
+
     return {
       planId,
       planName: limits.name,
       monitorCount,
       maxMonitors: limits.maxMonitors,
       monthlyChecks: limits.monthlyChecks,
+      monthlyChecksUsed,
       allowedIntervals: limits.allowedIntervals,
     };
   },
@@ -102,6 +122,10 @@ export const create = mutation({
     mobileViewport: v.optional(v.boolean()),
     blockAds: v.optional(v.boolean()),
     alertOnError: v.optional(v.boolean()),
+    webhookUrl: v.optional(v.string()),
+    webhookType: v.optional(
+      v.union(v.literal("generic"), v.literal("slack"), v.literal("discord"))
+    ),
   },
   handler: async (ctx, args) => {
     const user = await requireUser(ctx);
@@ -154,6 +178,8 @@ export const create = mutation({
       mobileViewport: args.mobileViewport,
       blockAds: args.blockAds,
       alertOnError: args.alertOnError,
+      webhookUrl: args.webhookUrl,
+      webhookType: args.webhookType,
     });
 
     return monitorId;

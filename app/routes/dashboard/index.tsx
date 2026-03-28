@@ -365,31 +365,77 @@ function DashboardOverview() {
           </div>
 
           {/* Plan usage */}
-          {usage && usage.maxMonitors !== -1 && (
+          {usage && (
             <div className="border-2 border-[#ccc] p-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-3.5 h-3.5 text-[#2d5a2d]" />
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
-                    {usage.planName} Plan
-                  </span>
-                </div>
-                <span className="text-[10px] font-bold text-[#888]">
-                  {usage.monitorCount} / {usage.maxMonitors}
+              <div className="flex items-center gap-2 mb-3">
+                <Zap className="w-3.5 h-3.5 text-[#2d5a2d]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+                  {usage.planName} Plan
                 </span>
               </div>
-              <div className="w-full h-1.5 bg-[#e8e8e0] border border-[#ccc]">
-                <div
-                  className="h-full bg-[#2d5a2d]"
-                  style={{
-                    width: `${Math.min(100, (usage.monitorCount / usage.maxMonitors) * 100)}%`,
-                  }}
-                />
+
+              {/* Monitors */}
+              <div className="mb-3">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold uppercase text-[#888]">
+                    Monitors
+                  </span>
+                  <span className="text-[10px] font-bold text-[#888]">
+                    {usage.monitorCount}{usage.maxMonitors === -1 ? " / Unlimited" : ` / ${usage.maxMonitors}`}
+                  </span>
+                </div>
+                {usage.maxMonitors !== -1 && (
+                  <div className="w-full h-1.5 bg-[#e8e8e0] border border-[#ccc]">
+                    <div
+                      className={`h-full transition-all ${
+                        usage.monitorCount >= usage.maxMonitors
+                          ? "bg-[#dc2626]"
+                          : usage.monitorCount >= usage.maxMonitors * 0.8
+                            ? "bg-[#ca8a04]"
+                            : "bg-[#2d5a2d]"
+                      }`}
+                      style={{
+                        width: `${Math.min(100, (usage.monitorCount / usage.maxMonitors) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                )}
               </div>
-              {usage.monitorCount >= usage.maxMonitors && (
+
+              {/* Monthly Checks */}
+              <div className="mb-3">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold uppercase text-[#888]">
+                    Monthly Checks
+                  </span>
+                  <span className="text-[10px] font-bold text-[#888]">
+                    {(usage.monthlyChecksUsed ?? 0).toLocaleString()}{usage.monthlyChecks === -1 ? " / Unlimited" : ` / ${usage.monthlyChecks.toLocaleString()}`}
+                  </span>
+                </div>
+                {usage.monthlyChecks !== -1 && (
+                  <div className="w-full h-1.5 bg-[#e8e8e0] border border-[#ccc]">
+                    <div
+                      className={`h-full transition-all ${
+                        (usage.monthlyChecksUsed ?? 0) >= usage.monthlyChecks
+                          ? "bg-[#dc2626]"
+                          : (usage.monthlyChecksUsed ?? 0) >= usage.monthlyChecks * 0.8
+                            ? "bg-[#ca8a04]"
+                            : "bg-[#2d5a2d]"
+                      }`}
+                      style={{
+                        width: `${Math.min(100, ((usage.monthlyChecksUsed ?? 0) / usage.monthlyChecks) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {usage.maxMonitors !== -1 &&
+                (usage.monitorCount >= usage.maxMonitors ||
+                  (usage.monthlyChecks !== -1 && (usage.monthlyChecksUsed ?? 0) >= usage.monthlyChecks)) && (
                 <Link
                   to="/pricing"
-                  className="block mt-2 text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline underline-offset-4"
+                  className="block text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline underline-offset-4"
                 >
                   Upgrade →
                 </Link>

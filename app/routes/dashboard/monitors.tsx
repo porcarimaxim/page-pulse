@@ -486,18 +486,10 @@ function ListView({
           <StatusBadge status={monitor.status} position="" />
 
           {/* Toggle */}
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onToggle(monitor._id, monitor.status);
-            }}
-          >
-            <ToggleSwitch
-              active={monitor.status === "active"}
-              onToggle={() => {}}
-            />
-          </div>
+          <ToggleSwitch
+            active={monitor.status === "active"}
+            onToggle={() => onToggle(monitor._id, monitor.status)}
+          />
         </Link>
       ))}
     </div>

@@ -5,7 +5,6 @@ import { api } from "@convex/_generated/api";
 import { ZoneSelector, type Zone } from "@/components/zone-selector/ZoneSelector";
 import { ElementPicker } from "@/components/element-picker/ElementPicker";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectTrigger,
@@ -22,6 +21,7 @@ import {
   MousePointer,
   RefreshCw,
   ChevronDown,
+  Lock,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { Id } from "@convex/_generated/dataModel";
@@ -55,6 +55,7 @@ function MonitorSettingsPage() {
     api.monitors.get,
     isSignedIn ? { monitorId: monitorId as Id<"monitors"> } : "skip"
   );
+  const usage = useQuery(api.monitors.usage, isSignedIn ? {} : "skip");
 
   if (isLoaded && !isSignedIn) {
     navigate({ to: "/auth/sign-in", search: { redirect_url: `/dashboard/${monitorId}/settings` } as any });
@@ -329,7 +330,7 @@ function MonitorSettingsPage() {
         </div>
 
         {/* Right: Config sidebar — sticky */}
-        <div className="w-80 shrink-0 border-l-2 border-[#1a1a1a] bg-[#e4e4dc]">
+        <div className="w-80 shrink-0 border-l-2 border-[#1a1a1a]">
           <div className="sticky top-[105px] h-[calc(100vh-105px)] overflow-y-auto">
             <div className="p-6 space-y-6">
               <h2 className="font-black text-lg uppercase tracking-tighter">
@@ -352,18 +353,39 @@ function MonitorSettingsPage() {
                 <label className="block text-xs font-bold uppercase text-[#888] mb-2">
                   Check Frequency
                 </label>
-                <Select value={interval} onValueChange={setInterval}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {INTERVALS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {INTERVALS.map((opt) => {
+                    const allowed = usage?.allowedIntervals?.includes(opt.value) ?? true;
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => allowed && setInterval(opt.value)}
+                        disabled={!allowed}
+                        className={`border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all relative ${
+                          !allowed
+                            ? "opacity-40 cursor-not-allowed bg-[#e8e8e0] text-[#888]"
+                            : interval === opt.value
+                              ? "bg-[#1a1a1a] text-[#f0f0e8]"
+                              : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                        }`}
+                        title={!allowed ? `Upgrade to Pro for ${opt.label} checks` : ""}
+                      >
                         {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                        {!allowed && (
+                          <Lock className="w-2.5 h-2.5 absolute top-0.5 right-0.5 text-[#888]" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                {usage && usage.planId === "free" && (
+                  <p className="text-[10px] text-[#888] mt-1.5">
+                    Free plan: daily checks only.{" "}
+                    <a href="/pricing" className="text-[#2d5a2d] hover:underline">
+                      Upgrade for faster checks →
+                    </a>
+                  </p>
+                )}
               </div>
 
               {/* Sensitivity */}
@@ -712,7 +734,7 @@ function MonitorSettingsPage() {
             </div>
 
             {/* Bottom actions — pinned to bottom of sidebar */}
-            <div className="sticky bottom-0 bg-[#e4e4dc] border-t-2 border-[#1a1a1a] p-4 flex items-center gap-3">
+            <div className="sticky bottom-0 bg-[#f0f0e8] border-t-2 border-[#1a1a1a] p-4 flex items-center gap-3">
               <div className="flex-1">
                 {saved && (
                   <span className="text-sm text-[#2d5a2d] font-bold">
