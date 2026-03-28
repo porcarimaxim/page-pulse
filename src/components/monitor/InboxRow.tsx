@@ -28,11 +28,11 @@ export function InboxRow({
   return (
     <div
       className={`flex items-start gap-3 px-4 py-3 ${
-        !isLast ? "border-b border-[#ccc]" : ""
-      } ${muted ? "opacity-60" : ""} hover:bg-[#e8e8e0] transition-colors`}
+        !isLast ? "border-b border-gray-200" : ""
+      } ${muted ? "opacity-60" : ""} hover:bg-gray-50 transition-colors`}
     >
       <div
-        className={`w-2.5 h-2.5 ${severityBg(severity)} mt-1.5 shrink-0 ${
+        className={`w-2.5 h-2.5 rounded-full ${severityBg(severity)} mt-1.5 shrink-0 ${
           !change.reviewed ? "" : "opacity-40"
         }`}
       />
@@ -44,28 +44,28 @@ export function InboxRow({
       >
         <div className="flex items-center gap-2 mb-0.5">
           <span
-            className={`text-sm font-black uppercase tracking-tighter truncate ${
-              muted ? "text-[#888]" : ""
+            className={`text-sm font-semibold truncate ${
+              muted ? "text-gray-500" : ""
             }`}
           >
             {change.monitorName}
           </span>
           <span
-            className={`text-[10px] font-bold uppercase tracking-wider ${severityText(severity)}`}
+            className={`text-xs font-bold ${severityText(severity)}`}
           >
             {change.diffPercentage.toFixed(1)}%
           </span>
-          <span className="text-[10px] text-[#888] ml-auto shrink-0">
+          <span className="text-xs text-gray-500 ml-auto shrink-0">
             {formatRelativeTime(change.detectedAt)}
           </span>
         </div>
 
         {change.aiSummary && !change.aiSummary.startsWith("[Error]") ? (
-          <p className="text-xs text-[#555] leading-snug line-clamp-1">
+          <p className="text-xs text-gray-500 leading-snug line-clamp-1">
             {change.aiSummary}
           </p>
         ) : (
-          <p className="text-[10px] text-[#888] font-mono truncate">
+          <p className="text-xs text-gray-500 truncate">
             {change.monitorUrl}
           </p>
         )}
@@ -77,10 +77,10 @@ export function InboxRow({
           e.stopPropagation();
           onMarkReviewed();
         }}
-        className={`shrink-0 mt-1 p-1.5 border transition-all ${
+        className={`shrink-0 mt-1 p-1.5 border rounded-lg transition-all ${
           change.reviewed
-            ? "border-[#ccc] text-[#888] hover:border-[#1a1a1a] hover:text-[#1a1a1a]"
-            : "border-[#2d5a2d] text-[#2d5a2d] hover:bg-[#2d5a2d] hover:text-[#f0f0e8]"
+            ? "border-gray-200 text-gray-500 hover:border-gray-900 hover:text-gray-900"
+            : "border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white"
         }`}
         title={change.reviewed ? "Mark as unreviewed" : "Mark as reviewed"}
       >

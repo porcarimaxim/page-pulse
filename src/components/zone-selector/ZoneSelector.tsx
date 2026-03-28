@@ -327,25 +327,25 @@ export function ZoneSelector({
       {/* Dark overlay outside the zone (single layer via box-shadow) */}
       {imageLoaded && activeZone && (
         <div
-          className="absolute pointer-events-none border-2 border-[#2d5a2d]"
+          className="absolute pointer-events-none border-2 border-emerald-500 rounded-sm"
           style={{
             left: `${activeZone.x}%`,
             top: `${activeZone.y}%`,
             width: `${activeZone.width}%`,
             height: `${activeZone.height}%`,
-            boxShadow: `0 0 0 9999px rgba(26, 26, 26, 0.5)`,
+            boxShadow: `0 0 0 9999px rgba(0, 0, 0, 0.4)`,
           }}
         >
           {/* Corner handles — interactive for resize */}
-          <div className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-nw-resize" onMouseDown={(e) => handleHandleMouseDown(e, "nw")} />
-          <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-ne-resize" onMouseDown={(e) => handleHandleMouseDown(e, "ne")} />
-          <div className="absolute -bottom-1.5 -left-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-sw-resize" onMouseDown={(e) => handleHandleMouseDown(e, "sw")} />
-          <div className="absolute -bottom-1.5 -right-1.5 w-4 h-4 bg-[#2d5a2d] pointer-events-auto cursor-se-resize" onMouseDown={(e) => handleHandleMouseDown(e, "se")} />
+          <div className="absolute -top-1.5 -left-1.5 w-3.5 h-3.5 bg-emerald-500 rounded-full pointer-events-auto cursor-nw-resize" onMouseDown={(e) => handleHandleMouseDown(e, "nw")} />
+          <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-emerald-500 rounded-full pointer-events-auto cursor-ne-resize" onMouseDown={(e) => handleHandleMouseDown(e, "ne")} />
+          <div className="absolute -bottom-1.5 -left-1.5 w-3.5 h-3.5 bg-emerald-500 rounded-full pointer-events-auto cursor-sw-resize" onMouseDown={(e) => handleHandleMouseDown(e, "sw")} />
+          <div className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 bg-emerald-500 rounded-full pointer-events-auto cursor-se-resize" onMouseDown={(e) => handleHandleMouseDown(e, "se")} />
           {/* Edge handles — interactive for resize */}
-          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-6 h-2 bg-[#2d5a2d] pointer-events-auto cursor-n-resize" onMouseDown={(e) => handleHandleMouseDown(e, "n")} />
-          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-2 bg-[#2d5a2d] pointer-events-auto cursor-s-resize" onMouseDown={(e) => handleHandleMouseDown(e, "s")} />
-          <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-6 bg-[#2d5a2d] pointer-events-auto cursor-w-resize" onMouseDown={(e) => handleHandleMouseDown(e, "w")} />
-          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-6 bg-[#2d5a2d] pointer-events-auto cursor-e-resize" onMouseDown={(e) => handleHandleMouseDown(e, "e")} />
+          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-5 h-2 bg-emerald-500 rounded-full pointer-events-auto cursor-n-resize" onMouseDown={(e) => handleHandleMouseDown(e, "n")} />
+          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-2 bg-emerald-500 rounded-full pointer-events-auto cursor-s-resize" onMouseDown={(e) => handleHandleMouseDown(e, "s")} />
+          <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-5 bg-emerald-500 rounded-full pointer-events-auto cursor-w-resize" onMouseDown={(e) => handleHandleMouseDown(e, "w")} />
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-5 bg-emerald-500 rounded-full pointer-events-auto cursor-e-resize" onMouseDown={(e) => handleHandleMouseDown(e, "e")} />
         </div>
       )}
     </div>

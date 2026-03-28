@@ -24,17 +24,17 @@ function UserInfo() {
   const email = user?.primaryEmailAddress?.emailAddress;
 
   return (
-    <div className="px-4 py-3 border-t-2 border-[#1a1a1a]">
+    <div className="px-4 py-3 border-t border-gray-200">
       <div className="flex items-center gap-2.5">
         <UserButton
           appearance={{
-            elements: { avatarBox: "border-2 border-[#1a1a1a] w-8 h-8" },
+            elements: { avatarBox: "border border-gray-200 rounded-full w-8 h-8" },
           }}
         />
         <div className="min-w-0 flex-1">
           <p className="text-xs font-bold truncate">{name}</p>
           {email && (
-            <p className="text-[10px] text-[#888] truncate">{email}</p>
+            <p className="text-xs text-gray-500 truncate">{email}</p>
           )}
         </div>
       </div>
@@ -83,18 +83,18 @@ export function DashboardSidebar() {
 
   const NavContent = ({ onClose }: { onClose?: () => void }) => (
     <>
-      <div className="px-5 py-5 border-b-2 border-[#1a1a1a] flex items-center justify-between">
+      <div className="px-5 py-5 border-b border-gray-200 flex items-center justify-between">
         <Link
           to="/dashboard"
-          className="text-xl font-black tracking-tighter"
+          className="text-xl font-bold"
           onClick={onClose}
         >
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
+          PAGE<span className="text-emerald-600">PULSE</span>
         </Link>
         {onClose && (
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center hover:bg-[#d8d8d0] transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
             aria-label="Close menu"
           >
             <X className="w-4 h-4" />
@@ -110,10 +110,10 @@ export function DashboardSidebar() {
               key={item.to}
               to={item.to}
               onClick={onClose}
-              className={`flex items-center gap-3 px-3 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+              className={`flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
                 active
-                  ? "text-[#2d5a2d] bg-[#2d5a2d]/10 border-l-[3px] border-[#2d5a2d]"
-                  : "text-[#666] hover:text-[#1a1a1a] hover:bg-[#d8d8d0] border-l-[3px] border-transparent"
+                  ? "text-emerald-600 bg-emerald-50 border-l-2 border-emerald-600"
+                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-100 border-l-2 border-transparent"
               }`}
             >
               <item.icon className="w-4 h-4 shrink-0" />
@@ -125,10 +125,10 @@ export function DashboardSidebar() {
           <Link
             to="/dashboard/admin"
             onClick={onClose}
-            className={`flex items-center gap-3 px-3 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+            className={`flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
               isActive("/dashboard/admin", true)
-                ? "text-[#2d5a2d] bg-[#2d5a2d]/10 border-l-[3px] border-[#2d5a2d]"
-                : "text-[#666] hover:text-[#1a1a1a] hover:bg-[#d8d8d0] border-l-[3px] border-transparent"
+                ? "text-emerald-600 bg-emerald-50 border-l-2 border-emerald-600"
+                : "text-gray-500 hover:text-gray-900 hover:bg-gray-100 border-l-2 border-transparent"
             }`}
           >
             <Shield className="w-4 h-4 shrink-0" />
@@ -140,11 +140,11 @@ export function DashboardSidebar() {
       <Link
         to="/dashboard/settings"
         onClick={onClose}
-        className="block px-4 py-3 border-t border-[#ccc] hover:bg-[#d8d8d0] transition-colors"
+        className="block px-4 py-3 border-t border-gray-200 hover:bg-gray-100 transition-colors"
       >
         <div className="flex items-center gap-2">
-          <Zap className="w-3 h-3 text-[#2d5a2d]" />
-          <span className="text-[10px] font-bold uppercase text-[#666]">
+          <Zap className="w-3 h-3 text-emerald-600" />
+          <span className="text-xs font-medium text-gray-500">
             Manage Plan
           </span>
         </div>
@@ -157,18 +157,18 @@ export function DashboardSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-56 bg-[#e4e4dc] border-r-2 border-[#1a1a1a] flex-col z-40">
+      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-56 bg-white border-r border-gray-200 flex-col z-40">
         <NavContent />
       </aside>
 
       {/* Mobile top bar */}
-      <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#e4e4dc] border-b-2 border-[#1a1a1a] z-40 flex items-center justify-between px-4">
-        <Link to="/dashboard" className="text-lg font-black tracking-tighter">
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
+      <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 z-40 flex items-center justify-between px-4">
+        <Link to="/dashboard" className="text-lg font-bold">
+          PAGE<span className="text-emerald-600">PULSE</span>
         </Link>
         <button
           onClick={() => setMobileOpen(true)}
-          className="w-10 h-10 border-2 border-[#1a1a1a] flex items-center justify-center"
+          className="w-10 h-10 border border-gray-200 rounded-lg flex items-center justify-center"
           aria-label="Open menu"
         >
           <Menu className="w-5 h-5" />
@@ -179,25 +179,25 @@ export function DashboardSidebar() {
       {mobileOpen && (
         <>
           <div
-            className="md:hidden fixed inset-0 bg-[#1a1a1a]/40 z-50"
+            className="md:hidden fixed inset-0 bg-black/40 z-50"
             onClick={() => setMobileOpen(false)}
           />
-          <aside className="md:hidden fixed left-0 top-0 bottom-0 w-72 bg-[#e4e4dc] border-r-2 border-[#1a1a1a] flex flex-col z-50">
+          <aside className="md:hidden fixed left-0 top-0 bottom-0 w-72 bg-white border-r border-gray-200 flex flex-col z-50 shadow-lg">
             <NavContent onClose={() => setMobileOpen(false)} />
           </aside>
         </>
       )}
 
       {/* Mobile bottom tab bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#e4e4dc] border-t-2 border-[#1a1a1a] z-40 flex">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 z-40 flex">
         {navItems.map((item) => {
           const active = isActive(item.to, item.exact);
           return (
             <Link
               key={item.to}
               to={item.to}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider transition-colors ${
-                active ? "text-[#2d5a2d] border-t-2 border-[#2d5a2d] -mt-[2px]" : "text-[#888] border-t-2 border-transparent -mt-[2px]"
+              className={`flex-1 flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors ${
+                active ? "text-emerald-600 border-t-2 border-emerald-600 -mt-[2px]" : "text-gray-500 border-t-2 border-transparent -mt-[2px]"
               }`}
             >
               <item.icon className="w-5 h-5" />

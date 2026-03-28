@@ -15,28 +15,28 @@ export function EmailAlert({
   time?: string;
 }) {
   return (
-    <div className="border-2 border-[#1a1a1a] shadow-[8px_8px_0px_0px_#1a1a1a] bg-white">
+    <div className="border border-gray-200 shadow-lg rounded-xl bg-white">
       {/* Notification header */}
-      <div className="flex items-center gap-2 px-4 py-2 bg-[#2d5a2d] text-white">
+      <div className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white">
         <Bell className="w-3.5 h-3.5" />
         <span className="text-[10px] font-bold uppercase tracking-wider">
           Alert
         </span>
-        <span className="ml-auto text-[9px] opacity-70">{time}</span>
+        <span className="ml-auto text-xs opacity-70">{time}</span>
       </div>
 
       {/* Email content */}
       <div className="p-4">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 bg-[#2d5a2d] flex items-center justify-center shrink-0 mt-0.5">
-            <span className="text-white text-[10px] font-black">PP</span>
+          <div className="w-8 h-8 bg-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+            <span className="text-white text-[10px] font-bold">PP</span>
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-bold text-[#1a1a1a]">{from}</span>
+              <span className="text-xs font-bold text-gray-900">{from}</span>
             </div>
-            <p className="text-xs font-bold text-[#1a1a1a] mb-1">{subject}</p>
-            <p className="text-[10px] text-[#888] leading-relaxed">
+            <p className="text-xs font-bold text-gray-900 mb-1">{subject}</p>
+            <p className="text-[10px] text-gray-500 leading-relaxed">
               {preview}
             </p>
           </div>
@@ -49,12 +49,12 @@ export function EmailAlert({
             <div className="h-1.5 bg-[#ffcccc] flex-1" />
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-1 h-1 bg-[#2d5a2d]" />
+            <div className="w-1 h-1 bg-emerald-600" />
             <div className="h-1.5 bg-[#ccffcc] flex-1" />
           </div>
         </div>
 
-        <div className="mt-3 inline-block border-2 border-[#1a1a1a] px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-white transition-colors">
+        <div className="mt-3 inline-block border border-gray-200 rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider hover:bg-gray-900 hover:text-white transition-colors">
           View Changes
         </div>
       </div>
@@ -75,20 +75,20 @@ export function NotificationStack({
       {notifications.map((n, i) => (
         <div
           key={i}
-          className="flex items-center gap-3 border-2 border-[#1a1a1a] p-3 bg-white"
+          className="flex items-center gap-3 border border-gray-200 rounded-lg p-3 bg-white"
           style={{
             transform: `translateX(${i * 4}px)`,
           }}
         >
           <div
             className={`w-2 h-2 shrink-0 ${
-              n.type === "alert" ? "bg-[#ff4444]" : "bg-[#2d5a2d]"
+              n.type === "alert" ? "bg-[#ff4444]" : "bg-emerald-600"
             }`}
           />
-          <span className="text-[10px] font-bold text-[#1a1a1a] truncate flex-1">
+          <span className="text-[10px] font-bold text-gray-900 truncate flex-1">
             {n.title}
           </span>
-          <span className="text-[9px] text-[#888] shrink-0">{n.time}</span>
+          <span className="text-xs text-gray-500 shrink-0">{n.time}</span>
         </div>
       ))}
     </div>

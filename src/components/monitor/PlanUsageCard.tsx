@@ -15,10 +15,10 @@ export function PlanUsageCard({
   const checksUsed = usage.monthlyChecksUsed ?? 0;
 
   return (
-    <div className="border-2 border-[#ccc] p-4">
+    <div className="border border-gray-200 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Zap className="w-3.5 h-3.5 text-[#2d5a2d]" />
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+        <Zap className="w-3.5 h-3.5 text-emerald-600" />
+        <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
           {usage.planName} Plan
         </span>
       </div>
@@ -26,10 +26,10 @@ export function PlanUsageCard({
       {/* Monitors */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] font-bold uppercase text-[#888]">
+          <span className="text-xs font-bold uppercase text-gray-500">
             Monitors
           </span>
-          <span className="text-[10px] font-bold text-[#888]">
+          <span className="text-xs font-bold text-gray-500">
             {usage.monitorCount}
             {usage.maxMonitors === -1 ? " / Unlimited" : ` / ${usage.maxMonitors}`}
           </span>
@@ -45,10 +45,10 @@ export function PlanUsageCard({
       {/* Monthly Checks */}
       <div className="mb-3">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] font-bold uppercase text-[#888]">
+          <span className="text-xs font-bold uppercase text-gray-500">
             Monthly Checks
           </span>
-          <span className="text-[10px] font-bold text-[#888]">
+          <span className="text-xs font-bold text-gray-500">
             {checksUsed.toLocaleString()}
             {usage.monthlyChecks === -1
               ? " / Unlimited"
@@ -65,7 +65,7 @@ export function PlanUsageCard({
           (usage.monthlyChecks !== -1 && checksUsed >= usage.monthlyChecks)) && (
           <Link
             to="/pricing"
-            className="block text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline underline-offset-4"
+            className="block text-xs font-bold uppercase tracking-wider text-emerald-600 hover:underline underline-offset-4"
           >
             Upgrade →
           </Link>
@@ -78,13 +78,13 @@ function ProgressBar({ value, max }: { value: number; max: number }) {
   const pct = Math.min(100, (value / max) * 100);
   const color =
     value >= max
-      ? "bg-[#dc2626]"
+      ? "bg-red-500"
       : value >= max * 0.8
-        ? "bg-[#ca8a04]"
-        : "bg-[#2d5a2d]";
+        ? "bg-amber-500"
+        : "bg-emerald-600";
 
   return (
-    <div className="w-full h-1.5 bg-[#e8e8e0] border border-[#ccc]">
+    <div className="w-full h-1.5 bg-gray-50 border border-gray-200 rounded-full overflow-hidden">
       <div
         className={`h-full transition-all ${color}`}
         style={{ width: `${pct}%` }}

@@ -13,15 +13,15 @@ export function MonitorSelectionInfo({
   if (!isComplete) return null;
 
   return (
-    <div className="border-t-2 border-[#ccc] pt-4">
-      <p className="text-xs font-bold uppercase text-[#888] mb-1">Selection</p>
+    <div className="border-t border-gray-200 pt-4">
+      <p className="text-xs font-bold uppercase text-gray-500 mb-1">Selection</p>
       <p className="text-sm">
         {selectionMode === "element" ? (
-          <span className="font-mono text-[#2d5a2d] text-xs break-all">
+          <span className="font-mono text-emerald-600 text-xs break-all">
             {cssSelector}
           </span>
         ) : (
-          <span className="text-[#1a1a1a]">
+          <span className="text-gray-900">
             Zone: {zone ? `${zone.width.toFixed(0)}% × ${zone.height.toFixed(0)}%` : "—"}
           </span>
         )}

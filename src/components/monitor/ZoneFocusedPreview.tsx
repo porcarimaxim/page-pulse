@@ -32,8 +32,8 @@ export function ZoneFocusedPreview({
 
   if (!screenshotUrl) {
     return (
-      <div className={`relative bg-[#e8e8e0] overflow-hidden ${className}`}>
-        <div className="flex items-center justify-center h-full text-[#888] text-xs">
+      <div className={`relative bg-gray-50 overflow-hidden ${className}`}>
+        <div className="flex items-center justify-center h-full text-gray-500 text-xs">
           No screenshot yet
         </div>
       </div>
@@ -63,7 +63,7 @@ export function ZoneFocusedPreview({
   // capture API is already cropped to the element — just show it without zoom.
   if (isElement && isFullPage) {
     return (
-      <div ref={containerRef} className={`relative bg-[#e8e8e0] overflow-hidden ${className}`}>
+      <div ref={containerRef} className={`relative bg-gray-50 overflow-hidden ${className}`}>
         {ready && (
           <img
             src={screenshotUrl}
@@ -71,7 +71,7 @@ export function ZoneFocusedPreview({
             style={{ display: "block", width: "100%", height: "auto" }}
           />
         )}
-        <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5 z-10">
+        <div className="absolute top-2 right-2 text-xs font-bold text-white bg-emerald-600 rounded px-1.5 py-0.5 z-10">
           Element
         </div>
       </div>
@@ -79,7 +79,7 @@ export function ZoneFocusedPreview({
   }
 
   return (
-    <div ref={containerRef} className={`relative bg-[#e8e8e0] overflow-hidden ${className}`}>
+    <div ref={containerRef} className={`relative bg-gray-50 overflow-hidden ${className}`}>
       {ready && (
         <div
           style={{
@@ -105,8 +105,8 @@ export function ZoneFocusedPreview({
               top: `${zone.y}%`,
               width: `${zone.width}%`,
               height: `${zone.height}%`,
-              border: isElement ? "2px dashed #2d5a2d" : "2px solid #2d5a2d",
-              backgroundColor: "rgba(45, 90, 45, 0.1)",
+              border: isElement ? "2px dashed #059669" : "2px solid #059669",
+              backgroundColor: "rgba(5, 150, 105, 0.1)",
               pointerEvents: "none",
             }}
           />
@@ -115,7 +115,7 @@ export function ZoneFocusedPreview({
 
       {/* Element mode badge */}
       {isElement && (
-        <div className="absolute top-2 right-2 text-[8px] uppercase font-bold text-[#f0f0e8] bg-[#2d5a2d] px-1.5 py-0.5 z-10">
+        <div className="absolute top-2 right-2 text-xs font-bold text-white bg-emerald-600 rounded px-1.5 py-0.5 z-10">
           Element
         </div>
       )}

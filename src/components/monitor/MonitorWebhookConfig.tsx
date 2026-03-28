@@ -27,7 +27,7 @@ export function MonitorWebhookConfig({
   return (
     <>
       <div>
-        <label className="block text-xs font-bold uppercase text-[#888] mb-1.5">
+        <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">
           Type
         </label>
         <div className="flex gap-0">
@@ -35,12 +35,12 @@ export function MonitorWebhookConfig({
             <button
               key={t.value}
               onClick={() => onWebhookTypeChange(t.value)}
-              className={`border-2 border-[#1a1a1a] px-3 py-1.5 text-xs font-bold uppercase transition-all ${
+              className={`border border-gray-200 px-3 py-1.5 text-xs font-bold uppercase transition-all ${
                 t.value !== "generic" ? "border-l-0" : ""
               } ${
                 webhookType === t.value
-                  ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                  : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                  ? "bg-gray-900 text-white"
+                  : "bg-transparent text-gray-900 hover:bg-gray-50"
               }`}
             >
               {t.label}
@@ -50,7 +50,7 @@ export function MonitorWebhookConfig({
       </div>
 
       <div>
-        <label className="block text-xs font-bold uppercase text-[#888] mb-1.5">
+        <label className="block text-xs font-bold uppercase text-gray-500 mb-1.5">
           URL
         </label>
         <Input
@@ -68,7 +68,7 @@ export function MonitorWebhookConfig({
           <button
             onClick={onTest}
             disabled={!webhookUrl || isTesting}
-            className="text-xs font-bold uppercase text-[#888] hover:text-[#1a1a1a] disabled:opacity-50 transition-colors flex items-center gap-1"
+            className="text-xs font-bold uppercase text-gray-500 hover:text-gray-900 disabled:opacity-50 transition-colors flex items-center gap-1"
           >
             {isTesting ? (
               <Loader2 className="w-3 h-3 animate-spin" />
@@ -78,10 +78,10 @@ export function MonitorWebhookConfig({
             Test
           </button>
           {testResult === "success" && (
-            <span className="text-xs text-[#2d5a2d] font-bold">Sent!</span>
+            <span className="text-xs text-emerald-600 font-bold">Sent!</span>
           )}
           {testResult === "error" && (
-            <span className="text-xs text-[#dc2626] font-bold">Failed</span>
+            <span className="text-xs text-red-500 font-bold">Failed</span>
           )}
         </div>
       </div>

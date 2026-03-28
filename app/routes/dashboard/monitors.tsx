@@ -113,10 +113,10 @@ function MonitorsListPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-black uppercase tracking-tighter">
+          <h1 className="text-3xl font-bold">
             Monitors
           </h1>
-          <p className="text-sm text-[#888] mt-1">
+          <p className="text-sm text-gray-500 mt-1">
             {monitors
               ? `${monitors.length} monitor${monitors.length !== 1 ? "s" : ""} tracking ${stats.changes} change${stats.changes !== 1 ? "s" : ""}`
               : "Loading..."}
@@ -132,28 +132,28 @@ function MonitorsListPage() {
 
       {/* Plan usage bar — hidden for unlimited/special plans */}
       {usage && usage.maxMonitors !== -1 && (
-        <div className="border-2 border-[#ccc] p-4 mb-6 flex items-center gap-6">
+        <div className="border border-gray-200 p-4 mb-6 flex items-center gap-6 rounded-lg">
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+              <span className="text-xs font-bold text-gray-500">
                 {usage.planName} Plan — Monitors
               </span>
-              <span className="text-xs font-black tracking-tighter">
+              <span className="text-xs font-bold">
                 {usage.monitorCount}
-                <span className="text-[#888] font-bold">
+                <span className="text-gray-500 font-bold">
                   {" / "}
                   {usage.maxMonitors}
                 </span>
               </span>
             </div>
-            <div className="h-1.5 bg-[#e8e8e0] border border-[#ccc] overflow-hidden">
+            <div className="h-1.5 bg-gray-50 border border-gray-200 rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all ${
+                className={`h-full transition-all rounded-full ${
                   usage.monitorCount >= usage.maxMonitors
-                    ? "bg-[#dc2626]"
+                    ? "bg-red-500"
                     : usage.monitorCount >= usage.maxMonitors * 0.8
-                      ? "bg-[#ca8a04]"
-                      : "bg-[#2d5a2d]"
+                      ? "bg-amber-500"
+                      : "bg-emerald-600"
                 }`}
                 style={{
                   width: `${Math.min(100, (usage.monitorCount / usage.maxMonitors) * 100)}%`,
@@ -164,7 +164,7 @@ function MonitorsListPage() {
           {usage.monitorCount >= usage.maxMonitors && (
             <Link
               to="/pricing"
-              className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline underline-offset-4 shrink-0"
+              className="text-xs font-bold text-emerald-600 hover:underline underline-offset-4 shrink-0"
             >
               Upgrade →
             </Link>
@@ -173,7 +173,7 @@ function MonitorsListPage() {
       )}
 
       {monitors === undefined ? (
-        <div className="text-center py-20 text-[#888]">Loading...</div>
+        <div className="text-center py-20 text-gray-500">Loading...</div>
       ) : monitors.length === 0 ? (
         <EmptyState />
       ) : (
@@ -181,7 +181,7 @@ function MonitorsListPage() {
           {/* Filter bar */}
           <div className="flex items-center gap-3 mb-6">
             {/* Status tabs */}
-            <div className="flex border-2 border-[#1a1a1a]">
+            <div className="flex border border-gray-200 rounded-lg overflow-hidden">
               {(
                 [
                   { key: "all", label: "All", count: stats.total },
@@ -193,12 +193,12 @@ function MonitorsListPage() {
                 <button
                   key={tab.key}
                   onClick={() => setStatusFilter(tab.key)}
-                  className={`px-3 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors ${
-                    i > 0 ? "border-l-2 border-[#1a1a1a]" : ""
+                  className={`px-3 py-2 text-xs font-bold transition-colors ${
+                    i > 0 ? "border-l border-gray-200" : ""
                   } ${
                     statusFilter === tab.key
-                      ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                      : "text-[#888] hover:bg-[#e8e8e0]"
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-500 hover:bg-gray-50"
                   }`}
                 >
                   {tab.label}
@@ -209,7 +209,7 @@ function MonitorsListPage() {
 
             {/* Search */}
             <div className="relative flex-1 max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#888]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -221,15 +221,15 @@ function MonitorsListPage() {
             <div className="flex-1" />
 
             {/* View mode toggle */}
-            <div className="flex border-2 border-[#1a1a1a]">
+            <div className="flex border border-gray-200 rounded-lg overflow-hidden">
               <button
                 onClick={() => setAndPersistViewMode("cards")}
                 aria-pressed={viewMode === "cards"}
                 aria-label="Card view"
                 className={`p-2 transition-colors ${
                   viewMode === "cards"
-                    ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                    : "text-[#888] hover:bg-[#e8e8e0]"
+                    ? "bg-gray-900 text-white"
+                    : "text-gray-500 hover:bg-gray-50"
                 }`}
                 title="Card view"
               >
@@ -239,10 +239,10 @@ function MonitorsListPage() {
                 onClick={() => setAndPersistViewMode("list")}
                 aria-pressed={viewMode === "list"}
                 aria-label="List view"
-                className={`p-2 border-l-2 border-[#1a1a1a] transition-colors ${
+                className={`p-2 border-l border-gray-200 transition-colors ${
                   viewMode === "list"
-                    ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                    : "text-[#888] hover:bg-[#e8e8e0]"
+                    ? "bg-gray-900 text-white"
+                    : "text-gray-500 hover:bg-gray-50"
                 }`}
                 title="List view"
               >
@@ -250,7 +250,7 @@ function MonitorsListPage() {
               </button>
             </div>
 
-            <p className="text-[10px] text-[#888] uppercase tracking-wider">
+            <p className="text-xs text-gray-500">
               {filteredMonitors.length} shown
             </p>
           </div>
@@ -270,9 +270,9 @@ function MonitorsListPage() {
 
           {/* No results */}
           {filteredMonitors.length === 0 && (
-            <div className="border-2 border-[#ccc] border-dashed p-12 text-center mt-4">
-              <Search className="w-8 h-8 text-[#ccc] mx-auto mb-3" />
-              <p className="text-sm font-bold text-[#888]">
+            <div className="border border-gray-200 border-dashed p-12 text-center mt-4 rounded-lg">
+              <Search className="w-8 h-8 text-gray-200 mx-auto mb-3" />
+              <p className="text-sm font-bold text-gray-500">
                 No monitors match your filters
               </p>
               <button
@@ -280,7 +280,7 @@ function MonitorsListPage() {
                   setSearch("");
                   setStatusFilter("all");
                 }}
-                className="text-xs text-[#2d5a2d] hover:underline mt-2"
+                className="text-xs text-emerald-600 hover:underline mt-2"
               >
                 Clear filters
               </button>
@@ -306,13 +306,13 @@ function CardGrid({
       {monitors.map((monitor) => (
         <div
           key={monitor._id}
-          className="border-2 border-[#1a1a1a] group hover:shadow-[4px_4px_0px_0px_#1a1a1a] transition-all"
+          className="border border-gray-200 group hover:shadow-md transition-all rounded-xl overflow-hidden"
         >
           {/* Screenshot */}
           <Link
             to="/dashboard/$monitorId"
             params={{ monitorId: monitor._id } as any}
-            className="block relative h-36 border-b-2 border-[#1a1a1a] overflow-hidden"
+            className="block relative h-36 border-b border-gray-200 overflow-hidden"
           >
             <ZoneFocusedPreview
               screenshotUrl={monitor.screenshotUrl}
@@ -322,9 +322,9 @@ function CardGrid({
             />
             <StatusBadge status={monitor.status} className="absolute top-2 right-2 z-10" />
             {monitor.changeCount > 0 && (
-              <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-[#1a1a1a] text-[#f0f0e8] px-1.5 py-0.5 z-10">
+              <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-gray-900 text-white px-1.5 py-0.5 rounded z-10">
                 <Zap className="w-2.5 h-2.5" />
-                <span className="text-[9px] font-bold">{monitor.changeCount}</span>
+                <span className="text-xs font-bold">{monitor.changeCount}</span>
               </div>
             )}
           </Link>
@@ -337,10 +337,10 @@ function CardGrid({
                 params={{ monitorId: monitor._id } as any}
                 className="flex-1 min-w-0"
               >
-                <h3 className="text-sm font-black uppercase tracking-tighter truncate group-hover:text-[#2d5a2d] transition-colors">
+                <h3 className="text-sm font-semibold truncate group-hover:text-emerald-600 transition-colors">
                   {monitor.name}
                 </h3>
-                <p className="text-[10px] text-[#888] font-mono truncate mt-0.5">
+                <p className="text-xs text-gray-500 truncate mt-0.5">
                   {monitor.url}
                 </p>
               </Link>
@@ -350,11 +350,11 @@ function CardGrid({
               />
             </div>
             {monitor.selectionMode === "element" && monitor.cssSelector && (
-              <p className="text-[10px] font-mono text-[#2d5a2d] truncate mb-1">
+              <p className="text-xs font-mono text-emerald-600 truncate mb-1">
                 {monitor.cssSelector}
               </p>
             )}
-            <div className="flex items-center gap-3 text-[10px] text-[#888]">
+            <div className="flex items-center gap-3 text-xs text-gray-500">
               <span className="flex items-center gap-1">
                 <Clock className="w-3 h-3" />
                 {intervalLabel(monitor.interval)}
@@ -371,7 +371,7 @@ function CardGrid({
                 {monitor.tags.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
-                    className="text-[8px] uppercase font-bold text-[#888] bg-[#e8e8e0] border border-[#ccc] px-1.5 py-0"
+                    className="text-xs font-bold text-gray-500 bg-gray-50 border border-gray-200 px-1.5 py-0 rounded"
                   >
                     {tag}
                   </span>
@@ -379,7 +379,7 @@ function CardGrid({
               </div>
             )}
             {monitor.status === "error" && (
-              <div className="flex items-center gap-1.5 mt-2 text-[10px] text-[#dc2626] font-bold">
+              <div className="flex items-center gap-1.5 mt-2 text-xs text-red-500 font-bold">
                 <AlertTriangle className="w-3 h-3" />
                 {monitor.consecutiveErrors} consecutive failures
               </div>
@@ -401,26 +401,26 @@ function ListView({
   onToggle: (id: string, status: string) => void;
 }) {
   return (
-    <div className="border-2 border-[#1a1a1a]">
+    <div className="border border-gray-200 rounded-lg overflow-hidden">
       {/* Table header */}
-      <div className="grid grid-cols-[auto_2fr_1fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8] items-center">
-        <span className="text-[10px] font-bold uppercase tracking-wider w-12" />
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+      <div className="grid grid-cols-[auto_2fr_1fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 bg-gray-900 text-white items-center">
+        <span className="text-xs font-bold w-12" />
+        <span className="text-xs font-bold">
           Monitor
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold">
           Interval
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold">
           Last Check
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold">
           Changes
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider w-16 text-center">
+        <span className="text-xs font-bold w-16 text-center">
           Status
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider w-12" />
+        <span className="text-xs font-bold w-12" />
       </div>
 
       {monitors.map((monitor, i) => (
@@ -428,12 +428,12 @@ function ListView({
           key={monitor._id}
           to="/dashboard/$monitorId"
           params={{ monitorId: monitor._id } as any}
-          className={`grid grid-cols-[auto_2fr_1fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 items-center hover:bg-[#e8e8e0] transition-colors ${
-            i < monitors.length - 1 ? "border-b border-[#ccc]" : ""
+          className={`grid grid-cols-[auto_2fr_1fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 items-center hover:bg-gray-50 transition-colors ${
+            i < monitors.length - 1 ? "border-b border-gray-200" : ""
           }`}
         >
           {/* Thumbnail */}
-          <div className="w-12 h-8 bg-[#e8e8e0] border border-[#ccc] overflow-hidden shrink-0">
+          <div className="w-12 h-8 bg-gray-50 border border-gray-200 overflow-hidden shrink-0 rounded">
             {monitor.screenshotUrl ? (
               <img
                 src={monitor.screenshotUrl}
@@ -442,33 +442,33 @@ function ListView({
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <Eye className="w-3 h-3 text-[#ccc]" />
+                <Eye className="w-3 h-3 text-gray-200" />
               </div>
             )}
           </div>
 
           {/* Name + URL */}
           <div className="min-w-0">
-            <p className="text-sm font-black uppercase tracking-tighter truncate">
+            <p className="text-sm font-semibold truncate">
               {monitor.name}
             </p>
-            <p className="text-[10px] text-[#888] font-mono truncate">
+            <p className="text-xs text-gray-500 truncate">
               {monitor.url}
             </p>
             {monitor.selectionMode === "element" && monitor.cssSelector && (
-              <p className="text-[10px] font-mono text-[#2d5a2d] truncate">
+              <p className="text-xs font-mono text-emerald-600 truncate">
                 {monitor.cssSelector}
               </p>
             )}
           </div>
 
           {/* Interval */}
-          <span className="text-xs text-[#888]">
+          <span className="text-xs text-gray-500">
             {intervalLabel(monitor.interval)}
           </span>
 
           {/* Last check */}
-          <span className="text-xs text-[#888]">
+          <span className="text-xs text-gray-500">
             {monitor.lastCheckedAt
               ? formatRelativeTime(monitor.lastCheckedAt)
               : "Never"}
@@ -477,14 +477,14 @@ function ListView({
           {/* Changes */}
           <div className="flex items-center gap-2">
             <span
-              className={`text-sm font-black ${
-                monitor.changeCount > 0 ? "text-[#1a1a1a]" : "text-[#ccc]"
+              className={`text-sm font-bold ${
+                monitor.changeCount > 0 ? "text-gray-900" : "text-gray-200"
               }`}
             >
               {monitor.changeCount}
             </span>
             {monitor.status === "error" && (
-              <AlertTriangle className="w-3.5 h-3.5 text-[#dc2626]" />
+              <AlertTriangle className="w-3.5 h-3.5 text-red-500" />
             )}
           </div>
 
@@ -521,13 +521,13 @@ function ToggleSwitch({
       role="switch"
       aria-checked={active}
       aria-label={active ? "Pause monitor" : "Resume monitor"}
-      className={`w-9 h-5 relative transition-colors shrink-0 ${
-        active ? "bg-[#2d5a2d]" : "bg-[#ccc]"
+      className={`w-9 h-5 relative transition-colors shrink-0 rounded-full ${
+        active ? "bg-emerald-600" : "bg-gray-200"
       }`}
       title={active ? "Pause monitor" : "Resume monitor"}
     >
       <div
-        className={`absolute top-0.5 w-4 h-4 bg-[#f0f0e8] transition-transform ${
+        className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
           active ? "translate-x-4" : "translate-x-0.5"
         }`}
       />
@@ -537,12 +537,12 @@ function ToggleSwitch({
 
 function EmptyState() {
   return (
-    <div className="border-2 border-[#1a1a1a] border-dashed p-16 text-center">
-      <Eye className="w-12 h-12 mx-auto mb-4 text-[#888]" />
-      <h2 className="text-xl font-black uppercase tracking-tighter mb-2">
+    <div className="border border-gray-200 border-dashed p-16 text-center rounded-lg">
+      <Eye className="w-12 h-12 mx-auto mb-4 text-gray-500" />
+      <h2 className="text-xl font-bold mb-2">
         No Monitors Yet
       </h2>
-      <p className="text-sm text-[#888] mb-6 max-w-sm mx-auto">
+      <p className="text-sm text-gray-500 mb-6 max-w-sm mx-auto">
         Create your first monitor to start tracking a webpage for changes.
       </p>
       <Button asChild>

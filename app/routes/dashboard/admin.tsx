@@ -38,12 +38,12 @@ function AdminPage() {
   if (!isAdmin) {
     return (
       <main className="px-8 py-8 max-w-[1100px]">
-        <div className="border-2 border-[#dc2626] p-12 text-center">
-          <Shield className="w-10 h-10 text-[#dc2626] mx-auto mb-4" />
-          <h1 className="text-2xl font-black uppercase tracking-tighter mb-2">
+        <div className="border border-red-500 rounded-lg p-12 text-center">
+          <Shield className="w-10 h-10 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">
             Access Denied
           </h1>
-          <p className="text-sm text-[#888]">
+          <p className="text-sm text-gray-500">
             This page is restricted to administrators.
           </p>
         </div>
@@ -55,14 +55,14 @@ function AdminPage() {
     <main className="px-8 py-8 max-w-[1200px]">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 border-2 border-[#1a1a1a] bg-[#1a1a1a] flex items-center justify-center">
-          <Shield className="w-4 h-4 text-[#f0f0e8]" />
+        <div className="w-9 h-9 border border-gray-200 rounded-lg bg-gray-900 flex items-center justify-center">
+          <Shield className="w-4 h-4 text-white" />
         </div>
         <div>
-          <h1 className="text-3xl font-black uppercase tracking-tighter">
+          <h1 className="text-3xl font-bold">
             Admin
           </h1>
-          <p className="text-sm text-[#888] mt-0.5">
+          <p className="text-sm text-gray-500 mt-0.5">
             System-wide overview and controls
           </p>
         </div>
@@ -71,7 +71,7 @@ function AdminPage() {
       <StatsBar />
 
       {/* Tab bar */}
-      <div className="flex border-2 border-[#1a1a1a] mb-6">
+      <div className="flex border border-gray-200 rounded-lg mb-6">
         {(
           [
             { key: "users", label: "Users", icon: Users },
@@ -81,12 +81,12 @@ function AdminPage() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
-              i > 0 ? "border-l-2 border-[#1a1a1a]" : ""
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold transition-colors ${
+              i > 0 ? "border-l border-gray-200" : ""
             } ${
               tab === t.key
-                ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                : "text-[#888] hover:bg-[#e8e8e0]"
+                ? "bg-gray-900 text-white"
+                : "text-gray-500 hover:bg-gray-50"
             }`}
           >
             <t.icon className="w-4 h-4" />
@@ -107,7 +107,7 @@ function StatsBar() {
 
   if (!stats) {
     return (
-      <div className="border-2 border-[#1a1a1a] p-4 mb-6 text-center text-[#888] text-sm">
+      <div className="border border-gray-200 rounded-lg p-4 mb-6 text-center text-gray-500 text-sm">
         Loading stats...
       </div>
     );
@@ -116,29 +116,29 @@ function StatsBar() {
   const items = [
     { label: "Users", value: stats.totalUsers },
     { label: "Monitors", value: stats.totalMonitors },
-    { label: "Active", value: stats.activeMonitors, color: "text-[#2d5a2d]" },
-    { label: "Paused", value: stats.pausedMonitors, color: "text-[#888]" },
-    { label: "Errors", value: stats.errorMonitors, color: "text-[#dc2626]" },
+    { label: "Active", value: stats.activeMonitors, color: "text-emerald-600" },
+    { label: "Paused", value: stats.pausedMonitors, color: "text-gray-500" },
+    { label: "Errors", value: stats.errorMonitors, color: "text-red-500" },
     { label: "Changes", value: stats.totalChanges },
   ];
 
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-6 gap-0 border-2 border-[#1a1a1a] mb-6">
+    <div className="grid grid-cols-3 sm:grid-cols-6 gap-0 border border-gray-200 rounded-lg mb-6">
       {items.map((item, i) => (
         <div
           key={item.label}
           className={`p-4 text-center ${
-            i > 0 ? "border-l border-[#ccc]" : ""
+            i > 0 ? "border-l border-gray-200" : ""
           }`}
         >
           <p
-            className={`text-2xl font-black tracking-tighter ${
+            className={`text-2xl font-semibold ${
               item.color ?? ""
             }`}
           >
             {item.value}
           </p>
-          <p className="text-[9px] font-bold uppercase tracking-wider text-[#888] mt-0.5">
+          <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mt-0.5">
             {item.label}
           </p>
         </div>
@@ -162,7 +162,7 @@ function UsersTable() {
 
   if (!users) {
     return (
-      <div className="text-center py-12 text-[#888]">Loading users...</div>
+      <div className="text-center py-12 text-gray-500">Loading users...</div>
     );
   }
 
@@ -205,28 +205,28 @@ function UsersTable() {
   };
 
   return (
-    <div className="border-2 border-[#1a1a1a]">
+    <div className="border border-gray-200 rounded-lg">
       {/* Header */}
-      <div className="grid grid-cols-[2fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8] items-center">
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+      <div className="grid grid-cols-[2fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 bg-gray-900 text-white items-center">
+        <span className="text-xs font-bold uppercase tracking-wider">
           User
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold uppercase tracking-wider">
           Monitors
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold uppercase tracking-wider">
           Plan Override
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider w-20 text-center">
+        <span className="text-xs font-bold uppercase tracking-wider w-20 text-center">
           Plan
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider w-20 text-center">
+        <span className="text-xs font-bold uppercase tracking-wider w-20 text-center">
           Block
         </span>
       </div>
 
       {users.length === 0 ? (
-        <div className="p-8 text-center text-[#888] text-sm">No users yet</div>
+        <div className="p-8 text-center text-gray-500 text-sm">No users yet</div>
       ) : (
         users.map((u, i) => {
           const currentOverride =
@@ -239,36 +239,36 @@ function UsersTable() {
             <div
               key={u.userId}
               className={`grid grid-cols-[2fr_1fr_1fr_auto_auto] gap-4 px-4 py-3 items-center ${
-                i < users.length - 1 ? "border-b border-[#ccc]" : ""
-              } ${isBlocked ? "bg-[#fef2f2]" : "hover:bg-[#e8e8e0]"} transition-colors`}
+                i < users.length - 1 ? "border-b border-gray-200" : ""
+              } ${isBlocked ? "bg-red-50" : "hover:bg-gray-50"} transition-colors`}
             >
               {/* User info */}
               <div className="min-w-0 flex items-center gap-2">
                 <div className="min-w-0">
-                  <p className={`text-xs font-bold truncate ${isBlocked ? "line-through text-[#888]" : ""}`}>
+                  <p className={`text-xs font-bold truncate ${isBlocked ? "line-through text-gray-500" : ""}`}>
                     {u.email || u.userId}
                   </p>
                   {u.email && (
-                    <p className="text-[10px] text-[#888] font-mono truncate">
+                    <p className="text-xs text-gray-500 font-mono truncate">
                       {u.userId}
                     </p>
                   )}
                 </div>
                 {isBlocked && (
-                  <span className="shrink-0 px-1.5 py-0.5 bg-[#dc2626] text-white text-[8px] font-bold uppercase tracking-wider">
+                  <span className="shrink-0 px-1.5 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
                     Blocked
                   </span>
                 )}
               </div>
 
               {/* Monitor count */}
-              <span className="text-sm font-black">{u.monitorCount}</span>
+              <span className="text-sm font-semibold">{u.monitorCount}</span>
 
               {/* Plan override select */}
               <select
                 value={currentOverride}
                 onChange={(e) => handlePlanChange(u.userId, e.target.value)}
-                className="border-2 border-[#1a1a1a] bg-white px-2 py-1.5 text-xs font-bold uppercase"
+                className="border border-gray-200 rounded-lg bg-white px-2 py-1.5 text-xs font-bold"
               >
                 <option value="none">— Default —</option>
                 <option value="free">Free</option>
@@ -283,7 +283,7 @@ function UsersTable() {
                   <button
                     onClick={() => handleSave(u.userId)}
                     disabled={savingUser === u.userId}
-                    className="px-3 py-1.5 bg-[#2d5a2d] text-[#f0f0e8] text-[10px] font-bold uppercase tracking-wider hover:bg-[#3a6a3a] disabled:opacity-50 transition-colors"
+                    className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 disabled:opacity-50 transition-colors rounded-lg"
                   >
                     {savingUser === u.userId ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -292,11 +292,11 @@ function UsersTable() {
                     )}
                   </button>
                 ) : savedUser === u.userId ? (
-                  <span className="text-[#2d5a2d]">
+                  <span className="text-emerald-600">
                     <Check className="w-4 h-4" />
                   </span>
                 ) : (
-                  <span className="text-[10px] text-[#ccc]">—</span>
+                  <span className="text-xs text-gray-200">—</span>
                 )}
               </div>
 
@@ -305,10 +305,10 @@ function UsersTable() {
                 <button
                   onClick={() => handleToggleBlock(u.userId, isBlocked)}
                   disabled={blockingUser === u.userId}
-                  className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider border-2 transition-colors disabled:opacity-50 ${
+                  className={`px-3 py-1.5 text-xs font-bold border transition-colors disabled:opacity-50 rounded-lg ${
                     isBlocked
-                      ? "bg-[#e8e8e0] text-[#1a1a1a] border-[#1a1a1a] hover:bg-[#d8d8d0]"
-                      : "bg-[#dc2626] text-white border-[#dc2626] hover:bg-[#b91c1c]"
+                      ? "bg-gray-50 text-gray-900 border-gray-200 hover:bg-gray-200"
+                      : "bg-red-500 text-white border-red-500 hover:bg-red-600"
                   }`}
                 >
                   {blockingUser === u.userId ? (
@@ -336,36 +336,36 @@ function MonitorsTable() {
 
   if (!monitors) {
     return (
-      <div className="text-center py-12 text-[#888]">Loading monitors...</div>
+      <div className="text-center py-12 text-gray-500">Loading monitors...</div>
     );
   }
 
   return (
-    <div className="border-2 border-[#1a1a1a]">
+    <div className="border border-gray-200 rounded-lg">
       {/* Header */}
-      <div className="grid grid-cols-[2fr_1.5fr_1fr_1fr_1fr_auto] gap-3 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8] items-center">
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+      <div className="grid grid-cols-[2fr_1.5fr_1fr_1fr_1fr_auto] gap-3 px-4 py-3 bg-gray-900 text-white items-center">
+        <span className="text-xs font-bold uppercase tracking-wider">
           Monitor
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold uppercase tracking-wider">
           User
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold uppercase tracking-wider">
           Interval
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold uppercase tracking-wider">
           Last Check
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-xs font-bold uppercase tracking-wider">
           Changes
         </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider w-16 text-center">
+        <span className="text-xs font-bold uppercase tracking-wider w-16 text-center">
           Status
         </span>
       </div>
 
       {monitors.length === 0 ? (
-        <div className="p-8 text-center text-[#888] text-sm">
+        <div className="p-8 text-center text-gray-500 text-sm">
           No monitors yet
         </div>
       ) : (
@@ -373,47 +373,47 @@ function MonitorsTable() {
           <div
             key={m._id}
             className={`grid grid-cols-[2fr_1.5fr_1fr_1fr_1fr_auto] gap-3 px-4 py-3 items-center ${
-              i < monitors.length - 1 ? "border-b border-[#ccc]" : ""
-            } hover:bg-[#e8e8e0] transition-colors`}
+              i < monitors.length - 1 ? "border-b border-gray-200" : ""
+            } hover:bg-gray-50 transition-colors`}
           >
             {/* Monitor name + url */}
             <div className="min-w-0">
               <Link
                 to="/dashboard/$monitorId"
                 params={{ monitorId: m._id } as any}
-                className="text-xs font-black uppercase tracking-tighter truncate block hover:text-[#2d5a2d] transition-colors"
+                className="text-xs font-bold truncate block hover:text-emerald-600 transition-colors"
               >
                 {m.name}
               </Link>
-              <p className="text-[10px] text-[#888] font-mono truncate">
+              <p className="text-xs text-gray-500 font-mono truncate">
                 {m.url}
               </p>
             </div>
 
             {/* User */}
-            <p className="text-[10px] text-[#888] truncate">{m.email || m.userId}</p>
+            <p className="text-xs text-gray-500 truncate">{m.email || m.userId}</p>
 
             {/* Interval */}
-            <span className="text-xs text-[#888]">
+            <span className="text-xs text-gray-500">
               {intervalLabel(m.interval)}
             </span>
 
             {/* Last check */}
-            <span className="text-xs text-[#888]">
+            <span className="text-xs text-gray-500">
               {m.lastCheckedAt ? formatRelativeTime(m.lastCheckedAt) : "Never"}
             </span>
 
             {/* Changes */}
             <div className="flex items-center gap-2">
               <span
-                className={`text-sm font-black ${
-                  m.changeCount > 0 ? "text-[#1a1a1a]" : "text-[#ccc]"
+                className={`text-sm font-semibold ${
+                  m.changeCount > 0 ? "text-gray-900" : "text-gray-200"
                 }`}
               >
                 {m.changeCount}
               </span>
               {m.status === "error" && (
-                <AlertTriangle className="w-3.5 h-3.5 text-[#dc2626]" />
+                <AlertTriangle className="w-3.5 h-3.5 text-red-500" />
               )}
             </div>
 
@@ -422,12 +422,12 @@ function MonitorsTable() {
               onClick={() =>
                 toggleMonitor({ monitorId: m._id as Id<"monitors"> })
               }
-              className={`w-16 px-2 py-1 text-[8px] font-bold uppercase tracking-wider border-2 text-center transition-colors ${
+              className={`w-16 px-2 py-1 text-xs font-bold border text-center transition-colors rounded-lg ${
                 m.status === "active"
-                  ? "bg-[#2d5a2d] text-[#f0f0e8] border-[#2d5a2d] hover:bg-[#3a6a3a]"
+                  ? "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700"
                   : m.status === "error"
-                    ? "bg-[#dc2626] text-white border-[#dc2626] hover:bg-[#b91c1c]"
-                    : "bg-[#e8e8e0] text-[#888] border-[#ccc] hover:bg-[#d8d8d0]"
+                    ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
+                    : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-200"
               }`}
             >
               {m.status}

@@ -107,10 +107,10 @@ function UseCasePage() {
     return (
       <MarketingLayout>
         <section className="px-6 py-32 text-center">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-4">
+          <h1 className="text-4xl font-bold mb-4">
             Use Case Not Found
           </h1>
-          <p className="text-[#888] mb-8">
+          <p className="text-gray-500 mb-8">
             We couldn't find that use case.
           </p>
           <Button asChild>
@@ -136,33 +136,33 @@ function UseCasePage() {
           <div className="flex items-center gap-2 mb-10 text-xs font-bold uppercase tracking-wider">
             <Link
               to="/use-cases"
-              className="text-[#888] hover:text-[#1a1a1a] transition-colors"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
             >
               Use Cases
             </Link>
-            <span className="text-[#ccc]">/</span>
-            <span className="text-[#2d5a2d]">{category?.label}</span>
+            <span className="text-gray-200">/</span>
+            <span className="text-emerald-600">{category?.label}</span>
           </div>
 
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-black uppercase tracking-tighter leading-[1.1] mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold leading-[1.1] mb-6">
                 {useCase.headline}
               </h1>
-              <p className="text-lg text-[#666] leading-relaxed mb-10 max-w-md">
+              <p className="text-lg text-gray-500 leading-relaxed mb-10 max-w-md">
                 {useCase.description}
               </p>
 
               {/* URL input */}
               <div className="flex gap-0 mb-3">
-                <div className="flex-1 border-2 border-[#1a1a1a] border-r-0 px-4 py-3 bg-white text-sm text-[#aaa] font-mono">
+                <div className="flex-1 border border-gray-200 border-r-0 px-4 py-3 bg-white text-sm text-gray-400 rounded-l-lg">
                   Enter any web page...
                 </div>
                 <Button asChild className="shrink-0 py-3 px-6">
                   <Link to="/auth/sign-up">Start Monitoring</Link>
                 </Button>
               </div>
-              <p className="text-[10px] text-[#aaa] uppercase tracking-widest">
+              <p className="text-xs text-gray-400 uppercase tracking-widest">
                 Free to start · No credit card · Setup in 30 seconds
               </p>
             </div>
@@ -175,12 +175,12 @@ function UseCasePage() {
       </section>
 
       {/* ── BOLD STATEMENT ── */}
-      <section className="bg-[#1a1a1a] text-[#f0f0e8] px-6 py-14">
+      <section className="bg-gray-900 text-white px-6 py-14">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter leading-tight">
+          <h2 className="text-2xl md:text-4xl font-bold leading-tight">
             The #1 {useCase.title.toLowerCase()} tool
           </h2>
-          <p className="text-sm text-[#888] mt-3 max-w-xl mx-auto">
+          <p className="text-sm text-gray-500 mt-3 max-w-xl mx-auto">
             Stay on top of exactly the updates you need — automatically.
           </p>
         </div>
@@ -190,14 +190,14 @@ function UseCasePage() {
       {testimonials[0] && (
         <section className="px-6 py-16 md:py-20">
           <div className="max-w-3xl mx-auto flex gap-5 items-start">
-            <Quote className="w-8 h-8 text-[#2d5a2d] shrink-0 mt-1 opacity-20" />
+            <Quote className="w-8 h-8 text-emerald-600 shrink-0 mt-1 opacity-20" />
             <div>
-              <p className="text-lg md:text-xl font-bold leading-snug tracking-tight text-[#1a1a1a] mb-3">
+              <p className="text-lg md:text-xl font-bold leading-snug tracking-tight text-gray-900 mb-3">
                 "{testimonials[0].quote}"
               </p>
-              <p className="text-sm text-[#888]">
+              <p className="text-sm text-gray-500">
                 {testimonials[0].name},{" "}
-                <span className="text-[#aaa]">{testimonials[0].role}</span>
+                <span className="text-gray-400">{testimonials[0].role}</span>
               </p>
             </div>
           </div>
@@ -207,13 +207,13 @@ function UseCasePage() {
       {/* ── FEATURES LABEL ── */}
       <section className="px-6 pb-6">
         <div className="max-w-6xl mx-auto text-center">
-          <span className="text-xs font-bold uppercase tracking-[0.4em] text-[#2d5a2d] border-2 border-[#2d5a2d] px-4 py-1.5 inline-block">
+          <span className="text-xs font-bold uppercase tracking-[0.4em] text-emerald-600 border border-emerald-600 px-4 py-1.5 inline-block rounded-full">
             Features
           </span>
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mt-6 mb-3">
+          <h2 className="text-3xl md:text-5xl font-bold mt-6 mb-3">
             Simple, powerful {useCase.title.toLowerCase()}
           </h2>
-          <p className="text-[#888] max-w-lg mx-auto">
+          <p className="text-gray-500 max-w-lg mx-auto">
             Set it up once and get automatic alerts when the pages you care about change.
           </p>
         </div>
@@ -223,20 +223,20 @@ function UseCasePage() {
       <section className="px-6 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-600 mb-4">
               Instant Alerts
             </p>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
+            <h3 className="text-2xl md:text-3xl font-bold leading-[1.1] mb-5">
               Identify changes at speed — and scale
             </h3>
-            <p className="text-[#666] leading-relaxed mb-6">
+            <p className="text-gray-500 leading-relaxed mb-6">
               {useCase.longDescription[1] || useCase.description}
             </p>
             <div className="space-y-3 mb-8">
               {useCase.benefits.slice(0, 3).map((b) => (
                 <div key={b} className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-[#2d5a2d] shrink-0 mt-0.5" />
-                  <span className="text-sm text-[#555]">{b}</span>
+                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span className="text-sm text-gray-600">{b}</span>
                 </div>
               ))}
             </div>
@@ -248,7 +248,7 @@ function UseCasePage() {
               </Button>
               <Link
                 to="/features"
-                className="text-xs font-bold uppercase tracking-wider text-[#888] hover:text-[#1a1a1a] transition-colors"
+                className="text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 transition-colors"
               >
                 See All Features
               </Link>
@@ -266,7 +266,7 @@ function UseCasePage() {
       </section>
 
       {/* ── FEATURE 2: Visual Comparison ── */}
-      <section className="px-6 py-16 md:py-24 bg-[#fafaf2]">
+      <section className="px-6 py-16 md:py-24 bg-gray-50">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div className="order-2 md:order-1">
             <DiffView beforeLabel="Previous" afterLabel="Current" />
@@ -275,20 +275,20 @@ function UseCasePage() {
             </div>
           </div>
           <div className="order-1 md:order-2">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-600 mb-4">
               Advanced Analysis
             </p>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
+            <h3 className="text-2xl md:text-3xl font-bold leading-[1.1] mb-5">
               Assess the impact, not the details
             </h3>
-            <p className="text-[#666] leading-relaxed mb-6">
+            <p className="text-gray-500 leading-relaxed mb-6">
               {useCase.longDescription[2] || useCase.longDescription[0]}
             </p>
             <div className="space-y-3 mb-8">
               {useCase.benefits.slice(3, 6).map((b) => (
                 <div key={b} className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-[#2d5a2d] shrink-0 mt-0.5" />
-                  <span className="text-sm text-[#555]">{b}</span>
+                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span className="text-sm text-gray-600">{b}</span>
                 </div>
               ))}
             </div>
@@ -300,7 +300,7 @@ function UseCasePage() {
               </Button>
               <Link
                 to="/features"
-                className="text-xs font-bold uppercase tracking-wider text-[#888] hover:text-[#1a1a1a] transition-colors"
+                className="text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 transition-colors"
               >
                 See All Features
               </Link>
@@ -313,13 +313,13 @@ function UseCasePage() {
       <section className="px-6 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-600 mb-4">
               Centralized Dashboard
             </p>
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
+            <h3 className="text-2xl md:text-3xl font-bold leading-[1.1] mb-5">
               All your monitors in one place
             </h3>
-            <p className="text-[#666] leading-relaxed mb-6">
+            <p className="text-gray-500 leading-relaxed mb-6">
               Track all your monitored pages from a single dashboard. See
               change history, manage alerts, and respond to updates instantly.
             </p>
@@ -331,7 +331,7 @@ function UseCasePage() {
               </Button>
               <Link
                 to="/features"
-                className="text-xs font-bold uppercase tracking-wider text-[#888] hover:text-[#1a1a1a] transition-colors"
+                className="text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-900 transition-colors"
               >
                 See All Features
               </Link>
@@ -344,13 +344,13 @@ function UseCasePage() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20 md:py-28">
+      <section className="bg-gray-900 text-white px-6 py-20 md:py-28">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4">
+            <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4">
               Simple Setup
             </p>
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter">
+            <h2 className="text-3xl md:text-5xl font-bold">
               How It Works
             </h2>
           </div>
@@ -358,12 +358,12 @@ function UseCasePage() {
           <div className="grid md:grid-cols-3 gap-12">
             {useCase.howItWorks.map((step, i) => (
               <div key={step.step} className="text-center">
-                <div className="w-12 h-12 border-2 border-[#7cb87c] flex items-center justify-center mx-auto mb-5">
-                  <span className="text-lg font-black text-[#7cb87c]">
+                <div className="w-12 h-12 border border-emerald-400 flex items-center justify-center mx-auto mb-5 rounded-lg">
+                  <span className="text-lg font-bold text-emerald-400">
                     {step.step}
                   </span>
                 </div>
-                <h3 className="font-black text-lg uppercase tracking-tighter mb-3">
+                <h3 className="font-bold text-lg mb-3">
                   {step.title}
                 </h3>
                 <p className="text-sm opacity-60 leading-relaxed max-w-xs mx-auto">
@@ -379,14 +379,14 @@ function UseCasePage() {
       {testimonials[1] && (
         <section className="px-6 py-16 md:py-20">
           <div className="max-w-3xl mx-auto flex gap-5 items-start">
-            <Quote className="w-8 h-8 text-[#2d5a2d] shrink-0 mt-1 opacity-20" />
+            <Quote className="w-8 h-8 text-emerald-600 shrink-0 mt-1 opacity-20" />
             <div>
-              <p className="text-lg md:text-xl font-bold leading-snug tracking-tight text-[#1a1a1a] mb-3">
+              <p className="text-lg md:text-xl font-bold leading-snug tracking-tight text-gray-900 mb-3">
                 "{testimonials[1].quote}"
               </p>
-              <p className="text-sm text-[#888]">
+              <p className="text-sm text-gray-500">
                 {testimonials[1].name},{" "}
-                <span className="text-[#aaa]">{testimonials[1].role}</span>
+                <span className="text-gray-400">{testimonials[1].role}</span>
               </p>
             </div>
           </div>
@@ -394,13 +394,13 @@ function UseCasePage() {
       )}
 
       {/* ── SUPPORT SECTION ── */}
-      <section className="px-6 py-16 md:py-24 bg-[#fafaf2]">
+      <section className="px-6 py-16 md:py-24 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter">
+            <h2 className="text-3xl md:text-4xl font-bold">
               From Setup to Support
             </h2>
-            <p className="text-[#888] mt-3">
+            <p className="text-gray-500 mt-3">
               We're here to help you start monitoring.
             </p>
           </div>
@@ -430,13 +430,13 @@ function UseCasePage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="border-2 border-[#1a1a1a] p-6 bg-white shadow-[4px_4px_0px_0px_#1a1a1a]"
+                className="border border-gray-200 p-6 bg-white shadow-md rounded-xl"
               >
-                <item.icon className="w-5 h-5 text-[#2d5a2d] mb-4" />
-                <h3 className="font-black text-sm uppercase tracking-tighter mb-2">
+                <item.icon className="w-5 h-5 text-emerald-600 mb-4" />
+                <h3 className="font-bold text-sm mb-2">
                   {item.title}
                 </h3>
-                <p className="text-xs text-[#888] leading-relaxed">
+                <p className="text-xs text-gray-500 leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -450,13 +450,13 @@ function UseCasePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-start">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#2d5a2d] mb-4">
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-600 mb-4">
                 Use Cases
               </p>
-              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-[1.1] mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold leading-[1.1] mb-4">
                 What To Monitor
               </h2>
-              <p className="text-[#666] leading-relaxed mb-8">
+              <p className="text-gray-500 leading-relaxed mb-8">
                 Not sure where to start? Here are the most valuable pages
                 to monitor for {useCase.title.toLowerCase()}.
               </p>
@@ -464,8 +464,8 @@ function UseCasePage() {
               <div className="space-y-2">
                 {useCase.painPoints.slice(0, 3).map((point, i) => (
                   <div key={i} className="flex items-start gap-2">
-                    <AlertTriangle className="w-3.5 h-3.5 text-[#cc8800] shrink-0 mt-0.5" />
-                    <span className="text-xs text-[#888]">{point}</span>
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                    <span className="text-xs text-gray-500">{point}</span>
                   </div>
                 ))}
               </div>
@@ -476,10 +476,10 @@ function UseCasePage() {
                 return (
                   <div
                     key={i}
-                    className="border-2 border-[#1a1a1a] p-4 bg-white shadow-[3px_3px_0px_0px_#1a1a1a]"
+                    className="border border-gray-200 p-4 bg-white shadow-sm rounded-xl"
                   >
-                    <Icon className="w-4 h-4 text-[#2d5a2d] mb-2" />
-                    <span className="text-xs text-[#555] leading-relaxed block">
+                    <Icon className="w-4 h-4 text-emerald-600 mb-2" />
+                    <span className="text-xs text-gray-600 leading-relaxed block">
                       {tip}
                     </span>
                   </div>
@@ -491,10 +491,10 @@ function UseCasePage() {
       </section>
 
       {/* ── EXAMPLES ── */}
-      <section className="px-6 py-16 md:py-24 bg-[#fafaf2]">
+      <section className="px-6 py-16 md:py-24 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter">
+            <h2 className="text-3xl md:text-4xl font-bold">
               How People Use This
             </h2>
           </div>
@@ -502,15 +502,15 @@ function UseCasePage() {
             {useCase.examples.map((ex) => (
               <div
                 key={ex.title}
-                className="border-2 border-[#1a1a1a] bg-white p-8 shadow-[6px_6px_0px_0px_#1a1a1a]"
+                className="border border-gray-200 bg-white p-8 shadow-md rounded-xl"
               >
                 <div className="flex items-center gap-2 mb-4">
-                  <Zap className="w-4 h-4 text-[#2d5a2d]" />
-                  <h3 className="font-black text-base uppercase tracking-tighter">
+                  <Zap className="w-4 h-4 text-emerald-600" />
+                  <h3 className="font-bold text-base">
                     {ex.title}
                   </h3>
                 </div>
-                <p className="text-sm text-[#555] leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {ex.description}
                 </p>
               </div>
@@ -520,24 +520,24 @@ function UseCasePage() {
       </section>
 
       {/* ── PRICING TEASER ── */}
-      <section className="bg-[#2d5a2d] text-white px-6 py-14">
+      <section className="bg-emerald-600 text-white px-6 py-14">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter">
+            <h2 className="text-2xl md:text-3xl font-bold">
               Free to start. Upgrade when you need more.
             </h2>
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <Button
               asChild
-              className="bg-white text-[#1a1a1a] hover:bg-[#f0f0e8] border-2 border-white"
+              className="bg-white text-gray-900 hover:bg-gray-100 border border-white"
             >
               <Link to="/pricing">View Pricing</Link>
             </Button>
             <Button
               asChild
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white/10 bg-transparent"
+              className="border border-white text-white hover:bg-white/10 bg-transparent"
             >
               <Link to="/auth/sign-up">Start Free</Link>
             </Button>
@@ -549,7 +549,7 @@ function UseCasePage() {
       {related.length > 0 && (
         <section className="px-6 py-16 md:py-24">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12">
               Related Use Cases
             </h2>
             <div className="grid sm:grid-cols-3 gap-6">
@@ -557,18 +557,18 @@ function UseCasePage() {
                 <Link
                   key={uc.slug}
                   to={`/use-cases/${uc.slug}`}
-                  className="border-2 border-[#1a1a1a] p-6 shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-[6px_6px_0px_0px_#1a1a1a] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all group"
+                  className="border border-gray-200 p-6 shadow-md hover:shadow-lg transition-all group rounded-xl"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <uc.icon className="w-4 h-4 text-[#2d5a2d]" />
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2d5a2d]">
+                    <uc.icon className="w-4 h-4 text-emerald-600" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">
                       {uc.title}
                     </span>
                   </div>
-                  <h3 className="font-black text-sm uppercase tracking-tighter mb-2 leading-[1.1]">
+                  <h3 className="font-bold text-sm mb-2 leading-[1.1]">
                     {uc.headline}
                   </h3>
-                  <span className="text-xs font-bold text-[#2d5a2d] uppercase tracking-wider group-hover:underline">
+                  <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider group-hover:underline">
                     Learn More <ArrowRight className="inline w-3 h-3 ml-1" />
                   </span>
                 </Link>

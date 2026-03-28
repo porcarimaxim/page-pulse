@@ -179,11 +179,11 @@ function NewMonitorPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top bar -- pinned */}
-      <div className="sticky top-0 z-20 bg-[#f0f0e8] border-b-2 border-[#1a1a1a]">
+      <div className="sticky top-0 z-20 bg-white border-b border-gray-200">
         <div className="flex items-center gap-4 px-6 py-3">
           <button
             onClick={() => navigate({ to: "/dashboard/monitors" })}
-            className="flex items-center gap-1.5 text-xs text-[#888] hover:text-[#1a1a1a] font-bold uppercase transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-900 font-bold transition-colors shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -196,12 +196,12 @@ function NewMonitorPage() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCapture()}
-              className="flex-1 !border-2 !border-[#1a1a1a] !bg-white"
+              className="flex-1"
             />
             <button
               onClick={handleCapture}
               disabled={!url || isCapturing || !isConvexAuthed}
-              className="px-6 py-2 bg-[#2d5a2d] text-[#f0f0e8] font-bold uppercase text-sm border-2 border-[#2d5a2d] hover:bg-[#3a6a3a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
+              className="px-6 py-2 bg-emerald-600 text-white font-bold text-sm rounded-lg border border-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0"
             >
               {isCapturing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -213,13 +213,13 @@ function NewMonitorPage() {
         </div>
 
         {/* Mode toggles */}
-        <div className="flex items-center gap-4 px-6 py-2 border-t border-[#ccc]">
+        <div className="flex items-center gap-4 px-6 py-2 border-t border-gray-200">
           <button
             onClick={() => setSelectionMode("zone")}
-            className={`flex items-center gap-1.5 text-xs font-bold uppercase transition-colors ${
+            className={`flex items-center gap-1.5 text-xs font-bold transition-colors ${
               selectionMode === "zone"
-                ? "text-[#2d5a2d]"
-                : "text-[#888] hover:text-[#1a1a1a]"
+                ? "text-emerald-600"
+                : "text-gray-500 hover:text-gray-900"
             }`}
           >
             <Crop className="w-3.5 h-3.5" />
@@ -227,10 +227,10 @@ function NewMonitorPage() {
           </button>
           <button
             onClick={() => setSelectionMode("element")}
-            className={`flex items-center gap-1.5 text-xs font-bold uppercase transition-colors ${
+            className={`flex items-center gap-1.5 text-xs font-bold transition-colors ${
               selectionMode === "element"
-                ? "text-[#2d5a2d]"
-                : "text-[#888] hover:text-[#1a1a1a]"
+                ? "text-emerald-600"
+                : "text-gray-500 hover:text-gray-900"
             }`}
           >
             <MousePointer className="w-3.5 h-3.5" />
@@ -241,16 +241,16 @@ function NewMonitorPage() {
 
       {/* Monitor limit warning */}
       {usage && usage.maxMonitors !== -1 && usage.monitorCount >= usage.maxMonitors && (
-        <div className="mx-6 mt-4 border-2 border-[#ca8a04] bg-[#fefce8] p-4 flex items-center justify-between">
+        <div className="mx-6 mt-4 border border-amber-500 bg-amber-50 p-4 flex items-center justify-between rounded-lg">
           <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-[#ca8a04]" />
-            <p className="text-sm font-bold text-[#ca8a04]">
+            <Lock className="w-4 h-4 text-amber-500" />
+            <p className="text-sm font-bold text-amber-500">
               Monitor limit reached ({usage.monitorCount}/{usage.maxMonitors} on {usage.planName} plan)
             </p>
           </div>
           <a
             href="/pricing"
-            className="text-xs font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline shrink-0"
+            className="text-xs font-bold text-emerald-600 hover:underline shrink-0"
           >
             Upgrade →
           </a>
@@ -258,8 +258,8 @@ function NewMonitorPage() {
       )}
 
       {error && (
-        <div className="mx-6 mt-4 border-2 border-[#dc2626] bg-[#dc2626]/10 p-3">
-          <p className="text-sm text-[#dc2626] font-bold">{error}</p>
+        <div className="mx-6 mt-4 border border-red-500 bg-red-50 p-3 rounded-lg">
+          <p className="text-sm text-red-500 font-bold">{error}</p>
         </div>
       )}
 
@@ -282,9 +282,9 @@ function NewMonitorPage() {
                 />
               )
             ) : (
-              <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-[#ccc]">
+              <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-gray-200">
                 <ImageIcon className="w-20 h-20 mb-4 stroke-1" />
-                <p className="text-sm font-bold uppercase text-[#888]">
+                <p className="text-sm font-bold text-gray-500">
                   Enter website URL and click Go
                 </p>
               </div>
@@ -293,16 +293,16 @@ function NewMonitorPage() {
         </div>
 
         {/* Right: Config sidebar -- sticky */}
-        <div className="w-80 shrink-0 border-l-2 border-[#1a1a1a]">
+        <div className="w-80 shrink-0 border-l border-gray-200">
           <div className="sticky top-[105px] h-[calc(100vh-105px)] overflow-y-auto">
             <div className="p-6 space-y-6">
-              <h2 className="font-black text-lg uppercase tracking-tighter">
+              <h2 className="font-bold text-lg">
                 Setup
               </h2>
 
               {/* Monitor name */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Monitor Name
                 </label>
                 <Input
@@ -314,7 +314,7 @@ function NewMonitorPage() {
 
               {/* Check frequency */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Check Frequency
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
@@ -325,27 +325,27 @@ function NewMonitorPage() {
                         key={opt.value}
                         onClick={() => allowed && setInterval(opt.value)}
                         disabled={!allowed}
-                        className={`border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all relative ${
+                        className={`border border-gray-200 px-2 py-1.5 text-xs font-bold rounded-lg transition-all relative ${
                           !allowed
-                            ? "opacity-40 cursor-not-allowed bg-[#e8e8e0] text-[#888]"
+                            ? "opacity-40 cursor-not-allowed bg-gray-50 text-gray-500"
                             : interval === opt.value
-                              ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                              : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                              ? "bg-gray-900 text-white border-gray-900"
+                              : "bg-transparent text-gray-900 hover:bg-gray-50"
                         }`}
                         title={!allowed ? `Upgrade to Pro for ${opt.label} checks` : ""}
                       >
                         {opt.label}
                         {!allowed && (
-                          <Lock className="w-2.5 h-2.5 absolute top-0.5 right-0.5 text-[#888]" />
+                          <Lock className="w-2.5 h-2.5 absolute top-0.5 right-0.5 text-gray-500" />
                         )}
                       </button>
                     );
                   })}
                 </div>
                 {usage && usage.planId === "free" && (
-                  <p className="text-[10px] text-[#888] mt-1.5">
+                  <p className="text-xs text-gray-500 mt-1.5">
                     Free plan: daily checks only.{" "}
-                    <a href="/pricing" className="text-[#2d5a2d] hover:underline">
+                    <a href="/pricing" className="text-emerald-600 hover:underline">
                       Upgrade for faster checks →
                     </a>
                   </p>
@@ -354,7 +354,7 @@ function NewMonitorPage() {
 
               {/* Sensitivity */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Sensitivity
                 </label>
                 <Select
@@ -368,7 +368,7 @@ function NewMonitorPage() {
                     {SENSITIVITY_PRESETS.map((preset) => (
                       <SelectItem key={preset.value} value={String(preset.value)}>
                         <span>{preset.label}</span>
-                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                        <span className="ml-2 text-xs font-normal text-gray-500">
                           {preset.description}
                         </span>
                       </SelectItem>
@@ -379,7 +379,7 @@ function NewMonitorPage() {
 
               {/* Compare Type */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Compare Type
                 </label>
                 <Select
@@ -393,7 +393,7 @@ function NewMonitorPage() {
                     {COMPARE_TYPES.map((t) => (
                       <SelectItem key={t.value} value={t.value}>
                         <span>{t.label}</span>
-                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                        <span className="ml-2 text-xs font-normal text-gray-500">
                           {t.description}
                         </span>
                       </SelectItem>
@@ -404,7 +404,7 @@ function NewMonitorPage() {
 
               {/* Tags */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Tags
                 </label>
                 <Input
@@ -412,7 +412,7 @@ function NewMonitorPage() {
                   onChange={(e) => setTags(e.target.value)}
                   placeholder="pricing, competitor"
                 />
-                <p className="text-xs text-[#888] mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   Comma-separated
                 </p>
               </div>
@@ -471,17 +471,17 @@ function NewMonitorPage() {
             </div>
 
             {/* Bottom actions -- pinned to bottom of sidebar */}
-            <div className="sticky bottom-0 bg-[#f0f0e8] border-t-2 border-[#1a1a1a] p-4 flex gap-3">
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex gap-3">
               <button
                 onClick={() => navigate({ to: "/dashboard/monitors" })}
-                className="flex-1 border-2 border-[#1a1a1a] px-4 py-2.5 text-sm font-bold uppercase hover:bg-[#e8e8e0] transition-colors"
+                className="flex-1 border border-gray-200 px-4 py-2.5 text-sm font-bold rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreate}
                 disabled={!canCreate}
-                className="flex-1 bg-[#2d5a2d] text-[#f0f0e8] border-2 border-[#2d5a2d] px-4 py-2.5 text-sm font-bold uppercase hover:bg-[#3a6a3a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                className="flex-1 bg-emerald-600 text-white border border-emerald-600 px-4 py-2.5 text-sm font-bold rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
                 {isCreating ? (
                   <>

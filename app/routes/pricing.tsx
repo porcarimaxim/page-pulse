@@ -178,38 +178,38 @@ function PricingPage() {
     <MarketingLayout>
       {/* Hero */}
       <section className="px-6 pt-12 pb-8 md:pt-16 md:pb-10 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-4">
           Simple, Transparent Pricing
         </p>
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-4">
+        <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] mb-4">
           Plans That
           <br />
-          <span className="text-[#2d5a2d]">Scale</span>
+          <span className="text-emerald-600">Scale</span>
         </h1>
-        <p className="text-base text-[#666] max-w-xl mx-auto mb-6">
+        <p className="text-base text-gray-500 max-w-xl mx-auto mb-6">
           Monthly checks included in every plan. Need more? Buy credit packs
           on demand — they never expire.
         </p>
 
         {/* Annual/Monthly Toggle */}
         <div className="flex flex-col items-center gap-2">
-          <div className="inline-flex border-2 border-[#1a1a1a]">
+          <div className="inline-flex border border-gray-200 rounded-lg">
             <button
               onClick={() => setAnnual(false)}
-              className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+              className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors rounded-l-lg ${
                 !annual
-                  ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                  : "bg-transparent text-[#666] hover:text-[#1a1a1a]"
+                  ? "bg-gray-900 text-white"
+                  : "bg-transparent text-gray-500 hover:text-gray-900"
               }`}
             >
               Monthly
             </button>
             <button
               onClick={() => setAnnual(true)}
-              className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors border-l-2 border-[#1a1a1a] ${
+              className={`px-6 py-3 text-sm font-bold uppercase tracking-wider transition-colors border-l border-gray-200 rounded-r-lg ${
                 annual
-                  ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                  : "bg-transparent text-[#666] hover:text-[#1a1a1a]"
+                  ? "bg-gray-900 text-white"
+                  : "bg-transparent text-gray-500 hover:text-gray-900"
               }`}
             >
               Annual
@@ -217,7 +217,7 @@ function PricingPage() {
           </div>
           <span
             className={`text-xs font-bold uppercase tracking-wider transition-opacity duration-200 ${
-              annual ? "text-[#2d5a2d] opacity-100" : "opacity-0"
+              annual ? "text-emerald-600 opacity-100" : "opacity-0"
             }`}
           >
             Save 2 months — best value
@@ -236,14 +236,14 @@ function PricingPage() {
             return (
               <div
                 key={plan.name}
-                className={`border-2 border-[#1a1a1a] flex flex-col ${
+                className={`border border-gray-200 flex flex-col rounded-xl ${
                   h
-                    ? "bg-[#1a1a1a] text-[#f0f0e8] shadow-[8px_8px_0px_0px_#2d5a2d] relative"
-                    : "bg-white shadow-[6px_6px_0px_0px_#1a1a1a]"
+                    ? "bg-gray-900 text-white shadow-lg relative"
+                    : "bg-white shadow-md"
                 }`}
               >
                 {h && (
-                  <div className="absolute -top-4 left-6 bg-[#2d5a2d] text-[#f0f0e8] px-4 py-1 text-xs font-bold uppercase tracking-wider">
+                  <div className="absolute -top-4 left-6 bg-emerald-600 text-white px-4 py-1 text-xs font-bold uppercase tracking-wider rounded-full">
                     Most Popular
                   </div>
                 )}
@@ -251,24 +251,24 @@ function PricingPage() {
                 <div className="p-8 pb-0">
                   <div className="flex items-center gap-3 mb-3">
                     <div
-                      className={`w-9 h-9 border-2 flex items-center justify-center ${
-                        h ? "border-[#7cb87c]" : "border-[#2d5a2d]"
+                      className={`w-9 h-9 border flex items-center justify-center rounded-lg ${
+                        h ? "border-emerald-400" : "border-emerald-600"
                       }`}
                     >
                       <plan.icon
                         className={`w-4 h-4 ${
-                          h ? "text-[#7cb87c]" : "text-[#2d5a2d]"
+                          h ? "text-emerald-400" : "text-emerald-600"
                         }`}
                       />
                     </div>
-                    <h3 className="text-xl font-black uppercase tracking-tighter">
+                    <h3 className="text-xl font-bold">
                       {plan.name}
                     </h3>
                   </div>
 
                   <p
                     className={`text-sm mb-6 ${
-                      h ? "opacity-70" : "text-[#666]"
+                      h ? "opacity-70" : "text-gray-500"
                     }`}
                   >
                     {plan.description}
@@ -276,16 +276,16 @@ function PricingPage() {
 
                   {/* Price */}
                   <div className="mb-2">
-                    <span className="text-5xl font-black tracking-tighter">
+                    <span className="text-5xl font-bold">
                       ${price}
                     </span>
                     {price > 0 && (
-                      <span className={`text-sm ${h ? "opacity-60" : "text-[#666]"}`}>
+                      <span className={`text-sm ${h ? "opacity-60" : "text-gray-500"}`}>
                         {period}
                       </span>
                     )}
                     {price === 0 && (
-                      <span className={`text-sm ml-2 ${h ? "opacity-60" : "text-[#666]"}`}>
+                      <span className={`text-sm ml-2 ${h ? "opacity-60" : "text-gray-500"}`}>
                         forever
                       </span>
                     )}
@@ -294,40 +294,40 @@ function PricingPage() {
                   {/* Key metrics row */}
                   <div
                     className={`grid grid-cols-3 gap-2 py-4 mb-4 border-y ${
-                      h ? "border-[#333]" : "border-[#ccc]"
+                      h ? "border-gray-700" : "border-gray-200"
                     }`}
                   >
                     <div>
-                      <p className="text-lg font-black tracking-tighter">
+                      <p className="text-lg font-bold">
                         {plan.checks}
                       </p>
                       <p
-                        className={`text-[9px] uppercase tracking-wider ${
-                          h ? "text-[#a0a0a0]" : "text-[#888]"
+                        className={`text-xs uppercase tracking-wider ${
+                          h ? "text-gray-400" : "text-gray-500"
                         }`}
                       >
                         Checks/mo
                       </p>
                     </div>
                     <div>
-                      <p className="text-lg font-black tracking-tighter">
+                      <p className="text-lg font-bold">
                         {plan.monitors}
                       </p>
                       <p
-                        className={`text-[9px] uppercase tracking-wider ${
-                          h ? "text-[#a0a0a0]" : "text-[#888]"
+                        className={`text-xs uppercase tracking-wider ${
+                          h ? "text-gray-400" : "text-gray-500"
                         }`}
                       >
                         Monitors
                       </p>
                     </div>
                     <div>
-                      <p className="text-lg font-black tracking-tighter">
+                      <p className="text-lg font-bold">
                         {plan.frequency}
                       </p>
                       <p
-                        className={`text-[9px] uppercase tracking-wider ${
-                          h ? "text-[#a0a0a0]" : "text-[#888]"
+                        className={`text-xs uppercase tracking-wider ${
+                          h ? "text-gray-400" : "text-gray-500"
                         }`}
                       >
                         Fastest
@@ -339,7 +339,7 @@ function PricingPage() {
                     asChild
                     className={`w-full ${
                       h
-                        ? "bg-[#2d5a2d] hover:bg-[#3a6a3a] text-[#f0f0e8] border-[#2d5a2d]"
+                        ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600"
                         : ""
                     }`}
                   >
@@ -356,11 +356,11 @@ function PricingPage() {
                       {f.included ? (
                         <Check
                           className={`w-3.5 h-3.5 shrink-0 ${
-                            h ? "text-[#7cb87c]" : "text-[#2d5a2d]"
+                            h ? "text-emerald-400" : "text-emerald-600"
                           }`}
                         />
                       ) : (
-                        <X className="w-3.5 h-3.5 shrink-0 text-[#888] opacity-40" />
+                        <X className="w-3.5 h-3.5 shrink-0 text-gray-500 opacity-40" />
                       )}
                       <span
                         className={`text-xs ${
@@ -368,7 +368,7 @@ function PricingPage() {
                             ? ""
                             : h
                               ? "opacity-30"
-                              : "text-[#ccc]"
+                              : "text-gray-300"
                         }`}
                       >
                         {f.text}
@@ -383,21 +383,21 @@ function PricingPage() {
       </section>
 
       {/* Credit Packs */}
-      <section className="border-t-2 border-[#1a1a1a] px-6 py-20 md:py-24">
+      <section className="border-t border-gray-200 px-6 py-20 md:py-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 border-2 border-[#2d5a2d] flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-[#2d5a2d]" />
+              <div className="w-8 h-8 border border-emerald-600 flex items-center justify-center rounded-lg">
+                <CreditCard className="w-4 h-4 text-emerald-600" />
               </div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#666]">
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-500">
                 Need More Checks?
               </p>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[1.1] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold leading-[1.1] mb-4">
               Credit Packs
             </h2>
-            <p className="text-base text-[#666] max-w-lg mx-auto">
+            <p className="text-base text-gray-500 max-w-lg mx-auto">
               Buy extra checks anytime. Credits never expire and are used
               automatically when your monthly quota runs out. Available on any
               plan.
@@ -408,28 +408,28 @@ function PricingPage() {
             {creditPacks.map((pack) => (
               <div
                 key={pack.checks}
-                className={`border-2 border-[#1a1a1a] p-6 flex flex-col ${
+                className={`border border-gray-200 p-6 flex flex-col rounded-xl ${
                   pack.popular
-                    ? "shadow-[6px_6px_0px_0px_#2d5a2d] relative"
-                    : "shadow-[4px_4px_0px_0px_#1a1a1a]"
+                    ? "shadow-lg ring-2 ring-emerald-600 relative"
+                    : "shadow-md"
                 }`}
               >
                 {pack.popular && (
-                  <div className="absolute -top-3 right-4 bg-[#2d5a2d] text-[#f0f0e8] px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                  <div className="absolute -top-3 right-4 bg-emerald-600 text-white px-3 py-0.5 text-xs font-bold uppercase tracking-wider rounded-full">
                     Best Value
                   </div>
                 )}
-                <p className="text-3xl font-black tracking-tighter mb-1">
+                <p className="text-3xl font-bold mb-1">
                   {pack.checks}
                 </p>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-[#888] mb-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-4">
                   Checks
                 </p>
                 <div className="mt-auto">
-                  <p className="text-2xl font-black tracking-tighter">
+                  <p className="text-2xl font-bold">
                     ${pack.price}
                   </p>
-                  <p className="text-[10px] text-[#888] mb-4">
+                  <p className="text-xs text-gray-500 mb-4">
                     ${pack.perCheck} per check
                   </p>
                   <Button asChild variant="outline" size="sm" className="w-full">
@@ -443,28 +443,28 @@ function PricingPage() {
           </div>
 
           {/* How credits work */}
-          <div className="mt-12 border-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] p-8">
-            <h3 className="text-sm font-black uppercase tracking-tighter mb-4">
+          <div className="mt-12 border border-gray-200 bg-gray-900 text-white p-8 rounded-xl">
+            <h3 className="text-sm font-bold mb-4">
               How Credits Work
             </h3>
             <div className="grid sm:grid-cols-3 gap-6">
               <div>
-                <div className="text-2xl font-black text-[#7cb87c] mb-1">01</div>
-                <p className="text-xs leading-relaxed text-[#a0a0a0]">
+                <div className="text-2xl font-bold text-emerald-400 mb-1">01</div>
+                <p className="text-xs leading-relaxed text-gray-400">
                   Your monthly plan checks are used first. As long as you have
                   quota, credits stay untouched.
                 </p>
               </div>
               <div>
-                <div className="text-2xl font-black text-[#7cb87c] mb-1">02</div>
-                <p className="text-xs leading-relaxed text-[#a0a0a0]">
+                <div className="text-2xl font-bold text-emerald-400 mb-1">02</div>
+                <p className="text-xs leading-relaxed text-gray-400">
                   When monthly checks run out, credit packs kick in
                   automatically. No interruption to monitoring.
                 </p>
               </div>
               <div>
-                <div className="text-2xl font-black text-[#7cb87c] mb-1">03</div>
-                <p className="text-xs leading-relaxed text-[#a0a0a0]">
+                <div className="text-2xl font-bold text-emerald-400 mb-1">03</div>
+                <p className="text-xs leading-relaxed text-gray-400">
                   Credits never expire. Buy once, use whenever. Monthly quota
                   resets on your billing date.
                 </p>
@@ -475,12 +475,12 @@ function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-24">
+      <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-24">
         <div className="max-w-3xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4 text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4 text-center">
             Questions?
           </p>
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-16 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">
             FAQ
           </h2>
 
@@ -488,9 +488,9 @@ function PricingPage() {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className="border-t border-[#333] py-6 grid md:grid-cols-[1fr_1.5fr] gap-4"
+                className="border-t border-gray-700 py-6 grid md:grid-cols-[1fr_1.5fr] gap-4"
               >
-                <h3 className="font-black text-sm uppercase tracking-tighter">
+                <h3 className="font-bold text-sm">
                   {faq.q}
                 </h3>
                 <p className="text-sm opacity-70 leading-relaxed">{faq.a}</p>
