@@ -75,7 +75,8 @@ jobs:
 
       - name: Alias to static URL
         run: |
-          ALIAS="page-pulse-pr-${{ github.event.pull_request.number }}.vercel.app"
+          BRANCH=$(echo "${{ github.head_ref }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          ALIAS="page-pulse-${BRANCH}.vercel.app"
           vercel alias set ${{ steps.deploy.outputs.preview_url }} $ALIAS --token=${{ secrets.VERCEL_TOKEN }}
           echo "alias_url=https://$ALIAS" >> "$GITHUB_OUTPUT"
 
@@ -83,7 +84,8 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const alias = 'https://page-pulse-pr-${{ github.event.pull_request.number }}.vercel.app';
+            const branch = '${{ github.head_ref }}'.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+            const alias = `https://page-pulse-${branch}.vercel.app`;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
