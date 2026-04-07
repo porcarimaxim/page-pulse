@@ -72,6 +72,7 @@ jobs:
         run: |
           URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "preview_url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Deploy URL: $URL"
           echo "### 🔗 Preview deploy" >> "$GITHUB_STEP_SUMMARY"
           echo "**Deploy URL:** $URL" >> "$GITHUB_STEP_SUMMARY"
 
@@ -80,6 +81,7 @@ jobs:
           BRANCH=$(echo "${{ github.head_ref }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
           ALIAS="page-pulse-${BRANCH}.vercel.app"
           vercel alias set ${{ steps.deploy.outputs.preview_url }} $ALIAS --token=${{ secrets.VERCEL_TOKEN }}
+          echo "Static URL: https://$ALIAS"
           echo "**Static URL:** https://$ALIAS" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Comment preview URL on PR
@@ -132,10 +134,12 @@ jobs:
         run: |
           URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "preview_url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Deploy URL: $URL"
 
       - name: Alias to static URL
         run: |
           vercel alias set ${{ steps.deploy.outputs.preview_url }} page-pulse-staging.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
+          echo "Static URL: https://page-pulse-staging.vercel.app"
           echo "### 🚀 Staging deployed" >> "$GITHUB_STEP_SUMMARY"
           echo "**URL:** https://page-pulse-staging.vercel.app" >> "$GITHUB_STEP_SUMMARY"
 
@@ -177,9 +181,11 @@ jobs:
         run: |
           URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
           echo "prod_url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Deploy URL: $URL"
 
       - name: Alias to static URL
         run: |
           vercel alias set ${{ steps.deploy.outputs.prod_url }} page-pulse-prod.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
+          echo "Static URL: https://page-pulse-prod.vercel.app"
           echo "### 🚀 Production deployed" >> "$GITHUB_STEP_SUMMARY"
           echo "**URL:** https://page-pulse-prod.vercel.app" >> "$GITHUB_STEP_SUMMARY"
