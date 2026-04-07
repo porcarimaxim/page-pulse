@@ -73,16 +73,22 @@ jobs:
           URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "preview_url=$URL" >> "$GITHUB_OUTPUT"
 
+      - name: Alias to static URL
+        run: |
+          ALIAS="page-pulse-pr-${{ github.event.pull_request.number }}.vercel.app"
+          vercel alias set ${{ steps.deploy.outputs.preview_url }} $ALIAS --token=${{ secrets.VERCEL_TOKEN }}
+          echo "alias_url=https://$ALIAS" >> "$GITHUB_OUTPUT"
+
       - name: Comment preview URL on PR
         uses: actions/github-script@v7
         with:
           script: |
-            const url = '${{ steps.deploy.outputs.preview_url }}';
+            const alias = 'https://page-pulse-pr-${{ github.event.pull_request.number }}.vercel.app';
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `🚀 **Preview deployed:** ${url}`
+              body: `🚀 **Preview deployed:** ${alias}`
             });
 
   # ─── Staging: auto-deploy on push to main ───
@@ -122,8 +128,12 @@ jobs:
         run: |
           URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "preview_url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Alias to static URL
+        run: |
+          vercel alias set ${{ steps.deploy.outputs.preview_url }} page-pulse-staging.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
           echo "### 🚀 Staging deployed" >> "$GITHUB_STEP_SUMMARY"
-          echo "**URL:** $URL" >> "$GITHUB_STEP_SUMMARY"
+          echo "**URL:** https://page-pulse-staging.vercel.app" >> "$GITHUB_STEP_SUMMARY"
 
   # ─── Production: manual trigger only ───
   deploy-production:
@@ -159,6 +169,13 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_PROD }}
 
       - name: Deploy to production
+        id: deploy
         run: |
-          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "prod_url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Alias to static URL
+        run: |
+          vercel alias set ${{ steps.deploy.outputs.prod_url }} page-pulse-prod.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
           echo "### 🚀 Production deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "**URL:** https://page-pulse-prod.vercel.app" >> "$GITHUB_STEP_SUMMARY"
