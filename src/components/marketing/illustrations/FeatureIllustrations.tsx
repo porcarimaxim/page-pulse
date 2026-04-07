@@ -9,7 +9,7 @@ export function DiffSlider() {
 
   return (
     <div
-      className="relative w-full h-full min-h-[200px] border-2 border-[#1a1a1a] overflow-hidden cursor-col-resize select-none bg-white"
+      className="relative w-full h-full min-h-[200px] border border-gray-200 rounded-lg overflow-hidden cursor-col-resize select-none bg-white"
       onMouseMove={(e) => {
         if (e.buttons === 1) {
           const rect = e.currentTarget.getBoundingClientRect();
@@ -27,7 +27,7 @@ export function DiffSlider() {
       {/* "After" layer (full width, underneath) */}
       <div className="absolute inset-0 p-4 md:p-6">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-16 h-3 bg-[#1a1a1a]" />
+          <div className="w-16 h-3 bg-gray-900" />
           <div className="ml-auto flex gap-2">
             <div className="w-8 h-2 bg-[#ddd]" />
             <div className="w-8 h-2 bg-[#ddd]" />
@@ -38,18 +38,18 @@ export function DiffSlider() {
           <div className="h-2 bg-[#eee] w-[80%]" />
         </div>
         {/* Changed area - highlighted green */}
-        <div className="border-2 border-[#2d5a2d] bg-[#2d5a2d]/5 p-3 mb-3">
+        <div className="border-2 border-emerald-600 bg-emerald-50 p-3 mb-3">
           <div className="space-y-1.5">
             <div className="h-2 bg-[#ccffcc] w-[75%]" />
             <div className="h-2 bg-[#ccffcc] w-[55%]" />
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="h-5 px-2 bg-[#ccffcc] flex items-center">
-              <span className="text-[8px] font-mono text-[#2d5a2d] font-bold">
+              <span className="text-[8px] font-mono text-emerald-600 font-bold">
                 $39/mo
               </span>
             </div>
-            <span className="text-[7px] font-bold text-[#2d5a2d] uppercase tracking-wider">
+            <span className="text-[7px] font-bold text-emerald-600 uppercase tracking-wider">
               New
             </span>
           </div>
@@ -67,7 +67,7 @@ export function DiffSlider() {
         style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
       >
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-16 h-3 bg-[#1a1a1a]" />
+          <div className="w-16 h-3 bg-gray-900" />
           <div className="ml-auto flex gap-2">
             <div className="w-8 h-2 bg-[#ddd]" />
             <div className="w-8 h-2 bg-[#ddd]" />
@@ -85,7 +85,7 @@ export function DiffSlider() {
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="h-5 px-2 bg-[#eee] flex items-center">
-              <span className="text-[8px] font-mono text-[#888]">$49/mo</span>
+              <span className="text-[8px] font-mono text-gray-500">$49/mo</span>
             </div>
           </div>
         </div>
@@ -98,19 +98,19 @@ export function DiffSlider() {
 
       {/* Slider handle */}
       <div
-        className="absolute top-0 bottom-0 w-0.5 bg-[#1a1a1a] z-10"
+        className="absolute top-0 bottom-0 w-0.5 bg-gray-900 z-10"
         style={{ left: `${position}%` }}
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-[#1a1a1a] flex items-center justify-center">
-          <span className="text-[#f0f0e8] text-[10px] font-bold">⟨⟩</span>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gray-900 flex items-center justify-center">
+          <span className="text-white text-[10px] font-bold">⟨⟩</span>
         </div>
       </div>
 
       {/* Labels */}
-      <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#1a1a1a] text-[#f0f0e8] text-[8px] font-bold uppercase tracking-wider z-20">
+      <div className="absolute top-2 left-2 px-2 py-0.5 bg-gray-900 text-white text-[8px] font-bold uppercase tracking-wider z-20">
         Before
       </div>
-      <div className="absolute top-2 right-2 px-2 py-0.5 bg-[#2d5a2d] text-[#f0f0e8] text-[8px] font-bold uppercase tracking-wider z-20">
+      <div className="absolute top-2 right-2 px-2 py-0.5 bg-emerald-600 text-white text-[8px] font-bold uppercase tracking-wider z-20">
         After
       </div>
     </div>
@@ -122,15 +122,15 @@ export function DiffSlider() {
  */
 export function ElementPicker() {
   return (
-    <div className="border-2 border-[#1a1a1a] overflow-hidden bg-white">
+    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
       {/* Browser chrome */}
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1a1a1a]">
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-900">
         <div className="flex gap-1">
           <div className="w-2 h-2 bg-[#ff5f57]" />
           <div className="w-2 h-2 bg-[#febc2e]" />
           <div className="w-2 h-2 bg-[#28c840]" />
         </div>
-        <div className="flex-1 mx-2 px-2 py-0.5 bg-[#333] text-[9px] font-mono text-[#888]">
+        <div className="flex-1 mx-2 px-2 py-0.5 bg-gray-700 text-xs font-mono text-gray-500">
           shop.example.com/product
         </div>
       </div>
@@ -140,26 +140,26 @@ export function ElementPicker() {
         {/* Product layout */}
         <div className="flex gap-4">
           {/* Image placeholder */}
-          <div className="w-24 h-20 bg-[#f5f5f0] border border-[#eee] flex items-center justify-center shrink-0">
+          <div className="w-24 h-20 bg-gray-50 border border-[#eee] flex items-center justify-center shrink-0">
             <div className="w-10 h-10 border-2 border-[#ddd]" />
           </div>
           <div className="flex-1 space-y-2">
-            <div className="h-3 bg-[#1a1a1a] w-[80%]" />
+            <div className="h-3 bg-gray-900 w-[80%]" />
             <div className="h-2 bg-[#eee] w-[60%]" />
             {/* Selected element with dashed border */}
-            <div className="relative border-2 border-dashed border-[#2d5a2d] bg-[#2d5a2d]/5 p-2 mt-1">
-              <div className="h-5 bg-[#1a1a1a] w-16 flex items-center justify-center">
-                <span className="text-[9px] font-bold text-white">$149</span>
+            <div className="relative border-2 border-dashed border-emerald-600 bg-emerald-50 p-2 mt-1">
+              <div className="h-5 bg-gray-900 w-16 flex items-center justify-center">
+                <span className="text-xs font-bold text-white">$149</span>
               </div>
               {/* Selection tooltip */}
-              <div className="absolute -top-6 left-0 px-2 py-0.5 bg-[#2d5a2d] text-[7px] font-mono text-white whitespace-nowrap">
+              <div className="absolute -top-6 left-0 px-2 py-0.5 bg-emerald-600 text-[7px] font-mono text-white whitespace-nowrap">
                 .product-price
               </div>
               {/* Corner handles */}
-              <div className="absolute -top-1 -left-1 w-2 h-2 bg-[#2d5a2d]" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#2d5a2d]" />
-              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#2d5a2d]" />
-              <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-[#2d5a2d]" />
+              <div className="absolute -top-1 -left-1 w-2 h-2 bg-emerald-600" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-600" />
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-emerald-600" />
+              <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-emerald-600" />
             </div>
             <div className="h-2 bg-[#eee] w-[90%]" />
             <div className="h-2 bg-[#eee] w-[70%]" />
@@ -197,8 +197,8 @@ export function FrequencySelector() {
   ];
 
   return (
-    <div className="border-2 border-[#1a1a1a] bg-white overflow-hidden">
-      <div className="px-4 py-2.5 bg-[#1a1a1a] text-[9px] font-bold uppercase tracking-wider text-[#f0f0e8]">
+    <div className="border border-gray-200 rounded-lg bg-white overflow-hidden">
+      <div className="px-4 py-2.5 bg-gray-900 text-xs font-bold uppercase tracking-wider text-white">
         Check Frequency
       </div>
       <div className="p-4 space-y-2">
@@ -208,13 +208,13 @@ export function FrequencySelector() {
             onClick={() => setSelected(i)}
             className={`w-full flex items-center gap-3 p-3 border-2 transition-all text-left ${
               selected === i
-                ? "border-[#2d5a2d] bg-[#2d5a2d]/5"
-                : "border-[#eee] hover:border-[#ccc]"
+                ? "border-emerald-600 bg-emerald-50"
+                : "border-gray-200 hover:border-gray-300"
             }`}
           >
             <div
               className={`w-3 h-3 border-2 shrink-0 flex items-center justify-center ${
-                selected === i ? "border-[#2d5a2d] bg-[#2d5a2d]" : "border-[#ccc]"
+                selected === i ? "border-emerald-600 bg-emerald-600" : "border-gray-200"
               }`}
             >
               {selected === i && (
@@ -222,12 +222,12 @@ export function FrequencySelector() {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-black uppercase tracking-wider text-[#1a1a1a]">
+              <div className="text-xs font-bold uppercase tracking-wider text-gray-900">
                 {freq.label}
               </div>
-              <div className="text-[9px] text-[#888]">{freq.sublabel}</div>
+              <div className="text-xs text-gray-500">{freq.sublabel}</div>
             </div>
-            <div className="text-[9px] font-mono text-[#888]">
+            <div className="text-xs font-mono text-gray-500">
               {freq.checks}
             </div>
           </button>
@@ -242,42 +242,42 @@ export function FrequencySelector() {
  */
 export function AlertEmailMockup() {
   return (
-    <div className="border-2 border-[#1a1a1a] bg-[#f5f5f0] overflow-hidden">
+    <div className="border border-gray-200 rounded-lg bg-gray-50 overflow-hidden">
       {/* Email app chrome */}
-      <div className="px-3 py-2 bg-[#1a1a1a] flex items-center gap-2">
+      <div className="px-3 py-2 bg-gray-900 flex items-center gap-2">
         <div className="flex gap-1">
           <div className="w-2 h-2 bg-[#ff5f57]" />
           <div className="w-2 h-2 bg-[#febc2e]" />
           <div className="w-2 h-2 bg-[#28c840]" />
         </div>
-        <div className="text-[9px] text-[#888] font-mono ml-2">Inbox — 1 new</div>
+        <div className="text-xs text-gray-500 font-mono ml-2">Inbox — 1 new</div>
       </div>
 
       <div className="bg-white m-3 border border-[#eee]">
         {/* Email header */}
         <div className="p-3 border-b border-[#eee]">
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-5 h-5 bg-[#2d5a2d] flex items-center justify-center shrink-0">
-              <span className="text-[7px] font-black text-white">PP</span>
+            <div className="w-5 h-5 bg-emerald-600 flex items-center justify-center shrink-0">
+              <span className="text-[7px] font-bold text-white">PP</span>
             </div>
             <span className="text-[10px] font-bold">PagePulse</span>
-            <span className="text-[9px] text-[#888] ml-auto">2 min ago</span>
+            <span className="text-xs text-gray-500 ml-auto">2 min ago</span>
           </div>
-          <div className="text-xs font-black text-[#1a1a1a]">
+          <div className="text-xs font-bold text-gray-900">
             Change Detected: competitor-site.com/pricing
           </div>
         </div>
 
         {/* Email body */}
         <div className="p-3">
-          <div className="text-[9px] text-[#666] mb-3">
+          <div className="text-xs text-gray-500 mb-3">
             We detected a change on a page you're monitoring.
           </div>
 
           {/* Before/After thumbnails */}
           <div className="grid grid-cols-2 gap-2 mb-3">
             <div>
-              <div className="text-[7px] font-bold uppercase tracking-wider text-[#888] mb-1">
+              <div className="text-[7px] font-bold uppercase tracking-wider text-gray-500 mb-1">
                 Before
               </div>
               <div className="border border-[#eee] bg-[#fff8f8] p-2 space-y-1">
@@ -291,14 +291,14 @@ export function AlertEmailMockup() {
               </div>
             </div>
             <div>
-              <div className="text-[7px] font-bold uppercase tracking-wider text-[#2d5a2d] mb-1">
+              <div className="text-[7px] font-bold uppercase tracking-wider text-emerald-600 mb-1">
                 After
               </div>
               <div className="border border-[#eee] bg-[#f8fff8] p-2 space-y-1">
                 <div className="h-1.5 bg-[#ccffcc] w-[80%]" />
                 <div className="h-1.5 bg-[#eee] w-[65%]" />
                 <div className="h-3 bg-[#ccffcc] w-[40%] flex items-center justify-center">
-                  <span className="text-[6px] font-mono text-[#2d5a2d] font-bold">
+                  <span className="text-[6px] font-mono text-emerald-600 font-bold">
                     $39
                   </span>
                 </div>
@@ -308,16 +308,16 @@ export function AlertEmailMockup() {
 
           {/* Diff badge */}
           <div className="flex items-center gap-2 mb-3">
-            <div className="px-2 py-0.5 bg-[#2d5a2d] text-white text-[8px] font-bold">
+            <div className="px-2 py-0.5 bg-emerald-600 text-white text-[8px] font-bold">
               12% CHANGED
             </div>
-            <span className="text-[8px] text-[#888]">
+            <span className="text-[8px] text-gray-500">
               Zone: .pricing-section
             </span>
           </div>
 
           {/* CTA */}
-          <div className="inline-block bg-[#1a1a1a] text-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider">
+          <div className="inline-block bg-gray-900 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider">
             View Full Comparison →
           </div>
         </div>

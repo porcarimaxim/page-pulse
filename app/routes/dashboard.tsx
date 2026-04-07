@@ -16,7 +16,7 @@ function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f0e8]">
+    <div className="min-h-screen bg-[#fafafa]">
       <DashboardSidebar />
       {/* Desktop: offset for sidebar. Mobile: offset for top bar + bottom tab bar */}
       <div className="md:ml-56 pt-14 pb-16 md:pt-0 md:pb-0">

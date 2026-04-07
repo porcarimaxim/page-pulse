@@ -207,17 +207,17 @@ function VisualPingAlternativePage() {
     <MarketingLayout>
       {/* Hero */}
       <section className="px-6 pt-16 pb-20 md:pt-24 md:pb-28 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-6">
           PagePulse vs Visualping
         </p>
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold leading-[1.1] mb-6">
           The Best
           <br />
-          <span className="text-[#2d5a2d]">Visualping</span>
+          <span className="text-emerald-600">Visualping</span>
           <br />
           Alternative
         </h1>
-        <p className="text-lg text-[#888] max-w-2xl mx-auto mb-10">
+        <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10">
           Same powerful website change monitoring at half the price. Faster
           setup, cleaner interface, and a generous free tier. See how PagePulse
           compares.
@@ -235,18 +235,18 @@ function VisualPingAlternativePage() {
       </section>
 
       {/* Quick Comparison Banner */}
-      <section className="border-t-2 border-b-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8]">
-        <div className="max-w-5xl mx-auto grid grid-cols-3 divide-x-2 divide-[#333]">
+      <section className="border-t border-b border-gray-200 bg-gray-900 text-white">
+        <div className="max-w-5xl mx-auto grid grid-cols-3 divide-x divide-gray-700">
           {[
             { value: "50%", label: "Lower Price" },
             { value: "< 60s", label: "Setup Time" },
             { value: "Free", label: "Forever Plan" },
           ].map((stat) => (
             <div key={stat.label} className="py-8 px-6 text-center">
-              <div className="text-2xl md:text-4xl font-black tracking-tighter text-[#7cb87c]">
+              <div className="text-2xl md:text-4xl font-bold tracking-tighter text-emerald-400">
                 {stat.value}
               </div>
-              <div className="text-xs uppercase tracking-wider text-[#888] mt-1">
+              <div className="text-xs uppercase tracking-wider text-gray-500 mt-1">
                 {stat.label}
               </div>
             </div>
@@ -257,10 +257,10 @@ function VisualPingAlternativePage() {
       {/* Why Switch */}
       <section className="px-6 py-20 md:py-28">
         <div className="max-w-5xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-4 text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-4 text-center">
             Why Teams Switch
           </p>
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-16 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center">
             6 Reasons To Choose PagePulse
           </h2>
 
@@ -268,15 +268,15 @@ function VisualPingAlternativePage() {
             {whySwitchReasons.map((reason) => (
               <div
                 key={reason.title}
-                className="border-2 border-[#1a1a1a] p-6 shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-[6px_6px_0px_0px_#1a1a1a] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                className="border border-gray-200 p-6 shadow-md hover:shadow-lg transition-all rounded-xl"
               >
-                <div className="w-10 h-10 border-2 border-[#2d5a2d] flex items-center justify-center mb-4">
-                  <reason.icon className="w-5 h-5 text-[#2d5a2d]" />
+                <div className="w-10 h-10 border border-emerald-600 flex items-center justify-center mb-4">
+                  <reason.icon className="w-5 h-5 text-emerald-600" />
                 </div>
-                <h3 className="font-black text-sm uppercase tracking-tighter mb-2">
+                <h3 className="font-bold text-sm  mb-2">
                   {reason.title}
                 </h3>
-                <p className="text-xs text-[#888] leading-relaxed">
+                <p className="text-xs text-gray-500 leading-relaxed">
                   {reason.description}
                 </p>
               </div>
@@ -286,25 +286,25 @@ function VisualPingAlternativePage() {
       </section>
 
       {/* Feature-by-Feature Comparison Table */}
-      <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20 md:py-28">
+      <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-20 md:py-28">
         <div className="max-w-4xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4 text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4 text-center">
             Side-By-Side
           </p>
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-16 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center">
             Feature Comparison
           </h2>
 
-          <div className="border-2 border-[#333] overflow-hidden">
+          <div className="border border-gray-700 overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-[1.2fr_1fr_1fr] border-b-2 border-[#333] bg-[#222]">
-              <div className="p-4 text-xs font-bold uppercase tracking-wider text-[#888]">
+            <div className="grid grid-cols-[1.2fr_1fr_1fr] border-b border-gray-700 bg-gray-800">
+              <div className="p-4 text-xs font-bold uppercase tracking-wider text-gray-500">
                 Feature
               </div>
-              <div className="p-4 text-xs font-bold uppercase tracking-wider text-[#7cb87c] border-l border-[#333]">
+              <div className="p-4 text-xs font-bold uppercase tracking-wider text-emerald-400 border-l border-gray-700">
                 PagePulse
               </div>
-              <div className="p-4 text-xs font-bold uppercase tracking-wider text-[#888] border-l border-[#333]">
+              <div className="p-4 text-xs font-bold uppercase tracking-wider text-gray-500 border-l border-gray-700">
                 Visualping
               </div>
             </div>
@@ -314,23 +314,23 @@ function VisualPingAlternativePage() {
               <div
                 key={row.feature}
                 className={`grid grid-cols-[1.2fr_1fr_1fr] ${
-                  i < comparisonRows.length - 1 ? "border-b border-[#333]" : ""
+                  i < comparisonRows.length - 1 ? "border-b border-gray-700" : ""
                 }`}
               >
                 <div className="p-4 text-sm font-bold">{row.feature}</div>
                 <div
-                  className={`p-4 text-xs leading-relaxed border-l border-[#333] ${
+                  className={`p-4 text-xs leading-relaxed border-l border-gray-700 ${
                     row.winner === "pagepulse"
-                      ? "text-[#7cb87c]"
+                      ? "text-emerald-400"
                       : "opacity-70"
                   }`}
                 >
                   {row.pagepulse}
                 </div>
                 <div
-                  className={`p-4 text-xs leading-relaxed border-l border-[#333] ${
+                  className={`p-4 text-xs leading-relaxed border-l border-gray-700 ${
                     row.winner === "visualping"
-                      ? "text-[#7cb87c]"
+                      ? "text-emerald-400"
                       : "opacity-70"
                   }`}
                 >
@@ -340,7 +340,7 @@ function VisualPingAlternativePage() {
             ))}
           </div>
 
-          <p className="text-center text-xs text-[#888] mt-6">
+          <p className="text-center text-xs text-gray-500 mt-6">
             Comparison based on publicly available information as of March 2026.
           </p>
         </div>
@@ -349,10 +349,10 @@ function VisualPingAlternativePage() {
       {/* Pricing Comparison */}
       <section className="px-6 py-20 md:py-28">
         <div className="max-w-5xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-4 text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-4 text-center">
             Pricing Comparison
           </p>
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-16 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center">
             Half The Price,
             <br />
             Same Power
@@ -360,34 +360,34 @@ function VisualPingAlternativePage() {
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* PagePulse */}
-            <div className="border-2 border-[#2d5a2d] p-8 shadow-[8px_8px_0px_0px_#2d5a2d]">
+            <div className="border border-emerald-600 p-8 shadow-lg rounded-xl">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#2d5a2d] flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-[#f0f0e8]" />
+                <div className="w-10 h-10 bg-emerald-600 flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-black text-xl uppercase tracking-tighter">
+                  <h3 className="font-bold text-xl ">
                     PagePulse
                   </h3>
-                  <p className="text-xs text-[#888]">
+                  <p className="text-xs text-gray-500">
                     Simple, transparent pricing
                   </p>
                 </div>
               </div>
               <div className="space-y-4 mb-8">
-                <div className="flex justify-between items-center border-b border-[#ccc] pb-3">
+                <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                   <span className="text-sm font-bold">Free</span>
-                  <span className="font-black text-xl">$0</span>
+                  <span className="font-bold text-xl">$0</span>
                 </div>
-                <div className="flex justify-between items-center border-b border-[#ccc] pb-3">
+                <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                   <span className="text-sm font-bold">Pro (50 monitors)</span>
-                  <span className="font-black text-xl">$19/mo</span>
+                  <span className="font-bold text-xl">$19/mo</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-bold">
                     Business (unlimited)
                   </span>
-                  <span className="font-black text-xl">$49/mo</span>
+                  <span className="font-bold text-xl">$49/mo</span>
                 </div>
               </div>
               <Button asChild className="w-full">
@@ -398,41 +398,41 @@ function VisualPingAlternativePage() {
             </div>
 
             {/* Visualping */}
-            <div className="border-2 border-[#ccc] p-8 opacity-75">
+            <div className="border border-gray-200 p-8 opacity-75">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#888] flex items-center justify-center">
-                  <Eye className="w-5 h-5 text-[#f0f0e8]" />
+                <div className="w-10 h-10 bg-gray-500 flex items-center justify-center">
+                  <Eye className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-black text-xl uppercase tracking-tighter">
+                  <h3 className="font-bold text-xl ">
                     Visualping
                   </h3>
-                  <p className="text-xs text-[#888]">
+                  <p className="text-xs text-gray-500">
                     Higher cost at every tier
                   </p>
                 </div>
               </div>
               <div className="space-y-4 mb-8">
-                <div className="flex justify-between items-center border-b border-[#ccc] pb-3">
+                <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                   <span className="text-sm font-bold">Free</span>
-                  <span className="font-black text-xl text-[#888]">
+                  <span className="font-bold text-xl text-gray-500">
                     Limited
                   </span>
                 </div>
-                <div className="flex justify-between items-center border-b border-[#ccc] pb-3">
+                <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                   <span className="text-sm font-bold">Personal</span>
-                  <span className="font-black text-xl text-[#888]">
+                  <span className="font-bold text-xl text-gray-500">
                     $50/mo
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-bold">Business</span>
-                  <span className="font-black text-xl text-[#888]">
+                  <span className="font-bold text-xl text-gray-500">
                     $100/mo
                   </span>
                 </div>
               </div>
-              <div className="h-11 bg-[#eee] flex items-center justify-center text-sm text-[#888] font-bold uppercase tracking-wider">
+              <div className="h-11 bg-gray-100 flex items-center justify-center text-sm text-gray-500 font-bold uppercase tracking-wider">
                 2x+ more expensive
               </div>
             </div>
@@ -441,12 +441,12 @@ function VisualPingAlternativePage() {
       </section>
 
       {/* FAQ */}
-      <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20 md:py-28">
+      <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-20 md:py-28">
         <div className="max-w-3xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4 text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4 text-center">
             Questions
           </p>
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-16 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-16 text-center">
             Switching FAQ
           </h2>
 
@@ -454,9 +454,9 @@ function VisualPingAlternativePage() {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className="border-t border-[#333] py-6 grid md:grid-cols-[1fr_1.5fr] gap-4"
+                className="border-t border-gray-700 py-6 grid md:grid-cols-[1fr_1.5fr] gap-4"
               >
-                <h3 className="font-black text-sm uppercase tracking-tighter">
+                <h3 className="font-bold text-sm ">
                   {faq.q}
                 </h3>
                 <p className="text-sm opacity-70 leading-relaxed">{faq.a}</p>
@@ -473,7 +473,7 @@ function VisualPingAlternativePage() {
             "We replaced a $2,000/month competitive intelligence subscription
             with PagePulse. Better data, and we choose exactly what to track."
           </p>
-          <p className="text-sm text-[#888]">
+          <p className="text-sm text-gray-500">
             Rachel Torres, VP of Strategy at a SaaS Company
           </p>
         </div>

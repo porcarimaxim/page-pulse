@@ -16,19 +16,19 @@ export function Toggle({
       onClick={() => onChange(!checked)}
       className="flex items-center justify-between cursor-pointer group w-full"
     >
-      <span className="text-xs font-bold uppercase text-[#888] group-hover:text-[#1a1a1a] transition-colors">
+      <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">
         {label}
       </span>
       <span
-        className={`w-8 h-5 border-2 border-[#1a1a1a] flex items-center transition-colors ${
-          checked ? "bg-[#2d5a2d]" : "bg-transparent"
+        className={`w-9 h-5 rounded-full flex items-center transition-colors ${
+          checked ? "bg-emerald-600" : "bg-gray-200"
         }`}
       >
         <span
-          className={`w-3 h-3 transition-transform ${
+          className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${
             checked
-              ? "translate-x-3 bg-[#f0f0e8]"
-              : "translate-x-0.5 bg-[#1a1a1a]"
+              ? "translate-x-4.5"
+              : "translate-x-0.5"
           }`}
         />
       </span>

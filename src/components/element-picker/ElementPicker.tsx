@@ -200,7 +200,7 @@ export function ElementPicker({
             if (!el) return null;
             return (
               <div
-                className="absolute border-2 border-dashed border-[#2d5a2d] bg-[#2d5a2d]/10 pointer-events-none"
+                className="absolute border-2 border-dashed border-emerald-500 bg-emerald-500/10 pointer-events-none"
                 style={{
                   left: `${el.x}%`,
                   top: `${el.y}%`,
@@ -218,7 +218,7 @@ export function ElementPicker({
             if (!sel) return null;
             return (
               <div
-                className="absolute border-2 border-[#2d5a2d] bg-[#2d5a2d]/15 pointer-events-none"
+                className="absolute border-2 border-emerald-500 bg-emerald-500/15 pointer-events-none"
                 style={{
                   left: `${sel.x}%`,
                   top: `${sel.y}%`,
@@ -231,10 +231,10 @@ export function ElementPicker({
 
           {/* Loading overlay */}
           {isLoading && (
-            <div className="absolute inset-0 bg-[#1a1a1a]/40 flex items-center justify-center">
-              <div className="bg-[#f0f0e8] border-2 border-[#1a1a1a] px-4 py-3 flex items-center gap-2">
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <div className="bg-white border border-gray-200 rounded-lg shadow-lg px-4 py-3 flex items-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm font-bold uppercase">Loading elements...</span>
+                <span className="text-sm font-medium">Loading elements...</span>
               </div>
             </div>
           )}
@@ -243,37 +243,37 @@ export function ElementPicker({
 
       {/* Error message */}
       {loadError && (
-        <div className="border-t-2 border-[#dc2626] bg-[#dc2626]/10 px-4 py-2">
-          <p className="text-xs text-[#dc2626] font-bold">{loadError}</p>
+        <div className="border-t border-red-200 bg-red-50 rounded-b-lg px-4 py-2">
+          <p className="text-xs text-red-500 font-bold">{loadError}</p>
         </div>
       )}
 
       {/* Bottom bar */}
-      <div className="border-t-2 border-[#ccc] p-3 space-y-3 bg-[#f0f0e8]">
+      <div className="border-t border-gray-200 p-3 space-y-3 bg-white">
         {/* Selected element display */}
         {selectedSelector && (
-          <div className="border-2 border-[#2d5a2d] bg-[#2d5a2d]/10 p-2 flex items-start justify-between gap-2">
+          <div className="border border-emerald-200 bg-emerald-50 rounded-lg p-2 flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <p className="text-xs font-bold uppercase text-[#888] mb-0.5">
+              <p className="text-xs font-medium text-gray-500 mb-0.5">
                 Selected Element
               </p>
-              <p className="text-sm font-mono text-[#2d5a2d] font-bold break-all">
+              <p className="text-sm font-mono text-emerald-600 font-bold break-all">
                 {selectedSelector}
               </p>
             </div>
             <button
               onClick={handleReset}
-              className="shrink-0 p-1 hover:bg-[#2d5a2d]/10"
+              className="shrink-0 p-1 hover:bg-emerald-50"
               title="Pick a different element"
             >
-              <RotateCcw className="w-4 h-4 text-[#888]" />
+              <RotateCcw className="w-4 h-4 text-gray-500" />
             </button>
           </div>
         )}
 
         {/* Instruction text */}
         {!selectedSelector && !isLoading && (
-          <p className="text-xs text-[#888] font-bold uppercase">
+          <p className="text-xs text-gray-500 font-medium">
             Click an element to select it
           </p>
         )}
@@ -281,11 +281,11 @@ export function ElementPicker({
         {/* Element list */}
         {!isLoading && !selectedSelector && elements.length > 0 && (
           <div>
-            <p className="text-xs font-bold uppercase text-[#888] mb-1.5 flex items-center gap-1.5">
+            <p className="text-xs font-medium text-gray-500 mb-1.5 flex items-center gap-1.5">
               <List className="w-3 h-3" />
               Detected elements ({elements.length})
             </p>
-            <div className="max-h-40 overflow-y-auto border-2 border-[#ccc]">
+            <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-lg">
               {elements.map((el, i) => {
                 const { tag, detail } = formatSelector(el.selector);
                 return (
@@ -295,15 +295,15 @@ export function ElementPicker({
                     onClick={() => handleElementClick(el.selector)}
                     onMouseEnter={() => setHoveredSelector(el.selector)}
                     onMouseLeave={() => setHoveredSelector(null)}
-                    className={`w-full text-left px-2 py-1.5 text-xs font-mono border-b border-[#ccc] last:border-b-0 transition-colors ${
+                    className={`w-full text-left px-2 py-1.5 text-xs font-mono border-b border-gray-200 last:border-b-0 transition-colors ${
                       hoveredSelector === el.selector
-                        ? "bg-[#2d5a2d]/10 text-[#2d5a2d]"
-                        : "hover:bg-[#1a1a1a]/5"
+                        ? "bg-emerald-50 text-emerald-600"
+                        : "hover:bg-gray-50"
                     }`}
                   >
                     <span className="font-bold">{tag}</span>
                     {tag !== detail && (
-                      <span className="text-[#888] ml-1">
+                      <span className="text-gray-500 ml-1">
                         {detail.substring(tag.length)}
                       </span>
                     )}
@@ -316,7 +316,7 @@ export function ElementPicker({
 
         {/* Manual CSS selector input */}
         <div>
-          <p className="text-xs font-bold uppercase text-[#888] mb-1.5">
+          <p className="text-xs font-medium text-gray-500 mb-1.5">
             Or enter CSS selector
           </p>
           <div className="flex gap-2">

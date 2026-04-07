@@ -9,24 +9,24 @@ export function DashboardMockup({
   monitors?: number;
 }) {
   const monitorData = [
-    { name: "Pricing Page", status: "changed", time: "2m ago", color: "#2d5a2d" },
-    { name: "Product Updates", status: "watching", time: "15m ago", color: "#888" },
-    { name: "Careers Page", status: "watching", time: "1h ago", color: "#888" },
-    { name: "Blog / News", status: "changed", time: "3h ago", color: "#2d5a2d" },
-    { name: "Homepage Hero", status: "watching", time: "6h ago", color: "#888" },
+    { name: "Pricing Page", status: "changed", time: "2m ago", color: "#059669" },
+    { name: "Product Updates", status: "watching", time: "15m ago", color: "#6b7280" },
+    { name: "Careers Page", status: "watching", time: "1h ago", color: "#6b7280" },
+    { name: "Blog / News", status: "changed", time: "3h ago", color: "#059669" },
+    { name: "Homepage Hero", status: "watching", time: "6h ago", color: "#6b7280" },
   ].slice(0, monitors);
 
   return (
-    <div className="border-2 border-[#1a1a1a] shadow-[8px_8px_0px_0px_#1a1a1a] bg-white">
+    <div className="border border-gray-200 shadow-lg rounded-xl bg-white">
       {/* Dashboard header */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-[#1a1a1a]">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#f0f0e8]">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-900">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-white">
           Dashboard
         </span>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">
-            <Eye className="w-3 h-3 text-[#7cb87c]" />
-            <span className="text-[9px] text-[#7cb87c] font-mono">
+            <Eye className="w-3 h-3 text-emerald-400" />
+            <span className="text-xs text-emerald-400 font-mono">
               {monitors} active
             </span>
           </div>
@@ -44,11 +44,11 @@ export function DashboardMockup({
             key={stat.label}
             className="px-3 py-2.5 border-r border-[#eee] last:border-r-0 text-center"
           >
-            <stat.icon className="w-3 h-3 text-[#2d5a2d] mx-auto mb-1" />
-            <div className="text-xs font-black text-[#1a1a1a]">
+            <stat.icon className="w-3 h-3 text-emerald-600 mx-auto mb-1" />
+            <div className="text-xs font-bold text-gray-900">
               {stat.value}
             </div>
-            <div className="text-[8px] text-[#888] uppercase tracking-wider">
+            <div className="text-[10px] text-gray-500 uppercase tracking-wider">
               {stat.label}
             </div>
           </div>
@@ -66,19 +66,19 @@ export function DashboardMockup({
               className="w-1.5 h-1.5 shrink-0"
               style={{ backgroundColor: m.color }}
             />
-            <span className="text-[10px] font-bold text-[#1a1a1a] flex-1 truncate">
+            <span className="text-[10px] font-bold text-gray-900 flex-1 truncate">
               {m.name}
             </span>
             <span
-              className={`text-[8px] uppercase tracking-wider font-bold px-1.5 py-0.5 ${
+              className={`text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 ${
                 m.status === "changed"
-                  ? "bg-[#2d5a2d] text-white"
-                  : "text-[#888]"
+                  ? "bg-emerald-600 text-white"
+                  : "text-gray-500"
               }`}
             >
               {m.status}
             </span>
-            <span className="text-[9px] text-[#888] font-mono">{m.time}</span>
+            <span className="text-xs text-gray-500 font-mono">{m.time}</span>
           </div>
         ))}
       </div>
@@ -103,8 +103,8 @@ export function ChangeTimeline({
   ].slice(0, events);
 
   return (
-    <div className="border-2 border-[#1a1a1a] shadow-[8px_8px_0px_0px_#1a1a1a] bg-white p-4">
-      <div className="text-[10px] font-bold uppercase tracking-wider text-[#888] mb-3">
+    <div className="border border-gray-200 shadow-lg rounded-xl bg-white p-4">
+      <div className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-3">
         Change History
       </div>
       <div className="space-y-0">
@@ -114,7 +114,7 @@ export function ChangeTimeline({
             <div className="flex flex-col items-center">
               <div
                 className={`w-2 h-2 shrink-0 ${
-                  event.active ? "bg-[#2d5a2d]" : "bg-[#ccc]"
+                  event.active ? "bg-emerald-600" : "bg-gray-300"
                 }`}
               />
               {i < timelineData.length - 1 && (
@@ -123,10 +123,10 @@ export function ChangeTimeline({
             </div>
             {/* Content */}
             <div className="pb-4">
-              <div className="text-[10px] font-bold text-[#1a1a1a] leading-none">
+              <div className="text-[10px] font-bold text-gray-900 leading-none">
                 {event.label}
               </div>
-              <div className="text-[9px] text-[#888] mt-0.5">{event.time}</div>
+              <div className="text-xs text-gray-500 mt-0.5">{event.time}</div>
             </div>
           </div>
         ))}

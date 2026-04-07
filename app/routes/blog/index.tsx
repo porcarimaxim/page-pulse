@@ -57,15 +57,15 @@ function BlogIndex() {
     <MarketingLayout>
       {/* Hero */}
       <section className="px-6 pt-16 pb-12 md:pt-24 md:pb-16 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-6">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-6">
           {ALL_BLOG_POSTS.length} Articles &amp; Growing
         </p>
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
+        <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] mb-6">
           The
           <br />
-          <span className="text-[#2d5a2d]">Blog</span>
+          <span className="text-emerald-600">Blog</span>
         </h1>
-        <p className="text-lg text-[#666] max-w-xl mx-auto">
+        <p className="text-lg text-gray-500 max-w-xl mx-auto">
           Guides, tutorials, and comparisons to help you monitor the web and
           stay ahead of changes that matter.
         </p>
@@ -78,10 +78,10 @@ function BlogIndex() {
             <button
               key={cat.key}
               onClick={() => setFilter(cat.key)}
-              className={`px-5 py-2 text-xs font-bold uppercase tracking-wider border-2 transition-colors ${
+              className={`px-5 py-2 text-xs font-bold uppercase tracking-wider border transition-colors rounded-lg ${
                 filter === cat.key
-                  ? "bg-[#1a1a1a] text-[#f0f0e8] border-[#1a1a1a]"
-                  : "border-[#ccc] text-[#666] hover:border-[#1a1a1a] hover:text-[#1a1a1a]"
+                  ? "bg-gray-900 text-white border-gray-900"
+                  : "border-gray-200 text-gray-500 hover:border-gray-900 hover:text-gray-900"
               }`}
             >
               {cat.label}
@@ -96,23 +96,23 @@ function BlogIndex() {
           <div className="max-w-5xl mx-auto">
             <Link
               to={`/blog/${posts[0].slug}`}
-              className="block border-2 border-[#1a1a1a] shadow-[8px_8px_0px_0px_#1a1a1a] hover:shadow-[10px_10px_0px_0px_#2d5a2d] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all p-8 md:p-12 group"
+              className="block border border-gray-200 shadow-lg hover:shadow-xl transition-all p-8 md:p-12 group rounded-xl"
             >
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-[#2d5a2d] text-[#f0f0e8] px-3 py-1">
+                <span className="text-xs font-bold uppercase tracking-wider bg-emerald-600 text-white px-3 py-1 rounded-full">
                   {CATEGORY_LABELS[posts[0].category]}
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#666]">
+                <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
                   {posts[0].readTime}
                 </span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-[1.1] mb-4 group-hover:text-[#2d5a2d] transition-colors">
+              <h2 className="text-3xl md:text-5xl font-bold leading-[1.1] mb-4 group-hover:text-emerald-600 transition-colors">
                 {posts[0].title}
               </h2>
-              <p className="text-[#666] leading-relaxed mb-6 max-w-2xl">
+              <p className="text-gray-500 leading-relaxed mb-6 max-w-2xl">
                 {posts[0].heroSubtitle}
               </p>
-              <span className="text-sm font-bold text-[#2d5a2d] uppercase tracking-wider group-hover:underline">
+              <span className="text-sm font-bold text-emerald-600 uppercase tracking-wider group-hover:underline">
                 Read Article <ArrowRight className="inline w-4 h-4 ml-1" />
               </span>
             </Link>
@@ -121,39 +121,39 @@ function BlogIndex() {
       )}
 
       {/* Post Grid */}
-      <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20">
+      <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-20">
         <div className="max-w-5xl mx-auto">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.slice(1).map((post) => (
               <Link
                 key={post.slug}
                 to={`/blog/${post.slug}`}
-                className="border-2 border-[#333] p-6 hover:border-[#7cb87c] transition-colors group flex flex-col"
+                className="border border-gray-700 p-6 hover:border-emerald-400 transition-colors group flex flex-col rounded-xl"
               >
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#7cb87c]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
                     {CATEGORY_LABELS[post.category]}
                   </span>
-                  <span className="text-[10px] text-[#a0a0a0]">·</span>
-                  <span className="text-[10px] text-[#a0a0a0]">
+                  <span className="text-xs text-gray-400">·</span>
+                  <span className="text-xs text-gray-400">
                     {post.readTime}
                   </span>
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tighter leading-[1.1] mb-3 group-hover:text-[#7cb87c] transition-colors">
+                <h3 className="text-lg font-bold leading-[1.1] mb-3 group-hover:text-emerald-400 transition-colors">
                   {post.title}
                 </h3>
-                <p className="text-xs text-[#666] leading-relaxed mb-4 flex-1">
+                <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">
                   {post.heroSubtitle}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#a0a0a0]">
+                  <span className="text-xs text-gray-400">
                     {new Date(post.publishedAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",
                     })}
                   </span>
-                  <span className="text-xs font-bold text-[#7cb87c] uppercase tracking-wider group-hover:underline">
+                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider group-hover:underline">
                     Read <ArrowRight className="inline w-3 h-3 ml-1" />
                   </span>
                 </div>

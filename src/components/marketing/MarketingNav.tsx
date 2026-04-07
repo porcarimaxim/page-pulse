@@ -58,17 +58,17 @@ export function MarketingNav() {
   const isUseCases = location.pathname.startsWith("/use-cases");
 
   const linkClass = (path: string, active?: boolean) =>
-    `text-sm font-bold uppercase tracking-wider transition-colors ${
+    `text-sm font-medium transition-colors ${
       active || isActive(path)
-        ? "text-[#1a1a1a]"
-        : "text-[#888] hover:text-[#1a1a1a]"
+        ? "text-gray-900"
+        : "text-gray-500 hover:text-gray-900"
     }`;
 
   return (
-    <nav ref={navRef} className="relative border-b-2 border-[#1a1a1a] bg-[#f0f0e8]">
+    <nav ref={navRef} className="relative border-b border-gray-200 bg-white">
       <div className="px-4 md:px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-black tracking-tighter shrink-0">
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
+        <Link to="/" className="text-2xl font-bold shrink-0">
+          PAGE<span className="text-emerald-600">PULSE</span>
         </Link>
 
         {/* Desktop Nav - Left links */}
@@ -126,7 +126,7 @@ export function MarketingNav() {
           </Button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="w-10 h-10 border-2 border-[#1a1a1a] flex items-center justify-center"
+            className="w-10 h-10 border border-gray-200 rounded-lg flex items-center justify-center"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             {mobileOpen ? (
@@ -141,7 +141,7 @@ export function MarketingNav() {
       {/* Desktop Mega Menu */}
       {megaOpen && (
         <div
-          className="hidden md:block absolute left-0 right-0 top-full z-50 border-b-2 border-[#1a1a1a] bg-[#f0f0e8] shadow-[0_8px_0px_0px_rgba(26,26,26,0.1)]"
+          className="hidden md:block absolute left-0 right-0 top-full z-50 border-b border-gray-200 bg-white shadow-lg rounded-b-xl"
           onMouseEnter={() => {
             clearTimeout(megaTimeoutRef.current);
           }}
@@ -149,15 +149,15 @@ export function MarketingNav() {
             megaTimeoutRef.current = setTimeout(() => setMegaOpen(false), 200);
           }}
         >
-          <div className="max-w-5xl mx-auto grid grid-cols-3 divide-x-2 divide-[#1a1a1a]">
+          <div className="max-w-5xl mx-auto grid grid-cols-3 divide-x divide-gray-200">
             {CATEGORIES.map((cat) => {
               const cases = USE_CASES.filter((uc) => uc.category === cat.key);
               return (
                 <div key={cat.key} className="p-6">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-[#2d5a2d] mb-1">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-emerald-600 mb-1">
                     {cat.label}
                   </h3>
-                  <p className="text-[10px] text-[#888] mb-4">
+                  <p className="text-xs text-gray-500 mb-4">
                     {cat.description}
                   </p>
                   <div className="space-y-0.5">
@@ -166,14 +166,14 @@ export function MarketingNav() {
                         key={uc.slug}
                         to={`/use-cases/${uc.slug}`}
                         onClick={closeMega}
-                        className="flex items-center gap-3 px-3 py-2 -mx-3 hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors group"
+                        className="flex items-center gap-3 px-3 py-2 -mx-3 rounded-lg hover:bg-gray-50 transition-colors group"
                       >
-                        <uc.icon className="w-4 h-4 shrink-0 text-[#2d5a2d] group-hover:text-[#7cb87c]" />
+                        <uc.icon className="w-4 h-4 shrink-0 text-emerald-600 group-hover:text-emerald-400" />
                         <div className="min-w-0">
-                          <span className="text-sm font-bold block leading-tight">
+                          <span className="text-sm font-medium block leading-tight">
                             {uc.title}
                           </span>
-                          <span className="text-[10px] text-[#888] group-hover:text-[#888] leading-tight block truncate">
+                          <span className="text-xs text-gray-500 group-hover:text-gray-500 leading-tight block truncate">
                             {uc.tagline}
                           </span>
                         </div>
@@ -184,11 +184,11 @@ export function MarketingNav() {
               );
             })}
           </div>
-          <div className="border-t-2 border-[#1a1a1a] px-6 py-3 text-center">
+          <div className="border-t border-gray-200 px-6 py-3 text-center">
             <Link
               to="/use-cases"
               onClick={closeMega}
-              className="text-sm font-bold uppercase tracking-wider text-[#2d5a2d] hover:underline inline-flex items-center gap-1"
+              className="text-sm font-medium text-emerald-600 hover:underline inline-flex items-center gap-1"
             >
               View All Use Cases
               <ArrowRight className="w-4 h-4" />
@@ -199,11 +199,11 @@ export function MarketingNav() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t-2 border-[#1a1a1a] bg-[#f0f0e8] max-h-[70vh] overflow-y-auto">
+        <div className="md:hidden border-t border-gray-200 bg-white max-h-[70vh] overflow-y-auto">
           <div className="p-4 space-y-0">
             <Link
               to="/features"
-              className="block px-4 py-3 text-sm font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
+              className="block px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
               Features
             </Link>
@@ -216,7 +216,7 @@ export function MarketingNav() {
                     mobileCategory === "all" ? null : "all",
                   )
                 }
-                className="w-full flex items-center justify-between px-4 py-3 text-sm font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
+                className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Use Cases
                 <ChevronDown
@@ -225,15 +225,15 @@ export function MarketingNav() {
               </button>
 
               {mobileCategory === "all" && (
-                <div className="border-t border-[#ccc]">
+                <div className="border-t border-gray-200">
                   {CATEGORIES.map((cat) => {
                     const cases = USE_CASES.filter(
                       (uc) => uc.category === cat.key,
                     );
                     return (
-                      <div key={cat.key} className="border-b border-[#ccc]">
-                        <div className="px-6 py-2 bg-[#e8e8e0]">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-[#2d5a2d]">
+                      <div key={cat.key} className="border-b border-gray-200">
+                        <div className="px-6 py-2 bg-gray-50">
+                          <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600">
                             {cat.label}
                           </span>
                         </div>
@@ -241,9 +241,9 @@ export function MarketingNav() {
                           <Link
                             key={uc.slug}
                             to={`/use-cases/${uc.slug}`}
-                            className="flex items-center gap-3 px-8 py-2.5 text-sm hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
+                            className="flex items-center gap-3 px-8 py-2.5 text-sm hover:bg-gray-50 transition-colors"
                           >
-                            <uc.icon className="w-4 h-4 shrink-0 text-[#2d5a2d]" />
+                            <uc.icon className="w-4 h-4 shrink-0 text-emerald-600" />
                             {uc.title}
                           </Link>
                         ))}
@@ -252,7 +252,7 @@ export function MarketingNav() {
                   })}
                   <Link
                     to="/use-cases"
-                    className="flex items-center gap-2 px-6 py-3 text-sm font-bold text-[#2d5a2d]"
+                    className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-emerald-600"
                   >
                     View All Use Cases
                     <ChevronRight className="w-4 h-4" />
@@ -263,21 +263,21 @@ export function MarketingNav() {
 
             <Link
               to="/pricing"
-              className="block px-4 py-3 text-sm font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
+              className="block px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
               Pricing
             </Link>
 
             <Link
               to="/blog"
-              className="block px-4 py-3 text-sm font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
+              className="block px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
               Blog
             </Link>
 
             <Link
               to="/auth/sign-in"
-              className="block px-4 py-3 text-sm font-bold uppercase tracking-wider hover:bg-[#1a1a1a] hover:text-[#f0f0e8] transition-colors"
+              className="block px-4 py-3 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
               Sign In
             </Link>

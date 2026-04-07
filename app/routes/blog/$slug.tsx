@@ -71,10 +71,10 @@ function BlogPostPage() {
     return (
       <MarketingLayout>
         <section className="px-6 py-32 text-center">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-4">
+          <h1 className="text-4xl font-bold mb-4">
             Post Not Found
           </h1>
-          <p className="text-[#888] mb-8">
+          <p className="text-gray-500 mb-8">
             We couldn&apos;t find that article.
           </p>
           <Button asChild>
@@ -104,26 +104,26 @@ function BlogPostPage() {
           <div className="flex items-center gap-2 mb-10 text-xs font-bold uppercase tracking-wider">
             <Link
               to="/blog"
-              className="text-[#888] hover:text-[#1a1a1a] transition-colors"
+              className="text-gray-500 hover:text-gray-900 transition-colors"
             >
               Blog
             </Link>
-            <span className="text-[#ccc]">/</span>
-            <span className="text-[#2d5a2d]">
+            <span className="text-gray-200">/</span>
+            <span className="text-emerald-600">
               {CATEGORY_LABELS[post.category]}
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-[1.1] mb-6">
             {post.title}
           </h1>
 
-          <p className="text-lg text-[#666] leading-relaxed mb-8">
+          <p className="text-lg text-gray-500 leading-relaxed mb-8">
             {post.heroSubtitle}
           </p>
 
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-6 text-xs text-[#888] border-t-2 border-b-2 border-[#1a1a1a] py-4">
+          <div className="flex flex-wrap items-center gap-6 text-xs text-gray-500 border-t border-b border-gray-200 py-4">
             <div className="flex items-center gap-2">
               <User className="w-3.5 h-3.5" />
               <span>{post.author}</span>
@@ -138,7 +138,7 @@ function BlogPostPage() {
             </div>
             <div className="flex items-center gap-2">
               <Tag className="w-3.5 h-3.5" />
-              <span className="text-[#2d5a2d] font-bold uppercase tracking-wider">
+              <span className="text-emerald-600 font-bold uppercase tracking-wider">
                 {CATEGORY_LABELS[post.category]}
               </span>
             </div>
@@ -149,8 +149,8 @@ function BlogPostPage() {
       {/* ── TABLE OF CONTENTS ── */}
       <section className="px-6 pb-8">
         <div className="max-w-3xl mx-auto">
-          <details className="border-2 border-[#1a1a1a] bg-white p-6 shadow-[4px_4px_0px_0px_#1a1a1a]">
-            <summary className="font-black text-sm uppercase tracking-tighter cursor-pointer">
+          <details className="border border-gray-200 bg-white p-6 shadow-md rounded-xl">
+            <summary className="font-bold text-sm cursor-pointer">
               Table of Contents
             </summary>
             <nav className="mt-4 space-y-2">
@@ -158,7 +158,7 @@ function BlogPostPage() {
                 <a
                   key={i}
                   href={`#section-${i}`}
-                  className="block text-sm text-[#888] hover:text-[#2d5a2d] transition-colors"
+                  className="block text-sm text-gray-500 hover:text-emerald-600 transition-colors"
                 >
                   {section.heading}
                 </a>
@@ -173,11 +173,11 @@ function BlogPostPage() {
         <div className="max-w-3xl mx-auto space-y-12">
           {post.sections.map((section, i) => (
             <section key={i} id={`section-${i}`}>
-              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter leading-[1.1] mb-5">
+              <h2 className="text-2xl md:text-3xl font-bold leading-[1.1] mb-5">
                 {section.heading}
               </h2>
               <div
-                className="text-[#444] leading-relaxed space-y-4 [&_p]:mb-4 [&_strong]:font-bold [&_strong]:text-[#1a1a1a] [&_em]:italic [&_a]:text-[#2d5a2d] [&_a]:underline [&_a]:underline-offset-2 [&_code]:bg-[#eee] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:font-mono"
+                className="text-gray-600 leading-relaxed space-y-4 [&_p]:mb-4 [&_strong]:font-bold [&_strong]:text-gray-900 [&_em]:italic [&_a]:text-emerald-600 [&_a]:underline [&_a]:underline-offset-2 [&_code]:bg-gray-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_code]:font-mono [&_code]:rounded"
                 dangerouslySetInnerHTML={{ __html: section.content }}
               />
             </section>
@@ -188,8 +188,8 @@ function BlogPostPage() {
       {/* ── INLINE CTA ── */}
       <section className="px-6 pb-20">
         <div className="max-w-3xl mx-auto">
-          <div className="border-2 border-[#2d5a2d] bg-[#2d5a2d] text-[#f0f0e8] p-8 md:p-12 shadow-[8px_8px_0px_0px_#1a1a1a]">
-            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-4">
+          <div className="border border-emerald-600 bg-emerald-600 text-white p-8 md:p-12 shadow-lg rounded-xl">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
               {post.cta.text}
             </h3>
             <p className="opacity-70 mb-6">
@@ -199,7 +199,7 @@ function BlogPostPage() {
             <Button
               asChild
               size="lg"
-              className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-[#f0f0e8]"
+              className="bg-white text-gray-900 hover:bg-gray-100 border-white"
             >
               <Link to={post.cta.link}>
                 Start Monitoring Free
@@ -212,9 +212,9 @@ function BlogPostPage() {
 
       {/* ── RELATED POSTS ── */}
       {related.length > 0 && (
-        <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20">
+        <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-20">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12">
               Related Articles
             </h2>
             <div className="grid sm:grid-cols-3 gap-6">
@@ -222,15 +222,15 @@ function BlogPostPage() {
                 <Link
                   key={rel.slug}
                   to={`/blog/${rel.slug}`}
-                  className="border-2 border-[#333] p-6 hover:border-[#7cb87c] transition-colors group flex flex-col"
+                  className="border border-gray-700 p-6 hover:border-emerald-400 transition-colors group flex flex-col rounded-xl"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#7cb87c] mb-3">
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-3">
                     {CATEGORY_LABELS[rel.category]}
                   </span>
-                  <h3 className="text-base font-black uppercase tracking-tighter leading-[1.1] mb-3 group-hover:text-[#7cb87c] transition-colors flex-1">
+                  <h3 className="text-base font-bold leading-[1.1] mb-3 group-hover:text-emerald-400 transition-colors flex-1">
                     {rel.title}
                   </h3>
-                  <span className="text-xs font-bold text-[#7cb87c] uppercase tracking-wider group-hover:underline">
+                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider group-hover:underline">
                     Read <ArrowRight className="inline w-3 h-3 ml-1" />
                   </span>
                 </Link>

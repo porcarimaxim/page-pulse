@@ -38,28 +38,28 @@ function severityConfig(severity: "low" | "medium" | "high") {
   switch (severity) {
     case "low":
       return {
-        bg: "bg-[#2d5a2d]",
-        text: "text-[#2d5a2d]",
-        border: "border-[#2d5a2d]",
-        dotBg: "bg-[#7cb87c]",
+        bg: "bg-emerald-600",
+        text: "text-emerald-600",
+        border: "border-emerald-600",
+        dotBg: "bg-emerald-400",
         label: "Minor",
         Icon: Info,
       };
     case "medium":
       return {
-        bg: "bg-[#ca8a04]",
-        text: "text-[#ca8a04]",
-        border: "border-[#ca8a04]",
-        dotBg: "bg-[#ca8a04]",
+        bg: "bg-amber-500",
+        text: "text-amber-500",
+        border: "border-amber-500",
+        dotBg: "bg-amber-500",
         label: "Moderate",
         Icon: AlertCircle,
       };
     case "high":
       return {
-        bg: "bg-[#dc2626]",
-        text: "text-[#dc2626]",
-        border: "border-[#dc2626]",
-        dotBg: "bg-[#dc2626]",
+        bg: "bg-red-500",
+        text: "text-red-500",
+        border: "border-red-500",
+        dotBg: "bg-red-500",
         label: "Major",
         Icon: AlertTriangle,
       };
@@ -92,9 +92,9 @@ function AiSummaryBadge({
     if (isError) {
       return (
         <div className="mt-2">
-          <div className="flex items-start gap-2 px-4 py-2.5 border bg-[#fff5f5] border-[#f0d4d4]">
-            <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#dc2626]" />
-            <p className="text-xs leading-relaxed text-[#dc2626]">{summary.slice(8)}</p>
+          <div className="flex items-start gap-2 px-4 py-2.5 border rounded-lg bg-red-50 border-red-200">
+            <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-red-500" />
+            <p className="text-xs leading-relaxed text-red-500">{summary.slice(8)}</p>
           </div>
           {hasAiFeature && (
             <button
@@ -108,7 +108,7 @@ function AiSummaryBadge({
                   setError(err.message ?? "Failed");
                 }
               }}
-              className="flex items-center gap-1.5 mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#7c3aed] hover:text-[#5b21b6] transition-colors"
+              className="flex items-center gap-1.5 mt-1.5 text-xs font-bold text-violet-600 hover:text-violet-800 transition-colors"
             >
               <Sparkles className="w-3 h-3" />
               Retry
@@ -119,9 +119,9 @@ function AiSummaryBadge({
     }
     return (
       <div className="mt-2">
-        <div className="flex items-start gap-2 px-4 py-2.5 border bg-[#f5f0ff] border-[#d4c8f0]">
-          <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#7c3aed]" />
-          <p className="text-xs leading-relaxed text-[#4a3272]">{summary}</p>
+        <div className="flex items-start gap-2 px-4 py-2.5 border rounded-lg bg-violet-50 border-violet-200">
+          <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-violet-600" />
+          <p className="text-xs leading-relaxed text-violet-800">{summary}</p>
         </div>
         {hasAiFeature && (
           <button
@@ -134,7 +134,7 @@ function AiSummaryBadge({
                 setPending(false);
               }
             }}
-            className="flex items-center gap-1.5 mt-1.5 text-[10px] font-bold uppercase tracking-wider text-[#888] hover:text-[#7c3aed] transition-colors"
+            className="flex items-center gap-1.5 mt-1.5 text-xs font-bold text-gray-500 hover:text-violet-600 transition-colors"
           >
             <Sparkles className="w-3 h-3" />
             Regenerate
@@ -147,7 +147,7 @@ function AiSummaryBadge({
   // Loading state
   if (pending) {
     return (
-      <div className="flex items-center gap-2 mt-2 text-[10px] font-bold uppercase tracking-wider text-[#7c3aed]">
+      <div className="flex items-center gap-2 mt-2 text-xs font-bold text-violet-600">
         <Loader2 className="w-3 h-3 animate-spin" />
         Generating summary...
       </div>
@@ -158,12 +158,12 @@ function AiSummaryBadge({
   if (!hasAiFeature) {
     return (
       <div className="mt-2 relative group/ai">
-        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#ccc] cursor-not-allowed">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-gray-300 cursor-not-allowed">
           <Lock className="w-3 h-3" />
           AI Summary
         </div>
         <div className="absolute left-0 bottom-full mb-1 hidden group-hover/ai:block z-10">
-          <div className="bg-[#1a1a1a] text-[#f0f0e8] text-[10px] px-3 py-1.5 whitespace-nowrap">
+          <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-1.5 whitespace-nowrap">
             Upgrade to Pro or Business to use AI Summaries
           </div>
         </div>
@@ -187,13 +187,13 @@ function AiSummaryBadge({
             setError(err.message ?? "Failed to generate summary");
           }
         }}
-        className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#7c3aed] hover:text-[#5b21b6] transition-colors"
+        className="flex items-center gap-1.5 text-xs font-bold text-violet-600 hover:text-violet-800 transition-colors"
       >
         <Sparkles className="w-3 h-3" />
         AI Summary
       </button>
       {error && (
-        <p className="text-[11px] text-[#dc2626] mt-1">
+        <p className="text-xs text-red-500 mt-1">
           {error}
         </p>
       )}
@@ -208,8 +208,8 @@ export function ChangeTimeline({ changes }: ChangeTimelineProps) {
 
   if (changes.length === 0) {
     return (
-      <div className="border-2 border-[#1a1a1a] border-dashed p-8 text-center">
-        <p className="text-sm text-[#888]">No changes detected yet.</p>
+      <div className="border border-gray-200 border-dashed rounded-xl p-8 text-center">
+        <p className="text-sm text-gray-500">No changes detected yet.</p>
       </div>
     );
   }
@@ -225,8 +225,8 @@ export function ChangeTimeline({ changes }: ChangeTimelineProps) {
         return (
           <div
             key={change._id}
-            className={`border-2 border-[#1a1a1a] transition-shadow ${
-              isExpanded ? "shadow-[4px_4px_0px_0px_#1a1a1a]" : ""
+            className={`border border-gray-200 rounded-xl transition-shadow ${
+              isExpanded ? "shadow-md" : ""
             }`}
           >
             <div>
@@ -234,28 +234,28 @@ export function ChangeTimeline({ changes }: ChangeTimelineProps) {
                 onClick={() =>
                   setExpandedId(isExpanded ? null : change._id)
                 }
-                className="w-full flex items-center justify-between p-4 hover:bg-[#e8e8e0] transition-colors text-left"
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left"
               >
                 <div className="flex items-center gap-4 flex-1">
                   {/* Severity dot */}
-                  <div className={`w-3 h-3 ${config.dotBg} border-2 border-[#1a1a1a] shrink-0`} />
+                  <div className={`w-3 h-3 ${config.dotBg} rounded-full shrink-0`} />
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <SeverityIcon className={`w-3.5 h-3.5 ${config.text}`} />
-                      <span className={`text-[10px] font-bold uppercase tracking-wider ${config.text}`}>
+                      <span className={`text-xs font-bold ${config.text}`}>
                         {config.label} Change
                       </span>
                     </div>
-                    <p className="text-xs text-[#888]">
+                    <p className="text-xs text-gray-500">
                       {new Date(change.detectedAt).toLocaleString()} ({formatRelativeTime(change.detectedAt)})
                     </p>
                   </div>
 
                   {/* Diff bar + percentage */}
                   <div className="flex items-center gap-3 shrink-0">
-                    <div className="w-20 h-2 bg-[#e8e8e0] overflow-hidden border border-[#ccc]">
+                    <div className="w-20 h-2 bg-gray-50 overflow-hidden border border-gray-200 rounded-full">
                       <div
                         className={`h-full ${config.bg} transition-all`}
                         style={{
@@ -263,16 +263,16 @@ export function ChangeTimeline({ changes }: ChangeTimelineProps) {
                         }}
                       />
                     </div>
-                    <span className="text-sm font-black tabular-nums w-14 text-right">
+                    <span className="text-sm font-bold tabular-nums w-14 text-right">
                       {change.diffPercentage.toFixed(1)}%
                     </span>
                   </div>
                 </div>
 
                 {isExpanded ? (
-                  <ChevronUp className="w-4 h-4 text-[#888] ml-3" />
+                  <ChevronUp className="w-4 h-4 text-gray-500 ml-3" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-[#888] ml-3" />
+                  <ChevronDown className="w-4 h-4 text-gray-500 ml-3" />
                 )}
               </button>
 
@@ -287,7 +287,7 @@ export function ChangeTimeline({ changes }: ChangeTimelineProps) {
             </div>
 
             {isExpanded && (
-              <div className="border-t-2 border-[#1a1a1a]">
+              <div className="border-t border-gray-200">
                 <div className="p-4 bg-white">
                   <DiffViewer
                     beforeUrl={change.beforeUrl}

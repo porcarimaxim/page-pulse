@@ -37,19 +37,19 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
       params={{ monitorId: monitor._id } as any}
       className="block group"
     >
-      <div className="border-2 border-[#1a1a1a] bg-[#f0f0e8] shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] transition-all">
+      <div className="border border-gray-200 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
         {/* Screenshot preview */}
         <ZoneFocusedPreview
           screenshotUrl={monitor.screenshotUrl}
           zone={monitor.zone}
           selectionMode={monitor.selectionMode}
-          className="h-40 border-b-2 border-[#1a1a1a]"
+          className="h-40 border-b border-gray-200"
         />
 
         {/* Info */}
         <div className="p-4">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="font-black text-base uppercase tracking-tighter truncate">
+            <h3 className="font-semibold text-base truncate">
               {monitor.name}
             </h3>
             <Badge variant={config.variant} className="shrink-0">
@@ -58,11 +58,11 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
             </Badge>
           </div>
 
-          <p className="text-xs text-[#888] truncate mb-3 font-mono">
+          <p className="text-xs text-gray-500 truncate mb-3">
             {monitor.url}
           </p>
 
-          <div className="flex items-center justify-between text-xs text-[#888]">
+          <div className="flex items-center justify-between text-xs text-gray-500">
             <span>{intervalLabel(monitor.interval)}</span>
             <span>
               {monitor.changeCount} change{monitor.changeCount !== 1 ? "s" : ""}
@@ -74,7 +74,7 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
               {monitor.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-[9px] uppercase font-bold text-[#888] bg-[#e8e8e0] border border-[#ccc] px-1.5 py-0"
+                  className="text-xs uppercase font-bold text-gray-500 bg-gray-50 border border-gray-200 px-1.5 py-0 rounded"
                 >
                   {tag}
                 </span>
@@ -83,7 +83,7 @@ export function MonitorCard({ monitor }: MonitorCardProps) {
           )}
 
           {monitor.lastCheckedAt && (
-            <p className="text-xs text-[#888] mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               Last checked: {formatRelativeTime(monitor.lastCheckedAt)}
             </p>
           )}

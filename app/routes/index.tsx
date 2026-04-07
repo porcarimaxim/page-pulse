@@ -111,15 +111,15 @@ function Hero() {
     <section className="px-4 md:px-6 pt-12 md:pt-20 pb-14 md:pb-20 max-w-6xl mx-auto">
       <div className="grid md:grid-cols-[1.1fr_1fr] gap-12 md:gap-16 items-center">
         <div>
-          <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4">
+          <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-4">
             Website Change Detection &amp; Monitoring
           </p>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] mb-6">
             We Monitor
             <br />
             <span
               aria-live="polite"
-              className={`text-[#1a5a1a] inline-block min-w-[240px] sm:min-w-[300px] transition-all duration-300 ${
+              className={`text-emerald-600 inline-block min-w-[240px] sm:min-w-[300px] transition-all duration-300 ${
                 isExiting
                   ? "opacity-0 translate-y-2"
                   : "opacity-100 translate-y-0"
@@ -130,7 +130,7 @@ function Hero() {
             <br />
             So You Don&apos;t Have To
           </h1>
-          <p className="text-base md:text-lg text-[#666] max-w-lg mb-8 md:mb-10 leading-relaxed">
+          <p className="text-base md:text-lg text-gray-500 max-w-lg mb-8 md:mb-10 leading-relaxed">
             Select a zone on any webpage. Get email alerts with visual diffs
             and AI-powered summaries when something changes. Dead simple
             monitoring for teams and individuals.
@@ -138,24 +138,24 @@ function Hero() {
 
           <form
             onSubmit={handleGo}
-            className="flex flex-col sm:flex-row border-2 border-[#1a1a1a] shadow-[4px_4px_0px_0px_#1a1a1a] bg-white"
+            className="flex flex-col sm:flex-row border border-gray-200 shadow-md bg-white rounded-xl"
           >
             <input
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="Enter any URL to monitor"
-              className="flex-1 px-4 md:px-6 py-4 text-sm md:text-base bg-transparent outline-none placeholder:text-[#999] font-mono"
+              className="flex-1 px-4 md:px-6 py-4 text-sm md:text-base bg-transparent outline-none placeholder:text-gray-400"
             />
             <Button
               type="submit"
-              className="px-8 py-4 h-auto sm:border-l-2 border-t-2 sm:border-t-0 border-[#1a1a1a]"
+              className="px-8 py-4 h-auto sm:border-l border-t sm:border-t-0 border-gray-200"
             >
               Start Free <ArrowRight className="inline ml-1 w-4 h-4" />
             </Button>
           </form>
 
-          <p className="text-xs text-[#999] mt-4">
+          <p className="text-xs text-gray-400 mt-4">
             Free to get started — no credit card required
           </p>
         </div>
@@ -172,10 +172,10 @@ function Hero() {
 
 function TrustBar() {
   return (
-    <section className="border-t-2 border-b-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8]">
+    <section className="border-t border-b border-gray-200 bg-gray-900 text-white">
       <div className="max-w-5xl mx-auto py-6 md:py-8">
         {/* Stats row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x-2 divide-[#333]">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-700">
           {[
             { value: "< 60s", label: "Setup Time" },
             { value: "5 min", label: "Fastest Check" },
@@ -183,10 +183,10 @@ function TrustBar() {
             { value: "24/7", label: "Monitoring" },
           ].map((stat) => (
             <div key={stat.label} className="px-4 md:px-6 text-center">
-              <div className="text-xl md:text-3xl font-black tracking-tighter text-[#7cb87c]">
+              <div className="text-xl md:text-3xl font-bold text-emerald-400">
                 {stat.value}
               </div>
-              <div className="text-[10px] md:text-xs uppercase tracking-wider text-[#a0a0a0] mt-1">
+              <div className="text-xs md:text-xs uppercase tracking-wider text-gray-400 mt-1">
                 {stat.label}
               </div>
             </div>
@@ -253,14 +253,14 @@ function HowItWorks() {
   return (
     <section className="px-6 py-20 md:py-24">
       <div className="max-w-5xl mx-auto">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4 text-center">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-4 text-center">
           How It Works
         </p>
-        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-center mb-12 leading-[1.1]">
-          Three Steps. <span className="text-[#2d5a2d]">That&apos;s It.</span>
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 leading-[1.1]">
+          Three Steps. <span className="text-emerald-600">That&apos;s It.</span>
         </h2>
 
-        <div className="flex border-2 border-[#1a1a1a] mb-0">
+        <div className="flex border border-gray-200 rounded-t-xl mb-0">
           {howItWorksSteps.map((s, i) => (
             <button
               key={s.number}
@@ -270,19 +270,19 @@ function HowItWorks() {
               }}
               className={`flex-1 py-4 px-4 text-center transition-colors relative ${
                 activeStep === i
-                  ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                  : "bg-[#f0f0e8] text-[#1a1a1a] hover:bg-[#e8e8e0]"
-              } ${i > 0 ? "border-l-2 border-[#1a1a1a]" : ""}`}
+                  ? "bg-gray-900 text-white"
+                  : "bg-white text-gray-900 hover:bg-gray-50"
+              } ${i > 0 ? "border-l border-gray-200" : ""} ${i === 0 ? "rounded-tl-xl" : ""} ${i === howItWorksSteps.length - 1 ? "rounded-tr-xl" : ""}`}
             >
-              <span className="text-[10px] font-bold uppercase tracking-wider block">
+              <span className="text-xs font-bold uppercase tracking-wider block">
                 {s.number}
               </span>
-              <span className="text-xs md:text-sm font-black uppercase tracking-wider">
+              <span className="text-xs md:text-sm font-semibold uppercase tracking-wider">
                 {s.label}
               </span>
               {activeStep === i && (
                 <div
-                  className="absolute bottom-0 left-0 h-0.5 bg-[#7cb87c] transition-none"
+                  className="absolute bottom-0 left-0 h-0.5 bg-emerald-400 transition-none"
                   style={{ width: `${progress}%` }}
                 />
               )}
@@ -290,13 +290,13 @@ function HowItWorks() {
           ))}
         </div>
 
-        <div className="border-2 border-t-0 border-[#1a1a1a] bg-white">
+        <div className="border border-t-0 border-gray-200 bg-white rounded-b-xl">
           <div className="flex flex-col md:flex-row">
             <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
-              <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-4 leading-[1.1]">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 leading-[1.1]">
                 {step.headline}
               </h3>
-              <p className="text-[#666] leading-relaxed mb-6">
+              <p className="text-gray-500 leading-relaxed mb-6">
                 {step.description}
               </p>
               <div>
@@ -307,28 +307,28 @@ function HowItWorks() {
                 </Button>
               </div>
             </div>
-            <div className="flex-1 p-4 md:p-6 border-t-2 md:border-t-0 md:border-l-2 border-[#1a1a1a] bg-[#f5f5f0] flex items-center justify-center min-h-[280px]">
+            <div className="flex-1 p-4 md:p-6 border-t md:border-t-0 md:border-l border-gray-200 bg-gray-50 flex items-center justify-center min-h-[280px]">
               {step.visual === "url" && (
                 <div className="w-full max-w-sm">
-                  <div className="border-2 border-[#1a1a1a] bg-white">
-                    <div className="px-4 py-2 bg-[#1a1a1a] text-[9px] font-bold uppercase tracking-wider text-[#f0f0e8]">
+                  <div className="border border-gray-200 bg-white rounded-lg">
+                    <div className="px-4 py-2 bg-gray-900 text-xs font-bold uppercase tracking-wider text-white rounded-t-lg">
                       New Monitor
                     </div>
                     <div className="p-4">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-[#888] mb-2">
+                      <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
                         URL to monitor
                       </div>
-                      <div className="flex border-2 border-[#1a1a1a]">
-                        <div className="flex-1 px-3 py-2 font-mono text-xs text-[#1a1a1a]">
+                      <div className="flex border border-gray-200 rounded-lg">
+                        <div className="flex-1 px-3 py-2 font-mono text-xs text-gray-900">
                           competitor.com/pricing
                         </div>
-                        <div className="px-3 py-2 bg-[#2d5a2d] text-white text-[10px] font-bold uppercase tracking-wider">
+                        <div className="px-3 py-2 bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider rounded-r-lg">
                           Capture
                         </div>
                       </div>
                       <div className="mt-3 flex items-center gap-2">
-                        <div className="w-2 h-2 bg-[#7cb87c] animate-pulse" />
-                        <span className="text-[10px] text-[#2d5a2d] font-bold">
+                        <div className="w-2 h-2 bg-emerald-400 animate-pulse rounded-full" />
+                        <span className="text-xs text-emerald-600 font-bold">
                           Screenshot captured in 1.2s
                         </span>
                       </div>
@@ -412,14 +412,14 @@ function WhoItsFor() {
   ];
 
   return (
-    <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20 md:py-24">
+    <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-20 md:py-24">
       <div className="max-w-5xl mx-auto">
         {/* Teams section */}
         <div className="mb-16">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4">
             Built For Teams That Move Fast
           </p>
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-[1.1] mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold leading-[1.1] mb-12">
             Your Autopilot
             <br />
             For The Web
@@ -430,23 +430,23 @@ function WhoItsFor() {
               <Link
                 key={a.title}
                 to={a.link}
-                className="border-2 border-[#333] p-6 hover:border-[#7cb87c] transition-colors group"
+                className="border border-gray-700 p-6 hover:border-emerald-400 transition-colors group rounded-xl"
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 border-2 border-[#7cb87c] flex items-center justify-center">
-                    <a.icon className="w-4 h-4 text-[#7cb87c]" />
+                  <div className="w-9 h-9 border border-emerald-400 flex items-center justify-center rounded-lg">
+                    <a.icon className="w-4 h-4 text-emerald-400" />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#7cb87c]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
                     {a.title}
                   </span>
                 </div>
-                <h3 className="font-black text-lg uppercase tracking-tighter mb-2 leading-[1.1]">
+                <h3 className="font-bold text-lg mb-2 leading-[1.1]">
                   {a.outcome}
                 </h3>
-                <p className="text-sm text-[#a0a0a0] leading-relaxed mb-3">
+                <p className="text-sm text-gray-400 leading-relaxed mb-3">
                   {a.description}
                 </p>
-                <span className="text-xs font-bold text-[#7cb87c] uppercase tracking-wider group-hover:underline">
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider group-hover:underline">
                   See How <ArrowRight className="inline w-3 h-3 ml-1" />
                 </span>
               </Link>
@@ -455,21 +455,21 @@ function WhoItsFor() {
         </div>
 
         {/* Personal wins — compact row */}
-        <div className="border-t-2 border-[#333] pt-12">
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#a0a0a0] mb-6">
+        <div className="border-t border-gray-700 pt-12">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-400 mb-6">
             Also great for personal use
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {personalWins.map((w) => (
               <div key={w.outcome} className="flex gap-3">
-                <div className="w-7 h-7 border border-[#444] flex items-center justify-center shrink-0 mt-0.5">
-                  <w.icon className="w-3.5 h-3.5 text-[#7cb87c]" />
+                <div className="w-7 h-7 border border-gray-600 flex items-center justify-center shrink-0 mt-0.5 rounded-lg">
+                  <w.icon className="w-3.5 h-3.5 text-emerald-400" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-black uppercase tracking-tighter mb-1">
+                  <h4 className="text-sm font-semibold mb-1">
                     {w.outcome}
                   </h4>
-                  <p className="text-[11px] text-[#888] leading-relaxed">
+                  <p className="text-[11px] text-gray-500 leading-relaxed">
                     {w.description}
                   </p>
                 </div>
@@ -486,26 +486,26 @@ function WhoItsFor() {
 
 function CoreFeature() {
   return (
-    <section className="border-t-2 border-[#1a1a1a] px-6 py-20 md:py-24">
+    <section className="border-t border-gray-200 px-6 py-20 md:py-24">
       <div className="max-w-5xl mx-auto">
-        <div className="border-2 border-[#1a1a1a] shadow-[8px_8px_0px_0px_#2d5a2d]">
+        <div className="border border-gray-200 shadow-lg rounded-xl">
           <div className="flex flex-col md:flex-row">
             {/* Text side */}
-            <div className="flex-1 bg-[#1a1a1a] text-[#f0f0e8] p-8 md:p-12 flex flex-col justify-center">
+            <div className="flex-1 bg-gray-900 text-white p-8 md:p-12 flex flex-col justify-center rounded-t-xl md:rounded-t-none md:rounded-l-xl">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 border-2 border-[#7cb87c] flex items-center justify-center">
-                  <GitCompareArrows className="w-5 h-5 text-[#7cb87c]" />
+                <div className="w-10 h-10 border border-emerald-400 flex items-center justify-center rounded-lg">
+                  <GitCompareArrows className="w-5 h-5 text-emerald-400" />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#7cb87c]">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-400">
                   Core Feature
                 </span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4 leading-[1.1]">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 leading-[1.1]">
                 Pixel-Level
                 <br />
                 Visual Diff
               </h2>
-              <p className="text-sm leading-relaxed text-[#a0a0a0] max-w-md mb-8">
+              <p className="text-sm leading-relaxed text-gray-400 max-w-md mb-8">
                 See exactly what changed with highlighted screenshot overlays.
                 Every pixel difference is visible at a glance — no more
                 guessing what&apos;s different.
@@ -519,10 +519,10 @@ function CoreFeature() {
                   { icon: Zap, label: "Instant\nAlerts" },
                 ].map((f) => (
                   <div key={f.label} className="text-center">
-                    <div className="w-8 h-8 border border-[#333] flex items-center justify-center mx-auto mb-2">
-                      <f.icon className="w-3.5 h-3.5 text-[#7cb87c]" />
+                    <div className="w-8 h-8 border border-gray-700 flex items-center justify-center mx-auto mb-2 rounded-lg">
+                      <f.icon className="w-3.5 h-3.5 text-emerald-400" />
                     </div>
-                    <span className="text-[9px] uppercase tracking-wider text-[#a0a0a0] whitespace-pre-line leading-tight">
+                    <span className="text-xs uppercase tracking-wider text-gray-400 whitespace-pre-line leading-tight">
                       {f.label}
                     </span>
                   </div>
@@ -533,7 +533,7 @@ function CoreFeature() {
                 <Button
                   asChild
                   size="sm"
-                  className="bg-[#f0f0e8] text-[#1a1a1a] hover:bg-white border-2 border-[#f0f0e8] shadow-[4px_4px_0px_0px_#7cb87c]"
+                  className="bg-white text-gray-900 hover:bg-gray-100 border border-white shadow-md"
                 >
                   <Link to="/auth/sign-up">
                     Start Free <ArrowRight className="ml-2 w-4 h-4" />
@@ -541,7 +541,7 @@ function CoreFeature() {
                 </Button>
                 <Link
                   to="/features"
-                  className="text-xs font-bold uppercase tracking-wider text-[#f0f0e8]/60 hover:text-[#f0f0e8] underline underline-offset-4 transition-colors self-center"
+                  className="text-xs font-bold uppercase tracking-wider text-white/60 hover:text-white underline underline-offset-4 transition-colors self-center"
                 >
                   All Features →
                 </Link>
@@ -549,7 +549,7 @@ function CoreFeature() {
             </div>
 
             {/* Visual side — use the product illustration */}
-            <div className="flex-1 bg-[#f5f5f0] p-6 md:p-8 border-t-2 md:border-t-0 md:border-l-2 border-[#1a1a1a] flex items-center justify-center">
+            <div className="flex-1 bg-gray-50 p-6 md:p-8 border-t md:border-t-0 md:border-l border-gray-200 flex items-center justify-center rounded-b-xl md:rounded-b-none md:rounded-r-xl">
               <div className="w-full max-w-md">
                 <HeroIllustration useCaseTitle="Price Monitoring" />
               </div>
@@ -584,12 +584,12 @@ function Testimonials() {
   ];
 
   return (
-    <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-20 md:py-24">
+    <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-20 md:py-24">
       <div className="max-w-5xl mx-auto">
-        <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4 text-center">
+        <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4 text-center">
           What People Say
         </p>
-        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-16 text-center leading-[1.1]">
+        <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center leading-[1.1]">
           Trusted By Teams
         </h2>
 
@@ -597,20 +597,20 @@ function Testimonials() {
           {quotes.map((q, i) => (
             <div
               key={i}
-              className={`border-2 p-6 flex flex-col justify-between ${
+              className={`border p-6 flex flex-col justify-between rounded-xl ${
                 q.featured
-                  ? "border-[#7cb87c]"
-                  : "border-[#333]"
+                  ? "border-emerald-400"
+                  : "border-gray-700"
               }`}
             >
-              <p className="text-sm leading-relaxed text-[#a0a0a0] mb-6">
+              <p className="text-sm leading-relaxed text-gray-400 mb-6">
                 &ldquo;{q.text}&rdquo;
               </p>
               <div>
-                <p className="font-black text-sm uppercase tracking-tighter">
+                <p className="font-bold text-sm">
                   {q.author}
                 </p>
-                <p className="text-xs text-[#a0a0a0]">{q.role}</p>
+                <p className="text-xs text-gray-400">{q.role}</p>
               </div>
             </div>
           ))}

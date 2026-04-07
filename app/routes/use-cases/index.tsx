@@ -49,43 +49,43 @@ function UseCaseCard({
   return (
     <Link
       to={`/use-cases/${useCase.slug}`}
-      className={`border-2 p-6 transition-all group ${
+      className={`border p-6 transition-all group rounded-xl ${
         isDark
-          ? "border-[#333] hover:border-[#7cb87c]"
-          : "border-[#1a1a1a] shadow-[4px_4px_0px_0px_#1a1a1a] hover:shadow-[6px_6px_0px_0px_#1a1a1a] hover:translate-x-[-2px] hover:translate-y-[-2px]"
+          ? "border-gray-700 hover:border-emerald-400"
+          : "border-gray-200 shadow-md hover:shadow-lg"
       }`}
     >
       <div className="flex items-center gap-3 mb-3">
         <div
-          className={`w-10 h-10 border-2 flex items-center justify-center ${
-            isDark ? "border-[#7cb87c]" : "border-[#2d5a2d]"
+          className={`w-10 h-10 border flex items-center justify-center rounded-lg ${
+            isDark ? "border-emerald-400" : "border-emerald-600"
           }`}
         >
           <useCase.icon
-            className={`w-5 h-5 ${isDark ? "text-[#7cb87c]" : "text-[#2d5a2d]"}`}
+            className={`w-5 h-5 ${isDark ? "text-emerald-400" : "text-emerald-600"}`}
           />
         </div>
         <span
           className={`text-xs font-bold uppercase tracking-wider ${
-            isDark ? "text-[#7cb87c]" : "text-[#2d5a2d]"
+            isDark ? "text-emerald-400" : "text-emerald-600"
           }`}
         >
           {useCase.title}
         </span>
       </div>
-      <h3 className="text-lg font-black uppercase tracking-tighter mb-2 leading-[1.1]">
+      <h3 className="text-lg font-bold mb-2 leading-[1.1]">
         {useCase.headline}
       </h3>
       <p
         className={`text-xs leading-relaxed mb-3 ${
-          isDark ? "opacity-60" : "text-[#666]"
+          isDark ? "opacity-60" : "text-gray-500"
         }`}
       >
         {useCase.tagline}
       </p>
       <span
         className={`text-xs font-bold uppercase tracking-wider group-hover:underline ${
-          isDark ? "text-[#7cb87c]" : "text-[#2d5a2d]"
+          isDark ? "text-emerald-400" : "text-emerald-600"
         }`}
       >
         Learn More <ArrowRight className="inline w-3 h-3 ml-1" />
@@ -99,30 +99,30 @@ function UseCasesHub() {
     <MarketingLayout>
       {/* Hero */}
       <section className="px-6 py-20 md:py-28 max-w-4xl mx-auto text-center">
-        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-6">
+        <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-6">
           22 Use Cases &amp; Growing
         </p>
-        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
+        <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] mb-6">
           Monitor
           <br />
-          <span className="text-[#2d5a2d]">Everything</span>
+          <span className="text-emerald-600">Everything</span>
         </h1>
-        <p className="text-lg text-[#666] max-w-xl mx-auto">
+        <p className="text-lg text-gray-500 max-w-xl mx-auto">
           From competitor intelligence to price alerts — see how teams and
           individuals use PagePulse to stay ahead of changes that matter.
         </p>
       </section>
 
       {/* Business Use Cases */}
-      <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-24">
+      <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-24">
         <div className="max-w-5xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4">
             For Teams &amp; Businesses
           </p>
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Business Use Cases
           </h2>
-          <p className="text-[#a0a0a0] leading-relaxed mb-16 max-w-lg">
+          <p className="text-gray-400 leading-relaxed mb-16 max-w-lg">
             Professional monitoring for competitive intelligence, compliance,
             and website integrity.
           </p>
@@ -136,15 +136,15 @@ function UseCasesHub() {
       </section>
 
       {/* Personal Use Cases */}
-      <section className="border-t-2 border-[#1a1a1a] px-6 py-24">
+      <section className="border-t border-gray-200 px-6 py-24">
         <div className="max-w-5xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#666] mb-4">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-gray-500 mb-4">
             For Everyone
           </p>
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Personal Use Cases
           </h2>
-          <p className="text-[#666] leading-relaxed mb-16 max-w-lg">
+          <p className="text-gray-500 leading-relaxed mb-16 max-w-lg">
             Stop manually checking websites. Let PagePulse watch for the changes
             that matter to you.
           </p>
@@ -158,15 +158,15 @@ function UseCasesHub() {
       </section>
 
       {/* Industry Solutions */}
-      <section className="border-t-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-24">
+      <section className="border-t border-gray-200 bg-gray-900 text-white px-6 py-24">
         <div className="max-w-5xl mx-auto">
-          <p className="text-sm font-bold uppercase tracking-[0.4em] text-[#7cb87c] mb-4">
+          <p className="text-sm font-bold uppercase tracking-[0.4em] text-emerald-400 mb-4">
             Tailored For Your Sector
           </p>
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Industry Solutions
           </h2>
-          <p className="text-[#888] leading-relaxed mb-16 max-w-lg">
+          <p className="text-gray-500 leading-relaxed mb-16 max-w-lg">
             Purpose-built monitoring strategies for specific industries and
             professional use cases.
           </p>

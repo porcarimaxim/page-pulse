@@ -123,7 +123,7 @@ function MonitorSettingsPage() {
   if (monitor === undefined) {
     return (
       <main className="px-8 py-8">
-        <div className="text-center py-20 text-[#888]">Loading...</div>
+        <div className="text-center py-20 text-gray-500">Loading...</div>
       </main>
     );
   }
@@ -132,7 +132,7 @@ function MonitorSettingsPage() {
     return (
       <main className="px-8 py-8">
         <div className="text-center py-20">
-          <h2 className="text-xl font-black uppercase">Monitor Not Found</h2>
+          <h2 className="text-xl font-semibold">Monitor Not Found</h2>
         </div>
       </main>
     );
@@ -212,7 +212,7 @@ function MonitorSettingsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top bar -- pinned */}
-      <div className="sticky top-0 z-20 bg-[#f0f0e8] border-b-2 border-[#1a1a1a]">
+      <div className="sticky top-0 z-20 bg-white border-b border-gray-200">
         <div className="flex items-center gap-4 px-6 py-3">
           <button
             onClick={() =>
@@ -221,20 +221,20 @@ function MonitorSettingsPage() {
                 params: { monitorId } as any,
               })
             }
-            className="flex items-center gap-1.5 text-xs text-[#888] hover:text-[#1a1a1a] font-bold uppercase transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-900 font-bold transition-colors shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
 
           <div className="flex-1 flex gap-3 items-center">
-            <p className="flex-1 text-sm font-mono text-[#888] border-2 border-[#ccc] bg-[#e8e8e0] px-3 py-2 truncate">
+            <p className="flex-1 text-sm font-mono text-gray-500 border border-gray-200 rounded-lg bg-gray-50 px-3 py-2 truncate">
               {monitor.url}
             </p>
             <button
               onClick={handleRecapture}
               disabled={isRecapturing}
-              className="px-4 py-2 bg-[#2d5a2d] text-[#f0f0e8] font-bold uppercase text-sm border-2 border-[#2d5a2d] hover:bg-[#3a6a3a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 flex items-center gap-2"
+              className="px-4 py-2 bg-emerald-600 text-white font-bold text-sm border border-emerald-600 rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 flex items-center gap-2"
             >
               {isRecapturing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -247,13 +247,13 @@ function MonitorSettingsPage() {
         </div>
 
         {/* Mode toggles */}
-        <div className="flex items-center gap-4 px-6 py-2 border-t border-[#ccc]">
+        <div className="flex items-center gap-4 px-6 py-2 border-t border-gray-200">
           <button
             onClick={() => setSelectionMode("zone")}
-            className={`flex items-center gap-1.5 text-xs font-bold uppercase transition-colors ${
+            className={`flex items-center gap-1.5 text-xs font-bold transition-colors ${
               selectionMode === "zone"
-                ? "text-[#2d5a2d]"
-                : "text-[#888] hover:text-[#1a1a1a]"
+                ? "text-emerald-600"
+                : "text-gray-500 hover:text-gray-900"
             }`}
           >
             <Crop className="w-3.5 h-3.5" />
@@ -261,10 +261,10 @@ function MonitorSettingsPage() {
           </button>
           <button
             onClick={() => setSelectionMode("element")}
-            className={`flex items-center gap-1.5 text-xs font-bold uppercase transition-colors ${
+            className={`flex items-center gap-1.5 text-xs font-bold transition-colors ${
               selectionMode === "element"
-                ? "text-[#2d5a2d]"
-                : "text-[#888] hover:text-[#1a1a1a]"
+                ? "text-emerald-600"
+                : "text-gray-500 hover:text-gray-900"
             }`}
           >
             <MousePointer className="w-3.5 h-3.5" />
@@ -294,15 +294,15 @@ function MonitorSettingsPage() {
                 />
               )
             ) : (
-              <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-[#ccc]">
+              <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-gray-200">
                 <RefreshCw className="w-20 h-20 mb-4 stroke-1" />
-                <p className="text-sm font-bold uppercase text-[#888]">
+                <p className="text-sm font-bold text-gray-500">
                   No screenshot available
                 </p>
                 <button
                   onClick={handleRecapture}
                   disabled={isRecapturing}
-                  className="mt-4 px-6 py-2 bg-[#2d5a2d] text-[#f0f0e8] font-bold uppercase text-sm border-2 border-[#2d5a2d] hover:bg-[#3a6a3a] disabled:opacity-50 transition-colors"
+                  className="mt-4 px-6 py-2 bg-emerald-600 text-white font-bold text-sm border border-emerald-600 rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
                   {isRecapturing ? "Capturing..." : "Capture Screenshot"}
                 </button>
@@ -312,16 +312,16 @@ function MonitorSettingsPage() {
         </div>
 
         {/* Right: Config sidebar -- sticky */}
-        <div className="w-80 shrink-0 border-l-2 border-[#1a1a1a]">
+        <div className="w-80 shrink-0 border-l border-gray-200">
           <div className="sticky top-[105px] h-[calc(100vh-105px)] overflow-y-auto">
             <div className="p-6 space-y-6">
-              <h2 className="font-black text-lg uppercase tracking-tighter">
+              <h2 className="font-bold text-lg">
                 Settings
               </h2>
 
               {/* Monitor name */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Monitor Name
                 </label>
                 <Input
@@ -332,7 +332,7 @@ function MonitorSettingsPage() {
 
               {/* Check frequency */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Check Frequency
                 </label>
                 <div className="grid grid-cols-3 gap-1.5">
@@ -343,27 +343,27 @@ function MonitorSettingsPage() {
                         key={opt.value}
                         onClick={() => allowed && setInterval(opt.value)}
                         disabled={!allowed}
-                        className={`border-2 border-[#1a1a1a] px-2 py-1.5 text-xs font-bold uppercase transition-all relative ${
+                        className={`border border-gray-200 rounded-lg px-2 py-1.5 text-xs font-bold uppercase transition-all relative ${
                           !allowed
-                            ? "opacity-40 cursor-not-allowed bg-[#e8e8e0] text-[#888]"
+                            ? "opacity-40 cursor-not-allowed bg-gray-50 text-gray-500"
                             : interval === opt.value
-                              ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                              : "bg-transparent text-[#1a1a1a] hover:bg-[#e8e8e0]"
+                              ? "bg-gray-900 text-white"
+                              : "bg-transparent text-gray-900 hover:bg-gray-50"
                         }`}
                         title={!allowed ? `Upgrade to Pro for ${opt.label} checks` : ""}
                       >
                         {opt.label}
                         {!allowed && (
-                          <Lock className="w-2.5 h-2.5 absolute top-0.5 right-0.5 text-[#888]" />
+                          <Lock className="w-2.5 h-2.5 absolute top-0.5 right-0.5 text-gray-500" />
                         )}
                       </button>
                     );
                   })}
                 </div>
                 {usage && usage.planId === "free" && (
-                  <p className="text-[10px] text-[#888] mt-1.5">
+                  <p className="text-xs text-gray-500 mt-1.5">
                     Free plan: daily checks only.{" "}
-                    <a href="/pricing" className="text-[#2d5a2d] hover:underline">
+                    <a href="/pricing" className="text-emerald-600 hover:underline">
                       Upgrade for faster checks →
                     </a>
                   </p>
@@ -372,7 +372,7 @@ function MonitorSettingsPage() {
 
               {/* Sensitivity */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Sensitivity
                 </label>
                 <Select
@@ -386,7 +386,7 @@ function MonitorSettingsPage() {
                     {SENSITIVITY_PRESETS.map((preset) => (
                       <SelectItem key={preset.value} value={String(preset.value)}>
                         <span>{preset.label}</span>
-                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                        <span className="ml-2 text-xs font-normal normal-case tracking-normal text-gray-500">
                           {preset.description}
                         </span>
                       </SelectItem>
@@ -397,7 +397,7 @@ function MonitorSettingsPage() {
 
               {/* Compare Type */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Compare Type
                 </label>
                 <Select
@@ -411,7 +411,7 @@ function MonitorSettingsPage() {
                     {COMPARE_TYPES.map((t) => (
                       <SelectItem key={t.value} value={t.value}>
                         <span>{t.label}</span>
-                        <span className="ml-2 text-[10px] font-normal normal-case tracking-normal text-[#888]">
+                        <span className="ml-2 text-xs font-normal normal-case tracking-normal text-gray-500">
                           {t.description}
                         </span>
                       </SelectItem>
@@ -430,7 +430,7 @@ function MonitorSettingsPage() {
 
               {/* Tags */}
               <div>
-                <label className="block text-xs font-bold uppercase text-[#888] mb-2">
+                <label className="block text-xs font-bold text-gray-500 mb-2">
                   Tags
                 </label>
                 <Input
@@ -438,7 +438,7 @@ function MonitorSettingsPage() {
                   onChange={(e) => setTags(e.target.value)}
                   placeholder="pricing, competitor"
                 />
-                <p className="text-xs text-[#888] mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   Comma-separated
                 </p>
               </div>
@@ -489,15 +489,15 @@ function MonitorSettingsPage() {
             </div>
 
             {/* Bottom actions -- pinned to bottom of sidebar */}
-            <div className="sticky bottom-0 bg-[#f0f0e8] border-t-2 border-[#1a1a1a] p-4 flex items-center gap-3">
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex items-center gap-3">
               <div className="flex-1">
                 {saved && (
-                  <span className="text-sm text-[#2d5a2d] font-bold">
+                  <span className="text-sm text-emerald-600 font-bold">
                     Saved!
                   </span>
                 )}
                 {saveError && (
-                  <span className="text-sm text-[#dc2626] font-bold">
+                  <span className="text-sm text-red-500 font-bold">
                     {saveError}
                   </span>
                 )}
@@ -505,7 +505,7 @@ function MonitorSettingsPage() {
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="bg-[#2d5a2d] text-[#f0f0e8] border-2 border-[#2d5a2d] px-4 py-2.5 text-sm font-bold uppercase hover:bg-[#3a6a3a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                className="bg-emerald-600 text-white border border-emerald-600 rounded-lg px-4 py-2.5 text-sm font-bold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
               >
                 {isSaving ? (
                   <>

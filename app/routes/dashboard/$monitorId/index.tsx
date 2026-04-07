@@ -43,7 +43,7 @@ function ActivitySparkline({ history }: { history: { status: string; diffPercent
       {last20.map((entry, i) => {
         const pct = entry.status === "changed" ? (entry.diffPercentage ?? 1) : 0;
         const height = pct > 0 ? Math.max(4, Math.min(32, (pct / 50) * 32)) : 2;
-        const color = pct > 0 ? severityColor(diffSeverity(pct)).bg : "bg-[#ccc]";
+        const color = pct > 0 ? severityColor(diffSeverity(pct)).bg : "bg-gray-200";
         return (
           <div
             key={i}
@@ -97,7 +97,7 @@ function MonitorDetailPage() {
   if (monitor === undefined) {
     return (
       <main className="px-8 py-8">
-        <div className="text-center py-20 text-[#888]">Loading...</div>
+        <div className="text-center py-20 text-gray-500">Loading...</div>
       </main>
     );
   }
@@ -106,7 +106,7 @@ function MonitorDetailPage() {
     return (
       <main className="px-8 py-8">
         <div className="text-center py-20">
-          <h2 className="text-xl font-black uppercase">Monitor Not Found</h2>
+          <h2 className="text-xl font-bold">Monitor Not Found</h2>
         </div>
       </main>
     );
@@ -170,13 +170,13 @@ function MonitorDetailPage() {
       <div className="flex items-center gap-4 mb-6">
         <button
           onClick={() => navigate({ to: "/dashboard/monitors" })}
-          className="text-[#888] hover:text-[#1a1a1a] transition-colors"
+          className="text-gray-500 hover:text-gray-900 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-black uppercase tracking-tighter">
+            <h1 className="text-2xl font-bold">
               {monitor.name}
             </h1>
             <Badge
@@ -195,7 +195,7 @@ function MonitorDetailPage() {
             href={monitor.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-[#2d5a2d] hover:underline flex items-center gap-1 font-mono"
+            className="text-sm text-emerald-600 hover:underline flex items-center gap-1 font-mono"
           >
             {monitor.url}
             <ExternalLink className="w-3 h-3" />
@@ -241,18 +241,18 @@ function MonitorDetailPage() {
       {/* Delete confirm dialog */}
       <Dialog.Root open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-[#1a1a1a]/50 z-50" />
-          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-[#f0f0e8] border-2 border-[#1a1a1a] shadow-[8px_8px_0px_0px_#1a1a1a] p-6 w-full max-w-sm">
-            <Dialog.Title className="text-lg font-black uppercase tracking-tighter mb-2">
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50" />
+          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white border border-gray-200 shadow-lg rounded-xl p-6 w-full max-w-sm">
+            <Dialog.Title className="text-lg font-bold mb-2">
               Delete Monitor
             </Dialog.Title>
-            <Dialog.Description className="text-sm text-[#888] mb-6">
-              This will permanently delete <span className="font-bold text-[#1a1a1a]">{monitor.name}</span> and
+            <Dialog.Description className="text-sm text-gray-500 mb-6">
+              This will permanently delete <span className="font-bold text-gray-900">{monitor.name}</span> and
               all its snapshots and change history. This cannot be undone.
             </Dialog.Description>
             {deleteError && (
-              <div className="border-2 border-[#dc2626] bg-[#dc2626]/10 p-3 mb-4">
-                <p className="text-sm text-[#dc2626] font-bold">{deleteError}</p>
+              <div className="border border-red-500 bg-red-50 p-3 mb-4 rounded-lg">
+                <p className="text-sm text-red-500 font-bold">{deleteError}</p>
               </div>
             )}
             <div className="flex gap-3 justify-end">
@@ -288,62 +288,62 @@ function MonitorDetailPage() {
       </Dialog.Root>
 
       {/* ─── Stats Banner ─── */}
-      <div className="border-2 border-[#1a1a1a] mb-6">
+      <div className="border border-gray-200 mb-6 rounded-xl overflow-hidden">
         <div className="grid grid-cols-2 md:grid-cols-5">
           {/* Screenshot preview */}
           <ZoneFocusedPreview
             screenshotUrl={monitor.screenshotUrl}
             zone={monitor.zone}
             selectionMode={monitor.selectionMode}
-            className="border-r-2 border-[#1a1a1a] md:row-span-1 h-32"
+            className="border-r border-gray-200 md:row-span-1 h-32"
           />
 
           {/* Stat cards */}
-          <div className="border-r-2 border-[#1a1a1a] p-4 flex flex-col justify-center">
+          <div className="border-r border-gray-200 p-4 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-1">
-              <Eye className="w-3.5 h-3.5 text-[#888]" />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+              <Eye className="w-3.5 h-3.5 text-gray-500" />
+              <p className="text-xs font-bold text-gray-500">
                 Total Checks
               </p>
             </div>
-            <p className="text-2xl font-black tracking-tighter">{totalChecks}</p>
+            <p className="text-2xl font-bold">{totalChecks}</p>
           </div>
 
-          <div className="border-r-2 border-[#1a1a1a] p-4 flex flex-col justify-center">
+          <div className="border-r border-gray-200 p-4 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-1">
-              <Zap className="w-3.5 h-3.5 text-[#888]" />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+              <Zap className="w-3.5 h-3.5 text-gray-500" />
+              <p className="text-xs font-bold text-gray-500">
                 Changes Found
               </p>
             </div>
-            <p className="text-2xl font-black tracking-tighter text-[#dc2626]">
+            <p className="text-2xl font-bold text-red-500">
               {monitor.changeCount}
             </p>
           </div>
 
-          <div className="border-r-2 border-[#1a1a1a] p-4 flex flex-col justify-center">
+          <div className="border-r border-gray-200 p-4 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-1">
-              <TrendingUp className="w-3.5 h-3.5 text-[#888]" />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+              <TrendingUp className="w-3.5 h-3.5 text-gray-500" />
+              <p className="text-xs font-bold text-gray-500">
                 Avg Diff
               </p>
             </div>
-            <p className="text-2xl font-black tracking-tighter">
+            <p className="text-2xl font-bold">
               {avgDiff > 0 ? `${avgDiff.toFixed(1)}%` : "—"}
             </p>
           </div>
 
           <div className="p-4 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-1">
-              <Clock className="w-3.5 h-3.5 text-[#888]" />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#888]">
+              <Clock className="w-3.5 h-3.5 text-gray-500" />
+              <p className="text-xs font-bold text-gray-500">
                 Frequency
               </p>
             </div>
-            <p className="text-lg font-black tracking-tighter">
+            <p className="text-lg font-bold">
               {intervalLabel(monitor.interval)}
             </p>
-            <p className="text-[10px] text-[#888] mt-0.5">
+            <p className="text-xs text-gray-500 mt-0.5">
               Next: {monitor.nextCheckAt ? formatRelativeTime(monitor.nextCheckAt) : "N/A"}
             </p>
           </div>
@@ -355,40 +355,40 @@ function MonitorDetailPage() {
         {/* Left: Tabs content */}
         <div className="flex-1 min-w-0">
           {/* Tabs */}
-          <div role="tablist" className="flex items-center gap-0 border-b-2 border-[#ccc] mb-6">
+          <div role="tablist" className="flex items-center gap-0 border-b border-gray-200 mb-6">
             <button
               role="tab"
               aria-selected={activeTab === "changes"}
               onClick={() => setActiveTab("changes")}
-              className={`px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors relative ${
+              className={`px-4 py-3 text-sm font-bold transition-colors relative ${
                 activeTab === "changes"
-                  ? "text-[#2d5a2d]"
-                  : "text-[#888] hover:text-[#1a1a1a]"
+                  ? "text-emerald-600"
+                  : "text-gray-500 hover:text-gray-900"
               }`}
             >
               Detected Changes
               {changes && changes.length > 0 && (
-                <span className="ml-2 text-[10px] bg-[#1a1a1a] text-[#f0f0e8] px-1.5 py-0.5 align-middle">
+                <span className="ml-2 text-xs bg-gray-900 text-white px-1.5 py-0.5 rounded align-middle">
                   {changes.length}
                 </span>
               )}
               {activeTab === "changes" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2d5a2d]" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600" />
               )}
             </button>
             <button
               role="tab"
               aria-selected={activeTab === "activity"}
               onClick={() => setActiveTab("activity")}
-              className={`px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors relative ${
+              className={`px-4 py-3 text-sm font-bold transition-colors relative ${
                 activeTab === "activity"
-                  ? "text-[#2d5a2d]"
-                  : "text-[#888] hover:text-[#1a1a1a]"
+                  ? "text-emerald-600"
+                  : "text-gray-500 hover:text-gray-900"
               }`}
             >
               Monitoring Activity
               {activeTab === "activity" && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2d5a2d]" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600" />
               )}
             </button>
             <div className="flex-1" />
@@ -399,22 +399,22 @@ function MonitorDetailPage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowExport(!showExport)}
-                  className="text-[#888] border-transparent"
+                  className="text-gray-500 border-transparent"
                 >
                   <Download className="w-4 h-4" />
                   Export
                 </Button>
                 {showExport && (
-                  <div className="absolute right-0 top-full mt-1 border-2 border-[#1a1a1a] bg-[#f0f0e8] z-10 shadow-[4px_4px_0px_0px_rgba(26,26,26,1)]">
+                  <div className="absolute right-0 top-full mt-1 border border-gray-200 bg-white z-10 shadow-md rounded-lg overflow-hidden">
                     <button
                       onClick={() => handleExport("csv")}
-                      className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0] border-b border-[#ccc]"
+                      className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-50 border-b border-gray-200"
                     >
                       CSV
                     </button>
                     <button
                       onClick={() => handleExport("json")}
-                      className="block w-full text-left px-4 py-2 text-sm font-bold uppercase hover:bg-[#e8e8e0]"
+                      className="block w-full text-left px-4 py-2 text-sm font-bold hover:bg-gray-50"
                     >
                       JSON
                     </button>
@@ -428,14 +428,14 @@ function MonitorDetailPage() {
           {activeTab === "changes" ? (
             <div>
               {changes === undefined ? (
-                <div className="text-center py-8 text-[#888]">Loading...</div>
+                <div className="text-center py-8 text-gray-500">Loading...</div>
               ) : changes.length === 0 ? (
-                <div className="border-2 border-[#1a1a1a] border-dashed p-12 text-center">
-                  <Eye className="w-8 h-8 text-[#ccc] mx-auto mb-3" />
-                  <p className="text-sm font-black uppercase tracking-tighter mb-1">
+                <div className="border border-gray-200 rounded-lg border-dashed p-12 text-center">
+                  <Eye className="w-8 h-8 text-gray-200 mx-auto mb-3" />
+                  <p className="text-sm font-bold mb-1">
                     No changes detected yet
                   </p>
-                  <p className="text-xs text-[#888]">
+                  <p className="text-xs text-gray-500">
                     We're watching this page. Changes will appear here with
                     before/after screenshots and visual diffs.
                   </p>
@@ -447,9 +447,9 @@ function MonitorDetailPage() {
           ) : (
             <div>
               {/* Check history table — cleaned up */}
-              <div className="border-2 border-[#1a1a1a]">
+              <div className="border border-gray-200 rounded-lg">
                 {/* Table header */}
-                <div className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 bg-[#1a1a1a] text-[#f0f0e8]">
+                <div className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 bg-gray-900 text-white">
                   <p className="text-xs font-bold uppercase tracking-wider">
                     Check Time
                   </p>
@@ -463,11 +463,11 @@ function MonitorDetailPage() {
 
                 {/* In-progress row */}
                 {isChecking && (
-                  <div className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 border-b border-[#ccc] bg-[#e8e8e0]">
-                    <p className="text-sm text-[#888] self-center">Now</p>
-                    <p className="text-sm text-[#888] self-center w-24 text-right">—</p>
+                  <div className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 border-b border-gray-200 bg-gray-50">
+                    <p className="text-sm text-gray-500 self-center">Now</p>
+                    <p className="text-sm text-gray-500 self-center w-24 text-right">—</p>
                     <div className="flex items-center gap-2 self-center w-28 justify-end">
-                      <Loader2 className="w-3 h-3 animate-spin text-[#ca8a04]" />
+                      <Loader2 className="w-3 h-3 animate-spin text-amber-500" />
                       <Badge variant="warning">In Progress</Badge>
                     </div>
                   </div>
@@ -475,11 +475,11 @@ function MonitorDetailPage() {
 
                 {/* History rows */}
                 {checkHistory === undefined ? (
-                  <div className="px-4 py-8 text-center text-[#888] text-sm">
+                  <div className="px-4 py-8 text-center text-gray-500 text-sm">
                     Loading...
                   </div>
                 ) : checkHistory.length === 0 && !isChecking ? (
-                  <div className="px-4 py-8 text-center text-[#888] text-sm">
+                  <div className="px-4 py-8 text-center text-gray-500 text-sm">
                     No checks recorded yet.
                   </div>
                 ) : (
@@ -493,7 +493,7 @@ function MonitorDetailPage() {
                     return (
                       <div
                         key={entry._id}
-                        className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 border-b border-[#ccc] last:border-b-0 hover:bg-[#e8e8e0] transition-colors"
+                        className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 border-b border-gray-200 last:border-b-0 hover:bg-gray-50 transition-colors"
                       >
                         <p className="text-sm self-center">
                           {new Date(entry.capturedAt).toLocaleString()}
@@ -501,7 +501,7 @@ function MonitorDetailPage() {
                         <div className="self-center w-24 text-right">
                           {isChanged ? (
                             <div className="flex items-center gap-2 justify-end">
-                              <div className="w-12 h-1.5 bg-[#e8e8e0] overflow-hidden">
+                              <div className="w-12 h-1.5 bg-gray-50 overflow-hidden">
                                 <div
                                   className={`h-full ${colors!.bg}`}
                                   style={{ width: `${Math.min(100, (entry.diffPercentage ?? 0) * 2)}%` }}
@@ -512,7 +512,7 @@ function MonitorDetailPage() {
                               </span>
                             </div>
                           ) : (
-                            <span className="text-xs text-[#ccc]">0%</span>
+                            <span className="text-xs text-gray-200">0%</span>
                           )}
                         </div>
                         <div className="self-center w-28 text-right">
@@ -525,8 +525,8 @@ function MonitorDetailPage() {
                             </div>
                           ) : (
                             <div className="flex items-center gap-1.5 justify-end">
-                              <CheckCircle className="w-3.5 h-3.5 text-[#2d5a2d]" />
-                              <span className="text-xs font-bold uppercase text-[#2d5a2d]">
+                              <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                              <span className="text-xs font-bold uppercase text-emerald-600">
                                 No change
                               </span>
                             </div>
@@ -544,11 +544,11 @@ function MonitorDetailPage() {
         {/* Right sidebar controls */}
         <div className="w-72 shrink-0 space-y-4">
           {/* Enable/Disable */}
-          <div className="border-2 border-[#1a1a1a] p-4">
+          <div className="border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-bold">Enable / Disable</p>
-                <p className="text-xs text-[#888] mt-0.5">
+                <p className="text-xs text-gray-500 mt-0.5">
                   Toggle monitoring job
                 </p>
               </div>
@@ -564,12 +564,12 @@ function MonitorDetailPage() {
                     });
                   }
                 }}
-                className={`w-12 h-6 relative transition-colors ${
-                  monitor.status === "active" ? "bg-[#2d5a2d]" : "bg-[#ccc]"
+                className={`w-12 h-6 relative transition-colors rounded-full ${
+                  monitor.status === "active" ? "bg-emerald-600" : "bg-gray-200"
                 }`}
               >
                 <div
-                  className={`absolute top-0.5 w-5 h-5 bg-[#f0f0e8] transition-transform ${
+                  className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
                     monitor.status === "active"
                       ? "translate-x-6"
                       : "translate-x-0.5"
@@ -581,21 +581,21 @@ function MonitorDetailPage() {
 
           {/* Activity sparkline */}
           {checkHistory && checkHistory.length > 0 && (
-            <div className="border-2 border-[#1a1a1a] p-4">
+            <div className="border border-gray-200 rounded-lg p-4">
               <p className="text-sm font-bold mb-3">Recent Activity</p>
               <ActivitySparkline history={checkHistory} />
-              <p className="text-[10px] text-[#888] mt-2 uppercase tracking-wider">
+              <p className="text-xs text-gray-500 mt-2">
                 Last {Math.min(20, checkHistory.length)} checks
               </p>
             </div>
           )}
 
           {/* Notifications */}
-          <div className="border-2 border-[#1a1a1a] p-4">
+          <div className="border border-gray-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-bold">Notifications</p>
-                <p className="text-xs text-[#888] mt-0.5">
+                <p className="text-xs text-gray-500 mt-0.5">
                   {monitor.email
                     ? monitor.email
                     : "No notification configured"}
@@ -606,13 +606,13 @@ function MonitorDetailPage() {
 
           {/* Tags */}
           {monitor.tags && monitor.tags.length > 0 && (
-            <div className="border-2 border-[#1a1a1a] p-4">
+            <div className="border border-gray-200 rounded-lg p-4">
               <p className="text-sm font-bold mb-2">Tags</p>
               <div className="flex gap-1 flex-wrap">
                 {monitor.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] uppercase font-bold text-[#888] bg-[#e8e8e0] border border-[#ccc] px-2 py-0.5"
+                    className="text-xs font-bold text-gray-500 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded"
                   >
                     {tag}
                   </span>
@@ -622,18 +622,18 @@ function MonitorDetailPage() {
           )}
 
           {/* Info */}
-          <div className="border-2 border-[#1a1a1a] p-4">
+          <div className="border border-gray-200 rounded-lg p-4">
             <p className="text-sm font-bold mb-2">Monitor Details</p>
             <div className="space-y-2 text-xs">
               <div className="flex justify-between">
-                <span className="text-[#888]">Mode</span>
+                <span className="text-gray-500">Mode</span>
                 <span className="font-bold">
                   {monitor.selectionMode === "element" ? "Element" : "Zone"}
                 </span>
               </div>
               {monitor.cssSelector && (
                 <div className="flex justify-between">
-                  <span className="text-[#888]">Selector</span>
+                  <span className="text-gray-500">Selector</span>
                   <span className="font-mono truncate max-w-32">
                     {monitor.cssSelector}
                   </span>
@@ -641,7 +641,7 @@ function MonitorDetailPage() {
               )}
               {monitor.compareType && (
                 <div className="flex justify-between">
-                  <span className="text-[#888]">Compare</span>
+                  <span className="text-gray-500">Compare</span>
                   <span className="font-bold capitalize">
                     {monitor.compareType}
                   </span>
@@ -649,18 +649,18 @@ function MonitorDetailPage() {
               )}
               {monitor.mobileViewport && (
                 <div className="flex justify-between">
-                  <span className="text-[#888]">Viewport</span>
+                  <span className="text-gray-500">Viewport</span>
                   <span className="font-bold">Mobile</span>
                 </div>
               )}
               {monitor.delay !== undefined && monitor.delay > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-[#888]">Delay</span>
+                  <span className="text-gray-500">Delay</span>
                   <span className="font-bold">{monitor.delay}s</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-[#888]">Last Checked</span>
+                <span className="text-gray-500">Last Checked</span>
                 <span className="font-bold">
                   {monitor.lastCheckedAt
                     ? formatRelativeTime(monitor.lastCheckedAt)
@@ -672,19 +672,19 @@ function MonitorDetailPage() {
 
           {/* Keywords */}
           {monitor.keywords && monitor.keywords.length > 0 && (
-            <div className="border-2 border-[#1a1a1a] p-4">
+            <div className="border border-gray-200 rounded-lg p-4">
               <p className="text-sm font-bold mb-2">Keyword Alerts</p>
               <div className="flex gap-1 flex-wrap">
                 {monitor.keywords.map((kw) => (
                   <span
                     key={kw}
-                    className="text-[10px] uppercase font-bold text-[#2d5a2d] bg-[#e8e8e0] border border-[#ccc] px-2 py-0.5"
+                    className="text-xs font-bold text-emerald-600 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded"
                   >
                     {kw}
                   </span>
                 ))}
               </div>
-              <p className="text-[10px] text-[#888] mt-1 uppercase">
+              <p className="text-xs text-gray-500 mt-1">
                 Mode: {monitor.keywordMode ?? "any"}
               </p>
             </div>
@@ -692,17 +692,17 @@ function MonitorDetailPage() {
 
           {/* Active Days */}
           {monitor.activeDays && monitor.activeDays.length > 0 && (
-            <div className="border-2 border-[#1a1a1a] p-4">
+            <div className="border border-gray-200 rounded-lg p-4">
               <p className="text-sm font-bold mb-2">Active Days</p>
               <div className="flex gap-1">
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
                   (day, i) => (
                     <span
                       key={day}
-                      className={`text-[10px] font-bold px-1.5 py-0.5 ${
+                      className={`text-xs font-bold px-1.5 py-0.5 rounded ${
                         monitor.activeDays!.includes(i)
-                          ? "bg-[#1a1a1a] text-[#f0f0e8]"
-                          : "text-[#ccc]"
+                          ? "bg-gray-900 text-white"
+                          : "text-gray-300"
                       }`}
                     >
                       {day}

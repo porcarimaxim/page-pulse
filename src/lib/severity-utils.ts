@@ -8,18 +8,18 @@ export function diffSeverity(pct: number): Severity {
 
 export function severityBg(s: Severity) {
   return s === "low"
-    ? "bg-[#2d5a2d]"
+    ? "bg-emerald-600"
     : s === "medium"
-      ? "bg-[#ca8a04]"
-      : "bg-[#dc2626]";
+      ? "bg-amber-500"
+      : "bg-red-500";
 }
 
 export function severityText(s: Severity) {
   return s === "low"
-    ? "text-[#2d5a2d]"
+    ? "text-emerald-600"
     : s === "medium"
-      ? "text-[#ca8a04]"
-      : "text-[#dc2626]";
+      ? "text-amber-500"
+      : "text-red-500";
 }
 
 export function severityColor(s: Severity) {
@@ -27,9 +27,9 @@ export function severityColor(s: Severity) {
     bg: severityBg(s),
     text: severityText(s),
     border: s === "low"
-      ? "border-[#2d5a2d]"
+      ? "border-emerald-600"
       : s === "medium"
-        ? "border-[#ca8a04]"
-        : "border-[#dc2626]",
+        ? "border-amber-500"
+        : "border-red-500",
   };
 }
