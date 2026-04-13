@@ -222,14 +222,14 @@ export const testWebhook = action({
             type: "header",
             text: {
               type: "plain_text",
-              text: "PagePulse Test Notification",
+              text: "Snaplert Test Notification",
             },
           },
           {
             type: "section",
             text: {
               type: "mrkdwn",
-              text: "This is a test webhook from PagePulse. Your integration is working correctly!",
+              text: "This is a test webhook from Snaplert. Your integration is working correctly!",
             },
           },
         ],
@@ -238,9 +238,9 @@ export const testWebhook = action({
       body = JSON.stringify({
         embeds: [
           {
-            title: "PagePulse Test Notification",
+            title: "Snaplert Test Notification",
             description:
-              "This is a test webhook from PagePulse. Your integration is working correctly!",
+              "This is a test webhook from Snaplert. Your integration is working correctly!",
             color: 0x2d5a2d,
             timestamp: new Date().toISOString(),
           },
@@ -250,7 +250,7 @@ export const testWebhook = action({
       body = JSON.stringify({
         event: "test",
         message:
-          "This is a test webhook from PagePulse. Your integration is working correctly!",
+          "This is a test webhook from Snaplert. Your integration is working correctly!",
         timestamp: new Date().toISOString(),
       });
     }

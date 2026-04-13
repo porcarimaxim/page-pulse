@@ -238,7 +238,7 @@ export function FrequencySelector() {
 }
 
 /**
- * Rich email alert mockup showing what a PagePulse notification looks like.
+ * Rich email alert mockup showing what a Snaplert notification looks like.
  */
 export function AlertEmailMockup() {
   return (
@@ -258,9 +258,9 @@ export function AlertEmailMockup() {
         <div className="p-3 border-b border-[#eee]">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-5 h-5 bg-[#2d5a2d] flex items-center justify-center shrink-0">
-              <span className="text-[7px] font-black text-white">PP</span>
+              <span className="text-[7px] font-black text-white">SN</span>
             </div>
-            <span className="text-[10px] font-bold">PagePulse</span>
+            <span className="text-[10px] font-bold">Snaplert</span>
             <span className="text-[9px] text-[#888] ml-auto">2 min ago</span>
           </div>
           <div className="text-xs font-black text-[#1a1a1a]">

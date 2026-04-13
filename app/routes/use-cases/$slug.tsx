@@ -37,7 +37,7 @@ export const Route = createFileRoute("/use-cases/$slug")({
   component: UseCasePage,
   head: ({ params }) => {
     const useCase = getUseCaseBySlug(params.slug);
-    if (!useCase) return { meta: [{ title: "Not Found — PagePulse" }] };
+    if (!useCase) return { meta: [{ title: "Not Found — Snaplert" }] };
     return {
       meta: [
         { title: useCase.metaTitle },
@@ -62,7 +62,7 @@ const TESTIMONIALS: Record<
     },
     {
       quote:
-        "I got my dream apartment because I was first to know about the listing. PagePulse is a game-changer.",
+        "I got my dream apartment because I was first to know about the listing. Snaplert is a game-changer.",
       name: "David K.",
       role: "Graduate Student",
     },
@@ -70,7 +70,7 @@ const TESTIMONIALS: Record<
   business: [
     {
       quote:
-        "We replaced a $2,000/month competitive intelligence subscription with PagePulse. Better data, and we choose exactly what to track.",
+        "We replaced a $2,000/month competitive intelligence subscription with Snaplert. Better data, and we choose exactly what to track.",
       name: "Rachel Torres",
       role: "VP of Strategy, SaaS Company",
     },
@@ -84,7 +84,7 @@ const TESTIMONIALS: Record<
   industry: [
     {
       quote:
-        "Before PagePulse, regulatory changes would take weeks to reach our compliance team. Now we know within the hour.",
+        "Before Snaplert, regulatory changes would take weeks to reach our compliance team. Now we know within the hour.",
       name: "Patricia Alvarez",
       role: "Chief Compliance Officer",
     },
@@ -258,7 +258,7 @@ function UseCasePage() {
             <EmailAlert
               subject={`${useCase.title}: Change Detected`}
               preview={useCase.benefits[0]}
-              from="PagePulse Alerts"
+              from="Snaplert Alerts"
               time="Just now"
             />
           </div>

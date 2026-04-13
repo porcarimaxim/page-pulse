@@ -29,7 +29,7 @@ export const Route = createFileRoute("/features")({
     meta: [
       {
         title:
-          "Website Change Monitoring Features — Visual Diffs, Alerts, Scheduling | PagePulse",
+          "Website Change Monitoring Features — Visual Diffs, Alerts, Scheduling | Snaplert",
       },
       {
         name: "description",
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/features")({
         content:
           "Six powerful tools: visual diff, zone selection, flexible scheduling, smart alerts, live dashboard, and change history.",
       },
-      { property: "og:url", content: "https://pagepulse.io/features" },
+      { property: "og:url", content: "https://snaplert.com/features" },
     ],
   }),
 });
@@ -292,7 +292,7 @@ function SocialProof() {
     },
     {
       quote:
-        "We replaced three manual check processes with PagePulse monitors. Saves us hours every week.",
+        "We replaced three manual check processes with Snaplert monitors. Saves us hours every week.",
       author: "David R.",
       role: "Operations Manager, SaaS",
       featured: true,
@@ -345,16 +345,16 @@ function SocialProof() {
 /* ─── Comparison Table ─── */
 
 const comparisonFeatures = [
-  { name: "Visual Diff", pagepulse: true, visualping: true, hexowatch: true },
-  { name: "AI Change Summaries", pagepulse: true, visualping: true, hexowatch: false },
-  { name: "Zone Selection", pagepulse: true, visualping: true, hexowatch: false },
-  { name: "5-Min Checks (Free)", pagepulse: true, visualping: false, hexowatch: false },
-  { name: "BYOK (Bring Your Own Key)", pagepulse: true, visualping: false, hexowatch: false },
-  { name: "Email Alerts", pagepulse: true, visualping: true, hexowatch: true },
-  { name: "Webhook / Slack", pagepulse: true, visualping: true, hexowatch: true },
-  { name: "Change History", pagepulse: true, visualping: true, hexowatch: true },
-  { name: "Free Plan", pagepulse: true, visualping: true, hexowatch: false },
-  { name: "No Credit Card Required", pagepulse: true, visualping: true, hexowatch: false },
+  { name: "Visual Diff", snaplert: true, visualping: true, hexowatch: true },
+  { name: "AI Change Summaries", snaplert: true, visualping: true, hexowatch: false },
+  { name: "Zone Selection", snaplert: true, visualping: true, hexowatch: false },
+  { name: "5-Min Checks (Free)", snaplert: true, visualping: false, hexowatch: false },
+  { name: "BYOK (Bring Your Own Key)", snaplert: true, visualping: false, hexowatch: false },
+  { name: "Email Alerts", snaplert: true, visualping: true, hexowatch: true },
+  { name: "Webhook / Slack", snaplert: true, visualping: true, hexowatch: true },
+  { name: "Change History", snaplert: true, visualping: true, hexowatch: true },
+  { name: "Free Plan", snaplert: true, visualping: true, hexowatch: false },
+  { name: "No Credit Card Required", snaplert: true, visualping: true, hexowatch: false },
 ];
 
 function ComparisonTable() {
@@ -376,7 +376,7 @@ function ComparisonTable() {
                   Feature
                 </th>
                 <th className="py-3 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center bg-[#2d5a2d]">
-                  PagePulse
+                  Snaplert
                 </th>
                 <th className="py-3 px-3 md:px-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-center">
                   Visualping
@@ -398,7 +398,7 @@ function ComparisonTable() {
                     {f.name}
                   </td>
                   <td className="py-3 px-3 md:px-6 text-center bg-[#2d5a2d]/5">
-                    {f.pagepulse ? (
+                    {f.snaplert ? (
                       <Check className="w-4 h-4 text-[#2d5a2d] mx-auto" />
                     ) : (
                       <X className="w-4 h-4 text-[#ccc] mx-auto" />

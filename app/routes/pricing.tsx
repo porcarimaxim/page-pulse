@@ -40,7 +40,7 @@ export const Route = createFileRoute("/pricing")({
   component: PricingPage,
   head: () => ({
     meta: [
-      { title: "Pricing & Plans — Free Website Monitoring | PagePulse" },
+      { title: "Pricing & Plans — Free Website Monitoring | Snaplert" },
       {
         name: "description",
         content:
@@ -48,11 +48,11 @@ export const Route = createFileRoute("/pricing")({
       },
       {
         property: "og:title",
-        content: "Pricing & Plans — Free Website Monitoring | PagePulse",
+        content: "Pricing & Plans — Free Website Monitoring | Snaplert",
       },
       {
         property: "og:url",
-        content: "https://pagepulse.io/pricing",
+        content: "https://snaplert.com/pricing",
       },
     ],
   }),

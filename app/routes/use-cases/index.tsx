@@ -17,7 +17,7 @@ export const Route = createFileRoute("/use-cases/")({
     meta: [
       {
         title:
-          "22 Website Monitoring Use Cases — Business, Personal & Industry | PagePulse",
+          "22 Website Monitoring Use Cases — Business, Personal & Industry | Snaplert",
       },
       {
         name: "description",
@@ -31,9 +31,9 @@ export const Route = createFileRoute("/use-cases/")({
       {
         property: "og:description",
         content:
-          "From competitor intelligence to price alerts — see how teams and individuals monitor the web with PagePulse.",
+          "From competitor intelligence to price alerts — see how teams and individuals monitor the web with Snaplert.",
       },
-      { property: "og:url", content: "https://pagepulse.io/use-cases" },
+      { property: "og:url", content: "https://snaplert.com/use-cases" },
     ],
   }),
 });
@@ -109,7 +109,7 @@ function UseCasesHub() {
         </h1>
         <p className="text-lg text-[#666] max-w-xl mx-auto">
           From competitor intelligence to price alerts — see how teams and
-          individuals use PagePulse to stay ahead of changes that matter.
+          individuals use Snaplert to stay ahead of changes that matter.
         </p>
       </section>
 
@@ -145,7 +145,7 @@ function UseCasesHub() {
             Personal Use Cases
           </h2>
           <p className="text-[#666] leading-relaxed mb-16 max-w-lg">
-            Stop manually checking websites. Let PagePulse watch for the changes
+            Stop manually checking websites. Let Snaplert watch for the changes
             that matter to you.
           </p>
 
@@ -182,7 +182,7 @@ function UseCasesHub() {
       <MarketingCTA
         headline={"Your Use Case Here"}
         subheadline="Ready To Start?"
-        description="If a website changes, PagePulse can detect it. Start monitoring in under 60 seconds."
+        description="If a website changes, Snaplert can detect it. Start monitoring in under 60 seconds."
       />
     </MarketingLayout>
   );

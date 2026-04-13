@@ -60,9 +60,9 @@ export interface UseCase {
   description: string;
   /** Extended multi-paragraph description shown on the individual page */
   longDescription: string[];
-  /** Pain points — the problem without PagePulse */
+  /** Pain points — the problem without Snaplert */
   painPoints: string[];
-  /** How PagePulse specifically solves this use case */
+  /** How Snaplert specifically solves this use case */
   howItWorks: HowItWorksStep[];
   benefits: string[];
   examples: UseCaseExample[];
@@ -106,8 +106,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor product pages on any shopping site. Get alerted the moment prices drop to your target, when flash sales start, or when items go on clearance.",
     longDescription: [
       "Manually checking product pages across Amazon, Best Buy, Walmart, and dozens of other retailers is exhausting and unreliable. By the time you notice a price drop, the deal is often already gone — flash sales expire, limited-time offers sell out, and promotional pricing reverts without warning.",
-      "PagePulse watches product pages for you around the clock. Point it at any product URL, select the price element, and set your check frequency. The moment the price changes — whether it drops by $5 or $500 — you get an email alert with a visual comparison showing exactly what changed, so you can act immediately.",
-      "Unlike browser extensions that only work on major retailers, PagePulse monitors any website with a price displayed on a page. Niche electronics shops, boutique fashion sites, international retailers, wholesale suppliers — if it has a webpage, PagePulse can track it.",
+      "Snaplert watches product pages for you around the clock. Point it at any product URL, select the price element, and set your check frequency. The moment the price changes — whether it drops by $5 or $500 — you get an email alert with a visual comparison showing exactly what changed, so you can act immediately.",
+      "Unlike browser extensions that only work on major retailers, Snaplert monitors any website with a price displayed on a page. Niche electronics shops, boutique fashion sites, international retailers, wholesale suppliers — if it has a webpage, Snaplert can track it.",
     ],
     painPoints: [
       "Manually refreshing product pages multiple times a day",
@@ -121,13 +121,13 @@ export const USE_CASES: UseCase[] = [
         step: "01",
         title: "Paste The Product URL",
         description:
-          "Copy the URL of any product page — Amazon, Best Buy, a boutique shop, or any site that displays a price. PagePulse captures a full screenshot instantly.",
+          "Copy the URL of any product page — Amazon, Best Buy, a boutique shop, or any site that displays a price. Snaplert captures a full screenshot instantly.",
       },
       {
         step: "02",
         title: "Select The Price Element",
         description:
-          "Use our visual element picker to click directly on the price. PagePulse locks onto that specific element so it ignores ads, banners, and other page noise.",
+          "Use our visual element picker to click directly on the price. Snaplert locks onto that specific element so it ignores ads, banners, and other page noise.",
       },
       {
         step: "03",
@@ -153,12 +153,12 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Black Friday Strategist",
         description:
-          "Marcus adds 30 items to his PagePulse watchlist in October. When retailers start rolling out early Black Friday deals in November, he gets alerts days before deal aggregator sites publish them. He snags the best prices before the rush and avoids the stress of constantly checking multiple stores.",
+          "Marcus adds 30 items to his Snaplert watchlist in October. When retailers start rolling out early Black Friday deals in November, he gets alerts days before deal aggregator sites publish them. He snags the best prices before the rush and avoids the stress of constantly checking multiple stores.",
       },
       {
         title: "The International Shopper",
         description:
-          "Yuki monitors a Japanese electronics retailer that no price tracking extension supports. When the store runs a weekend promotion with 40% off camera equipment, PagePulse catches the price change and sends an alert — something no other tool could do for this niche site.",
+          "Yuki monitors a Japanese electronics retailer that no price tracking extension supports. When the store runs a weekend promotion with 40% off camera equipment, Snaplert catches the price change and sends an alert — something no other tool could do for this niche site.",
       },
     ],
     monitoringTips: [
@@ -168,7 +168,7 @@ export const USE_CASES: UseCase[] = [
       "Outlet and clearance section landing pages",
       "Price comparison sites for your specific product search",
     ],
-    metaTitle: "Smart Shopping — Track Prices on Any Website | PagePulse",
+    metaTitle: "Smart Shopping — Track Prices on Any Website | Snaplert",
     metaDescription:
       "Monitor product prices on any e-commerce site. Get instant email alerts when prices drop, flash sales start, or coupons appear. Works on any website, not just major retailers.",
   },
@@ -183,8 +183,8 @@ export const USE_CASES: UseCase[] = [
       "Watch out-of-stock items, limited edition drops, and appointment slots. Be the first to know when what you want becomes available.",
     longDescription: [
       "Limited edition sneakers, sold-out gaming consoles, appointment slots at a booked-up specialist, popular restaurant reservations — the items and time slots you want most are often the hardest to get. By the time you notice they're available again, someone else has already grabbed them.",
-      "PagePulse monitors product pages and booking sites for visual changes. When an 'Out of Stock' button becomes 'Add to Cart', when a grayed-out appointment slot turns available, or when a waitlist page adds a 'Buy Now' option — PagePulse detects the visual change and alerts you within minutes.",
-      "Most brands and retailers offer email restock notifications, but these are notoriously slow. They batch-send to thousands of people simultaneously, and by the time you open the email, the item is sold out again. PagePulse checks the actual page directly and alerts you ahead of the crowd.",
+      "Snaplert monitors product pages and booking sites for visual changes. When an 'Out of Stock' button becomes 'Add to Cart', when a grayed-out appointment slot turns available, or when a waitlist page adds a 'Buy Now' option — Snaplert detects the visual change and alerts you within minutes.",
+      "Most brands and retailers offer email restock notifications, but these are notoriously slow. They batch-send to thousands of people simultaneously, and by the time you open the email, the item is sold out again. Snaplert checks the actual page directly and alerts you ahead of the crowd.",
     ],
     painPoints: [
       "Brand restock emails arrive too late — items sell out before you can act",
@@ -198,7 +198,7 @@ export const USE_CASES: UseCase[] = [
         step: "01",
         title: "Point At The Sold-Out Page",
         description:
-          "Paste the URL of the product page showing 'Out of Stock', the booking page with no available slots, or the waitlist page. PagePulse captures the current state.",
+          "Paste the URL of the product page showing 'Out of Stock', the booking page with no available slots, or the waitlist page. Snaplert captures the current state.",
       },
       {
         step: "02",
@@ -225,7 +225,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Sneaker Collector",
         description:
-          "Alex monitors a limited edition Jordan release page on three retailer sites. When Nike SNKRS quietly restocks a returned pair at 11 PM on a Tuesday, PagePulse alerts him within 5 minutes. He checks out before the page is even indexed by sneaker bot networks. The restock notification email from Nike arrives 45 minutes later — long after the pair sold out again.",
+          "Alex monitors a limited edition Jordan release page on three retailer sites. When Nike SNKRS quietly restocks a returned pair at 11 PM on a Tuesday, Snaplert alerts him within 5 minutes. He checks out before the page is even indexed by sneaker bot networks. The restock notification email from Nike arrives 45 minutes later — long after the pair sold out again.",
       },
       {
         title: "The Medical Appointment",
@@ -240,7 +240,7 @@ export const USE_CASES: UseCase[] = [
       "Restaurant reservation platforms (OpenTable, Resy, direct booking pages)",
       "Event ticket pages for sold-out shows",
     ],
-    metaTitle: "Restock Radar — Restock Notifications for Any Product | PagePulse",
+    metaTitle: "Restock Radar — Restock Notifications for Any Product | Snaplert",
     metaDescription:
       "Monitor out-of-stock products and get instant alerts when they're back. Faster than brand restock emails. Track appointments, limited editions, and reservations.",
   },
@@ -255,7 +255,7 @@ export const USE_CASES: UseCase[] = [
       "Monitor career pages at your target companies. Get notified the moment a new position appears — before it hits LinkedIn or job boards.",
     longDescription: [
       "The best job openings fill fast. Companies often post positions on their own career pages hours or even days before they appear on LinkedIn, Indeed, or Glassdoor. By the time a job hits the aggregators, hundreds of applications have already flooded in. Early applicants have a measurably higher callback rate.",
-      "PagePulse monitors company career pages directly at the source. When a new position is added, when a listing is updated, or when a previously full team starts hiring again — you know immediately. No more checking 12 different company websites every morning before work.",
+      "Snaplert monitors company career pages directly at the source. When a new position is added, when a listing is updated, or when a previously full team starts hiring again — you know immediately. No more checking 12 different company websites every morning before work.",
       "This is especially powerful for government jobs, university positions, and roles at companies that don't post on major job boards. Many of these organizations only list openings on their own websites, with short application windows that close within days.",
     ],
     painPoints: [
@@ -313,7 +313,7 @@ export const USE_CASES: UseCase[] = [
       "Startup job boards and niche industry hiring pages",
     ],
     metaTitle:
-      "Career Edge — Be First To Every Opening | PagePulse",
+      "Career Edge — Be First To Every Opening | Snaplert",
     metaDescription:
       "Monitor company career pages and get instant alerts when new positions appear. Apply before jobs hit LinkedIn or Indeed. Track government, university, and direct listings.",
   },
@@ -328,8 +328,8 @@ export const USE_CASES: UseCase[] = [
       "Track news sites, blogs, and announcement pages. Get alerted when new content appears on topics you care about.",
     longDescription: [
       "Information overload is real. Between newsletters, RSS feeds, social media alerts, and push notifications, staying on top of the topics that actually matter to you means wading through an ocean of irrelevant content. Most news alert services are keyword-based and flood you with tangentially related stories.",
-      "PagePulse takes a different approach. Instead of monitoring keywords across the entire internet, you point it at the specific pages that matter: your city council's announcements page, your industry association's news section, a specific journalist's article archive, or a government agency's press release page. When that page changes, you know.",
-      "This visual approach means you catch updates that keyword-based tools miss entirely. A new document uploaded to a government page, a revised policy posted without a press release, a blog post published and then quickly edited — PagePulse detects the visual change regardless of whether specific keywords were used.",
+      "Snaplert takes a different approach. Instead of monitoring keywords across the entire internet, you point it at the specific pages that matter: your city council's announcements page, your industry association's news section, a specific journalist's article archive, or a government agency's press release page. When that page changes, you know.",
+      "This visual approach means you catch updates that keyword-based tools miss entirely. A new document uploaded to a government page, a revised policy posted without a press release, a blog post published and then quickly edited — Snaplert detects the visual change regardless of whether specific keywords were used.",
     ],
     painPoints: [
       "Newsletter and RSS overload — too much noise, not enough signal",
@@ -370,7 +370,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Local Government Watcher",
         description:
-          "Lisa monitors her city council's meeting minutes and decisions page. When zoning changes affecting her neighborhood are posted on a Friday evening — with no press coverage — she's alerted within hours and organizes a community response before the public comment period closes. Without PagePulse, she would have discovered the change weeks later in a local newspaper article.",
+          "Lisa monitors her city council's meeting minutes and decisions page. When zoning changes affecting her neighborhood are posted on a Friday evening — with no press coverage — she's alerted within hours and organizes a community response before the public comment period closes. Without Snaplert, she would have discovered the change weeks later in a local newspaper article.",
       },
       {
         title: "The Industry Analyst",
@@ -385,7 +385,7 @@ export const USE_CASES: UseCase[] = [
       "Blog and publication landing pages for niche topics",
       "Research journal and preprint server new submissions pages",
     ],
-    metaTitle: "Source Watch — Track Updates on Any Website | PagePulse",
+    metaTitle: "Source Watch — Track Updates on Any Website | Snaplert",
     metaDescription:
       "Monitor news sites, blogs, and announcement pages for new content. Get signal without the noise. Visual alerts when specific source pages update.",
   },
@@ -400,8 +400,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor real estate listings and price changes. Get notified when homes in your target area drop in price or new listings appear.",
     longDescription: [
       "In competitive housing markets, the best properties get offers within hours. By the time a listing appears in your Zillow saved search email — which often arrives hours after the listing goes live — other buyers have already scheduled viewings. Speed matters enormously, especially in markets with limited inventory.",
-      "PagePulse monitors real estate search results pages directly. When a new listing matching your criteria appears on the page, you get an alert with a visual comparison showing exactly what was added. This is often significantly faster than the platform's own email notifications, which batch-send throughout the day.",
-      "Beyond new listings, PagePulse excels at tracking price reductions. Monitor overpriced listings you're interested in and get alerted the moment sellers reduce the price — a strong signal that they're motivated and open to negotiation.",
+      "Snaplert monitors real estate search results pages directly. When a new listing matching your criteria appears on the page, you get an alert with a visual comparison showing exactly what was added. This is often significantly faster than the platform's own email notifications, which batch-send throughout the day.",
+      "Beyond new listings, Snaplert excels at tracking price reductions. Monitor overpriced listings you're interested in and get alerted the moment sellers reduce the price — a strong signal that they're motivated and open to negotiation.",
     ],
     painPoints: [
       "Platform email alerts arrive hours after listings go live",
@@ -415,13 +415,13 @@ export const USE_CASES: UseCase[] = [
         step: "01",
         title: "Set Up Your Search",
         description:
-          "Navigate to your saved search or filtered results on Zillow, Redfin, Realtor.com, or any local listing site. PagePulse captures the current state of the results page.",
+          "Navigate to your saved search or filtered results on Zillow, Redfin, Realtor.com, or any local listing site. Snaplert captures the current state of the results page.",
       },
       {
         step: "02",
         title: "Monitor The Results",
         description:
-          "Select the listings area of the page. PagePulse will detect when new properties appear, when prices change, or when listing statuses update.",
+          "Select the listings area of the page. Snaplert will detect when new properties appear, when prices change, or when listing statuses update.",
       },
       {
         step: "03",
@@ -458,7 +458,7 @@ export const USE_CASES: UseCase[] = [
       "New construction community sales pages",
     ],
     metaTitle:
-      "Listing Scout — Move Faster Than Other Buyers | PagePulse",
+      "Listing Scout — Move Faster Than Other Buyers | Snaplert",
     metaDescription:
       "Monitor real estate listings for new properties and price drops. Get alerts faster than Zillow and Redfin emails. Track multiple sites from one dashboard.",
   },
@@ -473,8 +473,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor public social media profiles and pages for changes. Track when bios update, new content appears, or messaging shifts.",
     longDescription: [
       "Public social media profiles contain a wealth of information — company announcements, personal updates, branding shifts, and strategic positioning changes. But unless you're constantly checking these profiles, you miss the changes as they happen. Social media feeds are algorithmic and unreliable for catching specific profile updates.",
-      "PagePulse monitors the actual public profile pages — not the feeds. When someone updates their LinkedIn headline, when a company changes their Instagram bio, or when a public Facebook page revises their About section — you get alerted with a visual comparison showing exactly what changed.",
-      "This is particularly valuable for competitive intelligence, brand monitoring, and tracking public figures. Unlike social listening tools that focus on mentions and hashtags, PagePulse watches the source profiles themselves for direct changes.",
+      "Snaplert monitors the actual public profile pages — not the feeds. When someone updates their LinkedIn headline, when a company changes their Instagram bio, or when a public Facebook page revises their About section — you get alerted with a visual comparison showing exactly what changed.",
+      "This is particularly valuable for competitive intelligence, brand monitoring, and tracking public figures. Unlike social listening tools that focus on mentions and hashtags, Snaplert watches the source profiles themselves for direct changes.",
     ],
     painPoints: [
       "Social algorithms don't show you every profile change",
@@ -520,7 +520,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Recruiter's Edge",
         description:
-          "A recruiter monitors the LinkedIn profiles of 20 passive candidates. When a target candidate updates their headline to 'Open to opportunities' and revises their summary, PagePulse catches the change. The recruiter reaches out within the day — before other recruiters notice the update in their feed.",
+          "A recruiter monitors the LinkedIn profiles of 20 passive candidates. When a target candidate updates their headline to 'Open to opportunities' and revises their summary, Snaplert catches the change. The recruiter reaches out within the day — before other recruiters notice the update in their feed.",
       },
     ],
     monitoringTips: [
@@ -530,7 +530,7 @@ export const USE_CASES: UseCase[] = [
       "Public Facebook page About sections",
       "YouTube channel descriptions and about pages",
     ],
-    metaTitle: "Profile Pulse Monitoring — Track Profile Changes | PagePulse",
+    metaTitle: "Profile Pulse Monitoring — Track Profile Changes | Snaplert",
     metaDescription:
       "Monitor public social media profiles for bio changes, branding shifts, and content updates. Visual before/after comparisons for competitive intelligence.",
   },
@@ -545,8 +545,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor university portals for grade postings, course registration openings, and scholarship announcements.",
     longDescription: [
       "Every student knows the ritual: finals end, and then you refresh your student portal 50 times a day waiting for grades to post. Professors upload grades on their own schedules — sometimes at midnight, sometimes on weekends, sometimes weeks after the exam. There's no notification system that reliably tells you the moment grades appear.",
-      "PagePulse watches your student portal's grade page for you. When a new grade appears or a 'Not Yet Graded' status changes to a letter grade, you get an instant alert. No more obsessive refreshing. The same approach works for course registration — monitor the page and get alerted the moment slots open up.",
-      "For graduate students, this extends to tracking thesis committee decisions, funding announcements, and conference submission results. For anyone in education, PagePulse eliminates the anxious waiting game.",
+      "Snaplert watches your student portal's grade page for you. When a new grade appears or a 'Not Yet Graded' status changes to a letter grade, you get an instant alert. No more obsessive refreshing. The same approach works for course registration — monitor the page and get alerted the moment slots open up.",
+      "For graduate students, this extends to tracking thesis committee decisions, funding announcements, and conference submission results. For anyone in education, Snaplert eliminates the anxious waiting game.",
     ],
     painPoints: [
       "Obsessively refreshing student portals for grade postings",
@@ -560,13 +560,13 @@ export const USE_CASES: UseCase[] = [
         step: "01",
         title: "Navigate To Your Portal",
         description:
-          "Log into your student portal, navigate to the grades page or registration page, and copy the URL. PagePulse captures the current state of the page.",
+          "Log into your student portal, navigate to the grades page or registration page, and copy the URL. Snaplert captures the current state of the page.",
       },
       {
         step: "02",
         title: "Select The Grade Area",
         description:
-          "Click on the section showing grades, registration status, or availability. PagePulse will monitor that specific area for any visual changes.",
+          "Click on the section showing grades, registration status, or availability. Snaplert will monitor that specific area for any visual changes.",
       },
       {
         step: "03",
@@ -587,7 +587,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Anxious Finals Student",
         description:
-          "After a particularly brutal organic chemistry final, Jamie sets up PagePulse to monitor the grades page with hourly checks. At 11:47 PM on a Saturday, the professor posts final grades. Jamie gets the alert, sees the B+ (better than expected), and can finally stop stressing. Their roommate, who wasn't monitoring, doesn't find out until Monday afternoon.",
+          "After a particularly brutal organic chemistry final, Jamie sets up Snaplert to monitor the grades page with hourly checks. At 11:47 PM on a Saturday, the professor posts final grades. Jamie gets the alert, sees the B+ (better than expected), and can finally stop stressing. Their roommate, who wasn't monitoring, doesn't find out until Monday afternoon.",
       },
       {
         title: "The Waitlisted Student",
@@ -603,7 +603,7 @@ export const USE_CASES: UseCase[] = [
       "Academic calendar pages for schedule and deadline updates",
     ],
     metaTitle:
-      "Campus Alerts — Stop Refreshing Your Student Portal | PagePulse",
+      "Campus Alerts — Stop Refreshing Your Student Portal | Snaplert",
     metaDescription:
       "Monitor university portals for grade postings and course openings. Get instant alerts when grades appear or registration slots open. Stop refreshing student portals.",
   },
@@ -618,8 +618,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor restaurant reservation pages for cancellations and new booking windows. Get alerted when coveted time slots open up.",
     longDescription: [
       "The hottest restaurants in every city have a reservation problem. Tables at places like The French Laundry, Noma, or your local Michelin-starred spot book up within seconds of release. Cancellations create brief windows of availability that disappear almost immediately.",
-      "PagePulse monitors reservation pages for visual changes. When a previously unavailable date shows open slots, when a new booking window opens, or when a cancellation creates an opening — the visual change triggers an alert. You can act within minutes instead of randomly refreshing a booking page.",
-      "This works with any booking platform: OpenTable, Resy, Tock, or a restaurant's direct booking page. If the availability is displayed on a webpage, PagePulse can monitor it.",
+      "Snaplert monitors reservation pages for visual changes. When a previously unavailable date shows open slots, when a new booking window opens, or when a cancellation creates an opening — the visual change triggers an alert. You can act within minutes instead of randomly refreshing a booking page.",
+      "This works with any booking platform: OpenTable, Resy, Tock, or a restaurant's direct booking page. If the availability is displayed on a webpage, Snaplert can monitor it.",
     ],
     painPoints: [
       "Top restaurant reservations book out within seconds of release",
@@ -639,7 +639,7 @@ export const USE_CASES: UseCase[] = [
         step: "02",
         title: "Monitor Availability",
         description:
-          "Select the availability area showing time slots. When unavailable slots become available — due to cancellations or new releases — PagePulse detects the visual change.",
+          "Select the availability area showing time slots. When unavailable slots become available — due to cancellations or new releases — Snaplert detects the visual change.",
       },
       {
         step: "03",
@@ -660,7 +660,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Anniversary Dinner",
         description:
-          "James needs a reservation at a fully-booked Michelin-starred restaurant for his wedding anniversary in three weeks. He sets up PagePulse to check the booking page every 5 minutes. When someone cancels a Saturday evening table on a Wednesday afternoon, James gets the alert and books it within 4 minutes. The slot would have been grabbed by someone else within 30 minutes.",
+          "James needs a reservation at a fully-booked Michelin-starred restaurant for his wedding anniversary in three weeks. He sets up Snaplert to check the booking page every 5 minutes. When someone cancels a Saturday evening table on a Wednesday afternoon, James gets the alert and books it within 4 minutes. The slot would have been grabbed by someone else within 30 minutes.",
       },
       {
         title: "The New Restaurant Opening",
@@ -676,7 +676,7 @@ export const USE_CASES: UseCase[] = [
       "Special event and tasting menu booking pages",
     ],
     metaTitle:
-      "Table Sniper — Score Hard-To-Get Tables | PagePulse",
+      "Table Sniper — Score Hard-To-Get Tables | Snaplert",
     metaDescription:
       "Monitor restaurant reservation pages for cancellations and new openings. Get instant alerts when hard-to-get tables become available on any booking platform.",
   },
@@ -691,7 +691,7 @@ export const USE_CASES: UseCase[] = [
       "Monitor scholarship listings and application portals. Get alerted when new opportunities are posted or deadlines change.",
     longDescription: [
       "Scholarship money is left on the table every year simply because qualified applicants never found out about it in time. University financial aid pages, professional association awards, community foundation grants, and niche scholarship databases update constantly — but there's no reliable way to track all of them simultaneously.",
-      "PagePulse monitors scholarship listing pages for you. When a new award is added, when application windows open, or when deadlines are extended, you get an immediate alert with a visual comparison showing exactly what changed. This gives you maximum time to prepare a strong application.",
+      "Snaplert monitors scholarship listing pages for you. When a new award is added, when application windows open, or when deadlines are extended, you get an immediate alert with a visual comparison showing exactly what changed. This gives you maximum time to prepare a strong application.",
       "For graduate students and researchers, this extends to grant announcements, fellowship postings, and conference funding opportunities. Every day of lead time you gain translates to a better-prepared application and higher odds of winning the award.",
     ],
     painPoints: [
@@ -712,7 +712,7 @@ export const USE_CASES: UseCase[] = [
         step: "02",
         title: "Monitor The Listings",
         description:
-          "Select the listing area on each page. PagePulse will detect when new scholarships appear, when deadlines change, or when application windows open.",
+          "Select the listing area on each page. Snaplert will detect when new scholarships appear, when deadlines change, or when application windows open.",
       },
       {
         step: "03",
@@ -749,7 +749,7 @@ export const USE_CASES: UseCase[] = [
       "Research funding agency announcement portals (NSF, NIH, etc.)",
     ],
     metaTitle:
-      "Funding Finder — Discover Money Left On The Table | PagePulse",
+      "Funding Finder — Discover Money Left On The Table | Snaplert",
     metaDescription:
       "Monitor scholarship listings and financial aid announcements. Get instant alerts when new opportunities are posted. Apply early with maximum preparation time.",
   },
@@ -764,8 +764,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor flight prices, hotel rates, and travel deals. Get alerted when prices drop or flash sales launch on your target routes.",
     longDescription: [
       "Airline pricing is notoriously volatile. The same flight can swing hundreds of dollars in price within a single week. Hotels run flash promotions that last 48 hours. Travel deal sites post limited-time offers that sell out before most people see them. Timing your purchase right can save you hundreds — but constantly monitoring prices is impractical.",
-      "PagePulse watches travel search results pages for you. Set up monitors on airline search results for your specific routes and dates, hotel booking pages for your target dates, and travel deal aggregator sites. When prices change, you get a visual comparison showing exactly what moved and by how much.",
-      "Unlike dedicated flight tracking apps that only work with major airlines, PagePulse monitors any website that displays travel pricing. Boutique airlines, direct hotel booking pages, vacation package sites, and travel deal blogs are all fair game.",
+      "Snaplert watches travel search results pages for you. Set up monitors on airline search results for your specific routes and dates, hotel booking pages for your target dates, and travel deal aggregator sites. When prices change, you get a visual comparison showing exactly what moved and by how much.",
+      "Unlike dedicated flight tracking apps that only work with major airlines, Snaplert monitors any website that displays travel pricing. Boutique airlines, direct hotel booking pages, vacation package sites, and travel deal blogs are all fair game.",
     ],
     painPoints: [
       "Flight prices fluctuate wildly and unpredictably",
@@ -785,7 +785,7 @@ export const USE_CASES: UseCase[] = [
         step: "02",
         title: "Monitor The Prices",
         description:
-          "Select the pricing area in the search results. PagePulse will detect when prices change — whether they go up or down — and send you a visual comparison.",
+          "Select the pricing area in the search results. Snaplert will detect when prices change — whether they go up or down — and send you a visual comparison.",
       },
       {
         step: "03",
@@ -822,7 +822,7 @@ export const USE_CASES: UseCase[] = [
       "Vacation package pricing pages on tour operator sites",
     ],
     metaTitle:
-      "Fare Watch — Travel Smarter, Spend Less | PagePulse",
+      "Fare Watch — Travel Smarter, Spend Less | Snaplert",
     metaDescription:
       "Track flight and hotel prices automatically. Get instant alerts when prices drop or flash sales launch. Works with any travel booking site.",
   },
@@ -837,8 +837,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor event pages and ticket sale announcements. Get alerted when tickets go on sale or sold-out events release more seats.",
     longDescription: [
       "Whether it's a stadium tour for your favorite band, a sold-out comedy show, a major sports playoff game, or a music festival — the tickets you want most sell out the fastest. Presale codes drop at odd hours, general sale windows fill in minutes, and surprise ticket releases happen without warning.",
-      "PagePulse monitors ticket sale pages, artist tour announcements, and venue event calendars. When new tour dates are announced, when presale links go live, or when a sold-out event releases a final batch of tickets — you get an alert with visual proof of exactly what changed.",
-      "For resale markets, PagePulse can also track price movements on secondary platforms. Monitor a StubHub listing and get alerted when prices drop below your threshold as the event date approaches.",
+      "Snaplert monitors ticket sale pages, artist tour announcements, and venue event calendars. When new tour dates are announced, when presale links go live, or when a sold-out event releases a final batch of tickets — you get an alert with visual proof of exactly what changed.",
+      "For resale markets, Snaplert can also track price movements on secondary platforms. Monitor a StubHub listing and get alerted when prices drop below your threshold as the event date approaches.",
     ],
     painPoints: [
       "Presale links and codes drop at unpredictable times",
@@ -852,13 +852,13 @@ export const USE_CASES: UseCase[] = [
         step: "01",
         title: "Find The Event Page",
         description:
-          "Navigate to the artist's tour page, the venue's event calendar, or the ticketing platform's event listing. PagePulse captures the current state.",
+          "Navigate to the artist's tour page, the venue's event calendar, or the ticketing platform's event listing. Snaplert captures the current state.",
       },
       {
         step: "02",
         title: "Monitor For Changes",
         description:
-          "Select the ticket status area, tour date listing, or pricing section. PagePulse will detect when new dates appear, when sale status changes, or when prices move.",
+          "Select the ticket status area, tour date listing, or pricing section. Snaplert will detect when new dates appear, when sale status changes, or when prices move.",
       },
       {
         step: "03",
@@ -884,7 +884,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Festival Strategist",
         description:
-          "Luke monitors a sold-out music festival's ticket page with 5-minute checks. When the festival releases a final batch of 500 tickets at 8 AM on a random weekday, Luke gets the alert and secures two tickets within 10 minutes. The batch sells out in under an hour. Without PagePulse, he would have never known the release happened.",
+          "Luke monitors a sold-out music festival's ticket page with 5-minute checks. When the festival releases a final batch of 500 tickets at 8 AM on a random weekday, Luke gets the alert and secures two tickets within 10 minutes. The batch sells out in under an hour. Without Snaplert, he would have never known the release happened.",
       },
     ],
     monitoringTips: [
@@ -894,7 +894,7 @@ export const USE_CASES: UseCase[] = [
       "Festival lineup and ticket release announcement pages",
       "Resale marketplace listing pages for price tracking (StubHub, SeatGeek)",
     ],
-    metaTitle: "Drop Day — Never Miss a Sale | PagePulse",
+    metaTitle: "Drop Day — Never Miss a Sale | Snaplert",
     metaDescription:
       "Monitor ticket sales, tour announcements, and event pages. Get instant alerts when tickets go on sale or sold-out events release more seats.",
   },
@@ -911,8 +911,8 @@ export const USE_CASES: UseCase[] = [
       "Track competitor homepages, pricing pages, feature announcements, and hiring pages. Get alerted the moment they make a move.",
     longDescription: [
       "Your competitors are making moves right now. They're adjusting pricing, launching features, changing their messaging, updating their positioning, and hiring for new initiatives. Every one of these changes is a signal — and most companies only discover them weeks or months after the fact, if at all.",
-      "PagePulse transforms competitive intelligence from a periodic manual task into a continuous automated process. Monitor competitor pricing pages to catch rate changes instantly. Track product and feature pages to know the moment they launch something new. Watch their career pages to read hiring signals — a sudden burst of engineering hires often signals a product pivot 6-12 months out.",
-      "The visual diff approach means you catch changes that text-based monitoring tools miss entirely. A redesigned pricing page, a new comparison table, a repositioned hero message, a changed testimonial — PagePulse shows you the visual before and after so you can assess the strategic implications immediately.",
+      "Snaplert transforms competitive intelligence from a periodic manual task into a continuous automated process. Monitor competitor pricing pages to catch rate changes instantly. Track product and feature pages to know the moment they launch something new. Watch their career pages to read hiring signals — a sudden burst of engineering hires often signals a product pivot 6-12 months out.",
+      "The visual diff approach means you catch changes that text-based monitoring tools miss entirely. A redesigned pricing page, a new comparison table, a repositioned hero message, a changed testimonial — Snaplert shows you the visual before and after so you can assess the strategic implications immediately.",
     ],
     painPoints: [
       "Competitor pricing changes go unnoticed for weeks",
@@ -953,7 +953,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Pricing Intelligence Win",
         description:
-          "A B2B SaaS company monitors the pricing pages of 12 competitors with hourly checks. When their largest competitor quietly drops prices by 20% on a Thursday evening — clearly preparing for a Monday announcement — the sales team is briefed Friday morning. They adjust their competitive battle cards over the weekend, and the SDR team is ready with updated talk tracks on Monday. Without PagePulse, they would have learned about the price drop from a lost deal.",
+          "A B2B SaaS company monitors the pricing pages of 12 competitors with hourly checks. When their largest competitor quietly drops prices by 20% on a Thursday evening — clearly preparing for a Monday announcement — the sales team is briefed Friday morning. They adjust their competitive battle cards over the weekend, and the SDR team is ready with updated talk tracks on Monday. Without Snaplert, they would have learned about the price drop from a lost deal.",
       },
       {
         title: "The Feature Launch Detection",
@@ -973,7 +973,7 @@ export const USE_CASES: UseCase[] = [
       "Career/jobs listing pages for hiring signal intelligence",
       "Blog and newsroom pages for strategic announcements",
     ],
-    metaTitle: "Rival Radar — Track Competitor Websites Automatically | PagePulse",
+    metaTitle: "Rival Radar — Track Competitor Websites Automatically | Snaplert",
     metaDescription:
       "Monitor competitor pricing, features, messaging, and hiring automatically. Get instant visual alerts when competitors change their websites. Respond in hours, not months.",
   },
@@ -988,8 +988,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor government agencies and regulatory bodies for policy updates, rule changes, and new guidance documents.",
     longDescription: [
       "Regulatory changes can make or break a business. A new data privacy rule, a revised financial regulation, an updated environmental standard — these changes create compliance obligations, competitive advantages, and sometimes existential threats. Yet most companies learn about regulatory changes from law firm newsletters that arrive days or weeks after the fact.",
-      "PagePulse monitors regulatory websites directly at the source. When a federal agency publishes a new proposed rule, when a state regulator updates licensing requirements, or when an international body releases new guidance — you know immediately. Your compliance team can begin assessing impact the same day, not the same month.",
-      "The visual monitoring approach is particularly powerful for government websites, which often update PDF documents, add new entries to databases, or restructure pages in ways that text-based monitoring tools miss entirely. PagePulse catches every visual change.",
+      "Snaplert monitors regulatory websites directly at the source. When a federal agency publishes a new proposed rule, when a state regulator updates licensing requirements, or when an international body releases new guidance — you know immediately. Your compliance team can begin assessing impact the same day, not the same month.",
+      "The visual monitoring approach is particularly powerful for government websites, which often update PDF documents, add new entries to databases, or restructure pages in ways that text-based monitoring tools miss entirely. Snaplert catches every visual change.",
     ],
     painPoints: [
       "Law firm regulatory digests arrive days or weeks after publication",
@@ -1045,7 +1045,7 @@ export const USE_CASES: UseCase[] = [
       "International regulatory body portals (EU, UK FCA, etc.)",
       "Enforcement action and penalty announcement pages",
     ],
-    metaTitle: "Policy Watch — Monitor Government & Policy Changes | PagePulse",
+    metaTitle: "Policy Watch — Monitor Government & Policy Changes | Snaplert",
     metaDescription:
       "Track regulatory agencies and government websites for policy changes in real time. Get instant alerts when new rules, guidance, or enforcement actions are published.",
   },
@@ -1060,7 +1060,7 @@ export const USE_CASES: UseCase[] = [
       "Watch vendor terms of service, privacy policies, and third-party compliance pages. Detect unauthorized changes to shared agreements.",
     longDescription: [
       "Modern businesses depend on dozens of third-party vendors, each with their own terms of service, privacy policies, and data processing agreements. When a vendor changes these documents — which they can do unilaterally — it can create compliance exposure for your business. Most companies only discover these changes during annual vendor reviews, long after the risk has materialized.",
-      "PagePulse monitors vendor documentation pages continuously. When a cloud provider expands their data sharing provisions, when a SaaS vendor changes their data retention policy, or when a payment processor modifies their PCI compliance terms — you get alerted immediately. This creates a real-time compliance perimeter around your vendor relationships.",
+      "Snaplert monitors vendor documentation pages continuously. When a cloud provider expands their data sharing provisions, when a SaaS vendor changes their data retention policy, or when a payment processor modifies their PCI compliance terms — you get alerted immediately. This creates a real-time compliance perimeter around your vendor relationships.",
       "For regulated industries, this extends to monitoring your own customer-facing compliance pages, certification status pages, and regulatory filing portals. Ensure that content changes to these sensitive pages are detected and reviewed promptly.",
     ],
     painPoints: [
@@ -1117,7 +1117,7 @@ export const USE_CASES: UseCase[] = [
       "Service level agreement (SLA) documentation pages",
       "Sub-processor and third-party data sharing disclosure pages",
     ],
-    metaTitle: "Vendor Guard — Track Terms & Policies Automatically | PagePulse",
+    metaTitle: "Vendor Guard — Track Terms & Policies Automatically | Snaplert",
     metaDescription:
       "Monitor vendor terms of service, privacy policies, and compliance certifications. Get instant alerts when third-party agreements change. Maintain audit trails.",
   },
@@ -1132,8 +1132,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor your live website for visual regressions, layout breaks, and defacement. Catch issues before your users or your boss notices.",
     longDescription: [
       "Every deploy carries risk. A CSS change breaks the checkout button on mobile. A CMS update removes a hero image. A third-party script injects unwanted elements. A CDN issue corrupts font rendering. These visual regressions happen in production, and they directly impact revenue and user trust. The worst part: your team often learns about them from customer complaints — hours or days after the damage is done.",
-      "PagePulse acts as a continuous visual QA layer for your production environment. Monitor your most critical pages — homepage, checkout, pricing, login — and get alerted within minutes when something looks wrong. Unlike synthetic monitoring tools that check for uptime, PagePulse checks for visual correctness. A page can return 200 OK while looking completely broken, and PagePulse catches that.",
-      "For security-sensitive sites, PagePulse also detects defacement — unauthorized visual changes that indicate a security breach. Government websites, financial institutions, and any organization that could be targeted by hacktivists benefit from continuous visual integrity monitoring.",
+      "Snaplert acts as a continuous visual QA layer for your production environment. Monitor your most critical pages — homepage, checkout, pricing, login — and get alerted within minutes when something looks wrong. Unlike synthetic monitoring tools that check for uptime, Snaplert checks for visual correctness. A page can return 200 OK while looking completely broken, and Snaplert catches that.",
+      "For security-sensitive sites, Snaplert also detects defacement — unauthorized visual changes that indicate a security breach. Government websites, financial institutions, and any organization that could be targeted by hacktivists benefit from continuous visual integrity monitoring.",
     ],
     painPoints: [
       "Visual regressions discovered through customer complaints, not proactive monitoring",
@@ -1153,7 +1153,7 @@ export const USE_CASES: UseCase[] = [
         step: "02",
         title: "Establish Baselines",
         description:
-          "Create monitors for each critical page. PagePulse captures the 'known good' state. Set check intervals based on deploy frequency — every 5 minutes for high-traffic pages.",
+          "Create monitors for each critical page. Snaplert captures the 'known good' state. Set check intervals based on deploy frequency — every 5 minutes for high-traffic pages.",
       },
       {
         step: "03",
@@ -1174,12 +1174,12 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Checkout Button Disaster",
         description:
-          "An e-commerce team deploys a routine CSS update at 2 PM. Unknown to them, the update breaks the 'Place Order' button styling on Safari — it becomes invisible. PagePulse detects the visual change within 10 minutes and alerts the engineering team. They roll back the change by 2:30 PM. Without PagePulse, the bug would have gone unnoticed until daily analytics review the next morning — after 16 hours of lost Safari conversions, representing approximately $28,000 in missed revenue.",
+          "An e-commerce team deploys a routine CSS update at 2 PM. Unknown to them, the update breaks the 'Place Order' button styling on Safari — it becomes invisible. Snaplert detects the visual change within 10 minutes and alerts the engineering team. They roll back the change by 2:30 PM. Without Snaplert, the bug would have gone unnoticed until daily analytics review the next morning — after 16 hours of lost Safari conversions, representing approximately $28,000 in missed revenue.",
       },
       {
         title: "The Third-Party Script Change",
         description:
-          "A marketing team uses a third-party chat widget that auto-updates. One update changes the widget's behavior, adding a large overlay that partially covers the hero section on mobile. PagePulse detects the visual change within the hour. The team contacts the vendor and rolls back the widget version before the next morning's peak traffic.",
+          "A marketing team uses a third-party chat widget that auto-updates. One update changes the widget's behavior, adding a large overlay that partially covers the hero section on mobile. Snaplert detects the visual change within the hour. The team contacts the vendor and rolls back the widget version before the next morning's peak traffic.",
       },
     ],
     monitoringTips: [
@@ -1190,7 +1190,7 @@ export const USE_CASES: UseCase[] = [
       "Pages with third-party embeds, widgets, or advertising scripts",
     ],
     metaTitle:
-      "Site Shield — Protect Your Production Site | PagePulse",
+      "Site Shield — Protect Your Production Site | Snaplert",
     metaDescription:
       "Monitor your production website for visual regressions, layout breaks, and defacement. Get instant alerts when deploys break styling or third-party scripts misbehave.",
   },
@@ -1205,8 +1205,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor your site for content drift, broken elements, and changes that could hurt search rankings. Protect your organic traffic.",
     longDescription: [
       "Organic search traffic is often a company's most valuable and hardest-earned acquisition channel. A single unintended change to a top-ranking page can trigger a ranking drop that takes months to recover from. The problem: these changes often happen silently. A CMS migration alters URL structures. A content editor changes the H1 tag on your #1 ranking page. A developer removes schema markup during a code cleanup.",
-      "PagePulse monitors your SEO-critical pages for any visual changes. When someone modifies a page title, changes heading text, removes structured data markup, or alters internal linking — you get an alert before Google's next crawl. This early detection window is the difference between a quick fix and a months-long ranking recovery.",
-      "For SEO agencies managing multiple clients, PagePulse provides a scalable way to monitor hundreds of client pages simultaneously. Catch client-side CMS changes that break SEO elements before they show up as traffic drops in Google Analytics.",
+      "Snaplert monitors your SEO-critical pages for any visual changes. When someone modifies a page title, changes heading text, removes structured data markup, or alters internal linking — you get an alert before Google's next crawl. This early detection window is the difference between a quick fix and a months-long ranking recovery.",
+      "For SEO agencies managing multiple clients, Snaplert provides a scalable way to monitor hundreds of client pages simultaneously. Catch client-side CMS changes that break SEO elements before they show up as traffic drops in Google Analytics.",
     ],
     painPoints: [
       "Content editors unknowingly change SEO-critical page elements",
@@ -1247,12 +1247,12 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The H1 Tag Save",
         description:
-          "An SEO agency monitors 200 client pages across 15 accounts. When a client's content editor changes the H1 tag on their #1 ranking 'best CRM software' page from a keyword-rich heading to a generic 'Our Product', PagePulse alerts the SEO team within hours. They contact the client, revert the heading, and prevent what would have been a significant ranking drop for a keyword driving $50,000/month in organic leads.",
+          "An SEO agency monitors 200 client pages across 15 accounts. When a client's content editor changes the H1 tag on their #1 ranking 'best CRM software' page from a keyword-rich heading to a generic 'Our Product', Snaplert alerts the SEO team within hours. They contact the client, revert the heading, and prevent what would have been a significant ranking drop for a keyword driving $50,000/month in organic leads.",
       },
       {
         title: "The Schema Markup Recovery",
         description:
-          "An e-commerce site's engineering team deploys a code refactor that accidentally strips product schema markup from 300 product pages. PagePulse detects the visual change on the monitored pages within an hour. The SEO team identifies the root cause and the engineering team restores the markup before Google re-crawls the affected pages. Rich snippet rankings are preserved.",
+          "An e-commerce site's engineering team deploys a code refactor that accidentally strips product schema markup from 300 product pages. Snaplert detects the visual change on the monitored pages within an hour. The SEO team identifies the root cause and the engineering team restores the markup before Google re-crawls the affected pages. Rich snippet rankings are preserved.",
       },
     ],
     monitoringTips: [
@@ -1262,7 +1262,7 @@ export const USE_CASES: UseCase[] = [
       "Site navigation and internal linking structures on key pages",
       "XML sitemap and robots.txt pages for unintended access changes",
     ],
-    metaTitle: "Rank Protect — Detect Content & Ranking Changes | PagePulse",
+    metaTitle: "Rank Protect — Detect Content & Ranking Changes | Snaplert",
     metaDescription:
       "Monitor your website for SEO-impacting changes. Get instant alerts when content drifts, schema breaks, or critical pages are modified. Fix before Google notices.",
   },
@@ -1279,8 +1279,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor company IR pages, SEC filings, and financial announcements. Get alerted the moment material information is published.",
     longDescription: [
       "In financial markets, the speed at which you process new information directly correlates with alpha generation. Company investor relations pages, SEC filing databases, central bank announcement pages, and economic data release portals are the primary sources of market-moving information. Yet most investment professionals learn about filings and announcements from Bloomberg terminals and news wires — which themselves have a processing delay.",
-      "PagePulse monitors these source pages directly. When a company updates their investor relations page with new guidance, when a new 8-K filing appears in EDGAR, or when a central bank posts a policy statement — you know from the source itself. This can provide a critical informational edge measured in minutes.",
-      "For portfolio managers and research analysts, PagePulse enables comprehensive coverage of information sources that would be impossible to monitor manually. Track 50+ company IR pages, multiple regulatory databases, and central bank portals from a single dashboard.",
+      "Snaplert monitors these source pages directly. When a company updates their investor relations page with new guidance, when a new 8-K filing appears in EDGAR, or when a central bank posts a policy statement — you know from the source itself. This can provide a critical informational edge measured in minutes.",
+      "For portfolio managers and research analysts, Snaplert enables comprehensive coverage of information sources that would be impossible to monitor manually. Track 50+ company IR pages, multiple regulatory databases, and central bank portals from a single dashboard.",
     ],
     painPoints: [
       "Bloomberg and news wire delays mean you're not always first to react",
@@ -1337,7 +1337,7 @@ export const USE_CASES: UseCase[] = [
       "Sovereign wealth fund and major institutional disclosure pages",
     ],
     metaTitle:
-      "Market Pulse — Market Intelligence On Autopilot | PagePulse",
+      "Market Pulse — Market Intelligence On Autopilot | Snaplert",
     metaDescription:
       "Monitor company IR pages, SEC filings, and central bank announcements. Get instant alerts on market-moving information. Scale coverage across your entire universe.",
   },
@@ -1352,8 +1352,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor court dockets, regulatory announcements, and opposing counsel websites. Stay ahead of case developments and regulatory changes.",
     longDescription: [
       "Legal practice increasingly demands real-time awareness. Court dockets update with new filings that require immediate responses. Regulatory agencies publish new rules affecting client industries. Opposing parties quietly update their websites with information relevant to ongoing disputes. A law firm's competitive advantage often comes down to who notices these changes first.",
-      "PagePulse enables systematic monitoring of every digital information source relevant to your practice. Monitor court docket pages for new filings and orders. Track regulatory agency websites for rulemaking that affects your clients. Watch opposing party websites for changes that could be relevant to active cases.",
-      "For regulatory practices, PagePulse provides the kind of comprehensive agency monitoring that previously required expensive regulatory intelligence subscriptions. Monitor every relevant agency's announcement page and know about new rules, enforcement actions, and guidance the day they're published.",
+      "Snaplert enables systematic monitoring of every digital information source relevant to your practice. Monitor court docket pages for new filings and orders. Track regulatory agency websites for rulemaking that affects your clients. Watch opposing party websites for changes that could be relevant to active cases.",
+      "For regulatory practices, Snaplert provides the kind of comprehensive agency monitoring that previously required expensive regulatory intelligence subscriptions. Monitor every relevant agency's announcement page and know about new rules, enforcement actions, and guidance the day they're published.",
     ],
     painPoints: [
       "Court docket updates require manual checking or expensive services",
@@ -1394,7 +1394,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Litigation Advantage",
         description:
-          "A litigation team monitors the opposing party's corporate website during active securities litigation. When the defendant quietly removes a key executive's bio page and alters claims about their product's capabilities — changes directly relevant to the complaint's allegations — the legal team screenshots the changes through PagePulse's history feature and presents the evidence in discovery. The visual change log proves the modifications were made after the lawsuit was filed.",
+          "A litigation team monitors the opposing party's corporate website during active securities litigation. When the defendant quietly removes a key executive's bio page and alters claims about their product's capabilities — changes directly relevant to the complaint's allegations — the legal team screenshots the changes through Snaplert's history feature and presents the evidence in discovery. The visual change log proves the modifications were made after the lawsuit was filed.",
       },
       {
         title: "The Proactive Regulatory Counsel",
@@ -1410,7 +1410,7 @@ export const USE_CASES: UseCase[] = [
       "Bar association regulatory announcement and ethics opinion pages",
     ],
     metaTitle:
-      "Legal Intel — Legal Intelligence That Never Sleeps | PagePulse",
+      "Legal Intel — Legal Intelligence That Never Sleeps | Snaplert",
     metaDescription:
       "Monitor court dockets, regulatory announcements, and opposing party websites. Stay ahead of case developments. Deliver proactive intelligence to your clients.",
   },
@@ -1425,8 +1425,8 @@ export const USE_CASES: UseCase[] = [
       "Build web change detection into your platform. Monitor source websites for updates and feed changes into your data pipeline.",
     longDescription: [
       "If your product aggregates, compiles, or analyzes information from web sources, data freshness is your competitive advantage. Market intelligence platforms, competitive analysis tools, price comparison engines, job aggregators, and research databases all depend on knowing when their source websites update. Stale data drives away customers.",
-      "PagePulse provides the change detection layer that keeps your product current. Monitor hundreds of source websites and get notified the moment content changes. Feed these change events into your data pipeline to trigger re-scraping, content updates, and customer notifications.",
-      "Unlike building your own web monitoring infrastructure — which requires managing headless browsers, handling anti-bot measures, and maintaining screenshot comparison algorithms — PagePulse provides this as a reliable service. Focus your engineering resources on your core product, not monitoring infrastructure.",
+      "Snaplert provides the change detection layer that keeps your product current. Monitor hundreds of source websites and get notified the moment content changes. Feed these change events into your data pipeline to trigger re-scraping, content updates, and customer notifications.",
+      "Unlike building your own web monitoring infrastructure — which requires managing headless browsers, handling anti-bot measures, and maintaining screenshot comparison algorithms — Snaplert provides this as a reliable service. Focus your engineering resources on your core product, not monitoring infrastructure.",
     ],
     painPoints: [
       "Source websites update at unpredictable times and frequencies",
@@ -1446,13 +1446,13 @@ export const USE_CASES: UseCase[] = [
         step: "02",
         title: "Connect To Your Pipeline",
         description:
-          "Use PagePulse webhook integrations to trigger automated actions when changes are detected — re-scrape the page, update your database, or alert your data team.",
+          "Use Snaplert webhook integrations to trigger automated actions when changes are detected — re-scrape the page, update your database, or alert your data team.",
       },
       {
         step: "03",
         title: "Maintain Data Freshness At Scale",
         description:
-          "PagePulse handles the monitoring infrastructure. Your product always reflects the latest data from source websites, with change events flowing into your pipeline in real time.",
+          "Snaplert handles the monitoring infrastructure. Your product always reflects the latest data from source websites, with change events flowing into your pipeline in real time.",
       },
     ],
     benefits: [
@@ -1467,12 +1467,12 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Market Intelligence Platform",
         description:
-          "A competitive intelligence SaaS product monitors 600+ company websites for pricing, feature, and messaging changes on behalf of their enterprise customers. When any tracked company updates their pricing page, the change event triggers an automated re-scrape, analysis pipeline, and customer notification. Their product delivers 'real-time competitive intelligence' — and PagePulse is the change detection engine making that possible.",
+          "A competitive intelligence SaaS product monitors 600+ company websites for pricing, feature, and messaging changes on behalf of their enterprise customers. When any tracked company updates their pricing page, the change event triggers an automated re-scrape, analysis pipeline, and customer notification. Their product delivers 'real-time competitive intelligence' — and Snaplert is the change detection engine making that possible.",
       },
       {
         title: "The Price Comparison Engine",
         description:
-          "A B2B price comparison site monitors supplier pricing across 200 vendor websites. PagePulse detects price changes and triggers automated database updates. Their customers see the latest prices within an hour of any change. Before PagePulse, the platform relied on daily batch scraping and was frequently 24 hours behind actual pricing — leading to customer complaints about inaccurate data.",
+          "A B2B price comparison site monitors supplier pricing across 200 vendor websites. Snaplert detects price changes and triggers automated database updates. Their customers see the latest prices within an hour of any change. Before Snaplert, the platform relied on daily batch scraping and was frequently 24 hours behind actual pricing — leading to customer complaints about inaccurate data.",
       },
     ],
     monitoringTips: [
@@ -1483,7 +1483,7 @@ export const USE_CASES: UseCase[] = [
       "News and content source pages for aggregation products",
     ],
     metaTitle:
-      "Data Freshness — Power Your Product With Web Data | PagePulse",
+      "Data Freshness — Power Your Product With Web Data | Snaplert",
     metaDescription:
       "Monitor source websites and feed change data into your product pipeline. Build reliable web change detection without building infrastructure. Scale to hundreds of sources.",
   },
@@ -1498,8 +1498,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor competitor pricing, promotions, and inventory across the e-commerce landscape. Adjust your strategy in real time.",
     longDescription: [
       "In e-commerce, pricing and promotional strategy directly determines market share. Your competitors are constantly adjusting prices, running promotions, changing bundle offers, and testing new messaging. The companies that detect and respond to these moves fastest win. The ones that react slowly — or don't react at all — lose margin and customers.",
-      "PagePulse gives your e-commerce team continuous visibility into competitor activity. Monitor product pricing across competitive SKUs, track promotional campaigns and sale events, detect new product launches, and watch for inventory and availability changes. All from a centralized dashboard that your pricing, merchandising, and marketing teams can share.",
-      "For brand protection, PagePulse detects unauthorized resellers, below-MAP pricing violations, and counterfeit listings on marketplaces. Monitor your brand presence across major platforms and take enforcement action the same day violations appear.",
+      "Snaplert gives your e-commerce team continuous visibility into competitor activity. Monitor product pricing across competitive SKUs, track promotional campaigns and sale events, detect new product launches, and watch for inventory and availability changes. All from a centralized dashboard that your pricing, merchandising, and marketing teams can share.",
+      "For brand protection, Snaplert detects unauthorized resellers, below-MAP pricing violations, and counterfeit listings on marketplaces. Monitor your brand presence across major platforms and take enforcement action the same day violations appear.",
     ],
     painPoints: [
       "Competitor price changes happen faster than manual monitoring can track",
@@ -1545,7 +1545,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Brand Protection Action",
         description:
-          "A consumer electronics brand monitors marketplace search results for their product names on Amazon, eBay, and Walmart. When an unauthorized seller lists refurbished products as 'new' at below-MAP pricing, PagePulse catches the listing within a day. The brand protection team sends cease-and-desist notices and files a marketplace complaint, removing the listings before they significantly impact authorized dealer sales.",
+          "A consumer electronics brand monitors marketplace search results for their product names on Amazon, eBay, and Walmart. When an unauthorized seller lists refurbished products as 'new' at below-MAP pricing, Snaplert catches the listing within a day. The brand protection team sends cease-and-desist notices and files a marketplace complaint, removing the listings before they significantly impact authorized dealer sales.",
       },
     ],
     monitoringTips: [
@@ -1555,7 +1555,7 @@ export const USE_CASES: UseCase[] = [
       "Marketplace search results for your brand name (Amazon, eBay, etc.)",
       "Competitor homepage hero sections for major promotional pushes",
     ],
-    metaTitle: "Shelf Watch Monitoring — Track Competitor Prices & Promotions | PagePulse",
+    metaTitle: "Shelf Watch Monitoring — Track Competitor Prices & Promotions | Snaplert",
     metaDescription:
       "Monitor competitor pricing, promotions, and product launches across e-commerce. Protect your brand on marketplaces. Respond to competitive moves in hours, not weeks.",
   },
@@ -1570,8 +1570,8 @@ export const USE_CASES: UseCase[] = [
       "Monitor insured party websites and regulatory announcements. Detect changes that affect underwriting decisions and claims exposure.",
     longDescription: [
       "Insurance underwriting depends on accurate, current information about insured parties. But after a policy is bound, insurers have limited visibility into how a policyholder's risk profile changes. Company websites contain valuable signals: safety certifications being removed, product recalls being disclosed, business operations changing, leadership departures being announced. These changes can materially affect risk exposure.",
-      "PagePulse enables continuous portfolio monitoring by tracking the websites of insured parties, regulatory bodies, and industry safety organizations. When a commercial property insured removes their sprinkler inspection certification from their website, when a product liability insured posts a safety recall, or when a D&O insured announces executive departures — your underwriting team knows immediately.",
-      "For regulatory compliance, PagePulse monitors state insurance department websites for rate filing requirements, market conduct examination announcements, and regulatory guidance updates — keeping your compliance team ahead of every filing deadline and regulatory change.",
+      "Snaplert enables continuous portfolio monitoring by tracking the websites of insured parties, regulatory bodies, and industry safety organizations. When a commercial property insured removes their sprinkler inspection certification from their website, when a product liability insured posts a safety recall, or when a D&O insured announces executive departures — your underwriting team knows immediately.",
+      "For regulatory compliance, Snaplert monitors state insurance department websites for rate filing requirements, market conduct examination announcements, and regulatory guidance updates — keeping your compliance team ahead of every filing deadline and regulatory change.",
     ],
     painPoints: [
       "Policyholder risk changes are invisible between renewal cycles",
@@ -1627,7 +1627,7 @@ export const USE_CASES: UseCase[] = [
       "Catastrophe and severe weather monitoring service pages",
       "Professional liability insured parties' professional licensing status pages",
     ],
-    metaTitle: "Risk Lens Monitoring — Underwriting & Risk Intelligence | PagePulse",
+    metaTitle: "Risk Lens Monitoring — Underwriting & Risk Intelligence | Snaplert",
     metaDescription:
       "Monitor insured party websites and regulatory changes for underwriting intelligence. Detect risk signal changes and compliance requirements in real time.",
   },
@@ -1642,7 +1642,7 @@ export const USE_CASES: UseCase[] = [
       "Monitor government pages, corporate websites, and public records for changes that signal breaking news. Get tipped off to story leads from the source.",
     longDescription: [
       "The best journalism starts with noticing something that others haven't — a quiet website change, a document upload, a personnel announcement, a policy revision. These changes happen on government websites, corporate pages, court record databases, and public data portals every day. The journalists who notice them first break the biggest stories.",
-      "PagePulse automates the monitoring of source websites that would be impossible to track manually. A single investigative reporter can effectively 'watch' hundreds of government pages, corporate websites, and public data sources simultaneously. When a city planning department uploads new environmental impact documents, when a corporation revises their legal disclosures, or when a politician updates their campaign finance page — you get an alert.",
+      "Snaplert automates the monitoring of source websites that would be impossible to track manually. A single investigative reporter can effectively 'watch' hundreds of government pages, corporate websites, and public data sources simultaneously. When a city planning department uploads new environmental impact documents, when a corporation revises their legal disclosures, or when a politician updates their campaign finance page — you get an alert.",
       "The visual diff approach is particularly valuable for journalism because it catches changes that source organizations may not announce: revised documents, removed pages, edited statements, and quietly updated data. These 'stealth edits' are often the most newsworthy changes of all.",
     ],
     painPoints: [
@@ -1669,7 +1669,7 @@ export const USE_CASES: UseCase[] = [
         step: "03",
         title: "Follow The Changes",
         description:
-          "When a source page changes, evaluate the change for news value. A removed executive bio, a revised financial disclosure, an uploaded environmental document — every change tells a story. PagePulse helps you find it.",
+          "When a source page changes, evaluate the change for news value. A removed executive bio, a revised financial disclosure, an uploaded environmental document — every change tells a story. Snaplert helps you find it.",
       },
     ],
     benefits: [
@@ -1689,7 +1689,7 @@ export const USE_CASES: UseCase[] = [
       {
         title: "The Government Accountability Report",
         description:
-          "A local government reporter monitors their city's planning department, budget office, and public records portal. When environmental impact assessment documents for a controversial development project are uploaded to the planning site at 4 PM on a Friday — clearly timed to avoid media attention — the reporter gets an alert and reviews the documents over the weekend. Their story runs Monday morning, catching city officials off guard. Without PagePulse, the documents would have gone unnoticed until the next public meeting.",
+          "A local government reporter monitors their city's planning department, budget office, and public records portal. When environmental impact assessment documents for a controversial development project are uploaded to the planning site at 4 PM on a Friday — clearly timed to avoid media attention — the reporter gets an alert and reviews the documents over the weekend. Their story runs Monday morning, catching city officials off guard. Without Snaplert, the documents would have gone unnoticed until the next public meeting.",
       },
     ],
     monitoringTips: [
@@ -1699,7 +1699,7 @@ export const USE_CASES: UseCase[] = [
       "Campaign finance, lobbying, and political disclosure databases",
       "Statistical agency data release and publication pages",
     ],
-    metaTitle: "Scoop Engine Monitoring — Source Monitoring for Reporters | PagePulse",
+    metaTitle: "Scoop Engine Monitoring — Source Monitoring for Reporters | Snaplert",
     metaDescription:
       "Monitor government pages, corporate websites, and public records for story leads. Detect stealth edits and document changes. Break stories from primary sources.",
   },

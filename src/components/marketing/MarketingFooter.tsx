@@ -8,7 +8,7 @@ export function MarketingFooter() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div>
             <span className="text-lg font-black tracking-tighter block mb-4">
-              PAGE<span className="text-[#2d5a2d]">PULSE</span>
+              SNAP<span className="text-[#2d5a2d]">LERT</span>
             </span>
             <p className="text-xs text-[#666] leading-relaxed">
               Website change detection and monitoring alerts for teams and
@@ -85,7 +85,7 @@ export function MarketingFooter() {
 
         <div className="border-t-2 border-[#1a1a1a] pt-6 flex items-center justify-between">
           <span className="text-xs text-[#666]">
-            &copy; {new Date().getFullYear()} PagePulse. All rights reserved.
+            &copy; {new Date().getFullYear()} Snaplert. All rights reserved.
           </span>
         </div>
       </div>

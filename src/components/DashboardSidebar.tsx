@@ -89,7 +89,7 @@ export function DashboardSidebar() {
           className="text-xl font-black tracking-tighter"
           onClick={onClose}
         >
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
+          SNAP<span className="text-[#2d5a2d]">LERT</span>
         </Link>
         {onClose && (
           <button
@@ -164,7 +164,7 @@ export function DashboardSidebar() {
       {/* Mobile top bar */}
       <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#e4e4dc] border-b-2 border-[#1a1a1a] z-40 flex items-center justify-between px-4">
         <Link to="/dashboard" className="text-lg font-black tracking-tighter">
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
+          SNAP<span className="text-[#2d5a2d]">LERT</span>
         </Link>
         <button
           onClick={() => setMobileOpen(true)}

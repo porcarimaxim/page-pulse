@@ -3,7 +3,7 @@
  * Designed to look like a real product UI screenshot.
  */
 export function BrowserMockup({
-  url = "pagepulse.io",
+  url = "snaplert.com",
   children,
   className = "",
 }: {
@@ -89,10 +89,10 @@ export function HeroIllustration({
       <div className="absolute -bottom-6 -left-4 md:-left-8 border-2 border-[#1a1a1a] bg-white shadow-[4px_4px_0px_0px_#1a1a1a] p-3 max-w-[220px]">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-5 h-5 bg-[#2d5a2d] flex items-center justify-center shrink-0">
-            <span className="text-[7px] font-black text-white">PP</span>
+            <span className="text-[7px] font-black text-white">SN</span>
           </div>
           <div>
-            <div className="text-[9px] font-bold text-[#1a1a1a]">PagePulse Alert</div>
+            <div className="text-[9px] font-bold text-[#1a1a1a]">Snaplert Alert</div>
             <div className="text-[8px] text-[#888]">Just now</div>
           </div>
         </div>

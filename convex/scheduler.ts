@@ -309,7 +309,7 @@ export const processOneMonitor = internalAction({
               afterUrl: afterUrl ?? undefined,
               diffUrl: diffUrl ?? undefined,
               aiSummary,
-              dashboardUrl: `${process.env.SITE_URL ?? "https://pagepulse.dev"}/dashboard/${monitor._id}`,
+              dashboardUrl: `${process.env.SITE_URL ?? "https://snaplert.com"}/dashboard/${monitor._id}`,
             });
             console.log(`${label} — email notification: ${Date.now() - tEmail}ms`);
           } catch (e) {
@@ -331,7 +331,7 @@ export const processOneMonitor = internalAction({
               beforeUrl: beforeUrl ?? undefined,
               afterUrl: afterUrl ?? undefined,
               diffUrl: diffUrl ?? undefined,
-              dashboardUrl: `${process.env.SITE_URL ?? "https://pagepulse.dev"}/dashboard/${monitor._id}`,
+              dashboardUrl: `${process.env.SITE_URL ?? "https://snaplert.com"}/dashboard/${monitor._id}`,
             });
             console.log(`${label} — webhook notification: ${Date.now() - tWebhook}ms`);
           } catch (e) {
@@ -384,7 +384,7 @@ export const processOneMonitor = internalAction({
       if (monitor.alertOnError) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
-        const dashboardUrl = `${process.env.SITE_URL ?? "https://pagepulse.dev"}/dashboard/${monitor._id}`;
+        const dashboardUrl = `${process.env.SITE_URL ?? "https://snaplert.com"}/dashboard/${monitor._id}`;
 
         const userEmail = await ctx.runQuery(
           internal.schedulerHelpers.getMonitorUserEmail,

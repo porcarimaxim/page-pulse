@@ -15,7 +15,7 @@ export const Route = createFileRoute("/blog/$slug")({
     const post = getBlogPostBySlug(params.slug);
     if (!post)
       return {
-        meta: [{ title: "Post Not Found — PagePulse Blog" }],
+        meta: [{ title: "Post Not Found — Snaplert Blog" }],
       };
     return {
       meta: [
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:description", content: post.metaDescription },
         {
           property: "og:url",
-          content: `https://pagepulse.io/blog/${post.slug}`,
+          content: `https://snaplert.com/blog/${post.slug}`,
         },
         { property: "og:type", content: "article" },
         {
@@ -48,13 +48,13 @@ export const Route = createFileRoute("/blog/$slug")({
             },
             publisher: {
               "@type": "Organization",
-              name: "PagePulse",
-              url: "https://pagepulse.io",
+              name: "Snaplert",
+              url: "https://snaplert.com",
             },
             datePublished: post.publishedAt,
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `https://pagepulse.io/blog/${post.slug}`,
+              "@id": `https://snaplert.com/blog/${post.slug}`,
             },
           }),
         },

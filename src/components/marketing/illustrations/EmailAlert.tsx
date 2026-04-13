@@ -6,7 +6,7 @@ import { Bell } from "lucide-react";
 export function EmailAlert({
   subject = "Change Detected",
   preview = "The page you're monitoring has changed.",
-  from = "PagePulse Alerts",
+  from = "Snaplert Alerts",
   time = "Just now",
 }: {
   subject?: string;
@@ -29,7 +29,7 @@ export function EmailAlert({
       <div className="p-4">
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 bg-[#2d5a2d] flex items-center justify-center shrink-0 mt-0.5">
-            <span className="text-white text-[10px] font-black">PP</span>
+            <span className="text-white text-[10px] font-black">SN</span>
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">

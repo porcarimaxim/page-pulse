@@ -23,25 +23,25 @@ export const Route = createFileRoute("/compare/visualping-alternative")({
     meta: [
       {
         title:
-          "Best Visualping Alternative (2026) — PagePulse vs Visualping Comparison",
+          "Best Visualping Alternative (2026) — Snaplert vs Visualping Comparison",
       },
       {
         name: "description",
         content:
-          "Looking for a Visualping alternative? Compare PagePulse vs Visualping side-by-side: pricing, features, speed, and ease of use. Free forever plan available.",
+          "Looking for a Visualping alternative? Compare Snaplert vs Visualping side-by-side: pricing, features, speed, and ease of use. Free forever plan available.",
       },
       {
         property: "og:title",
-        content: "PagePulse vs Visualping — Best Alternative for 2026",
+        content: "Snaplert vs Visualping — Best Alternative for 2026",
       },
       {
         property: "og:description",
         content:
-          "Side-by-side comparison of PagePulse and Visualping. See why teams are switching to PagePulse for website change monitoring.",
+          "Side-by-side comparison of Snaplert and Visualping. See why teams are switching to Snaplert for website change monitoring.",
       },
       {
         property: "og:url",
-        content: "https://pagepulse.io/compare/visualping-alternative",
+        content: "https://snaplert.com/compare/visualping-alternative",
       },
     ],
   }),
@@ -50,91 +50,91 @@ export const Route = createFileRoute("/compare/visualping-alternative")({
 const comparisonRows = [
   {
     feature: "Free plan",
-    pagepulse: "5 monitors, daily checks",
+    snaplert: "5 monitors, daily checks",
     visualping: "Limited (65 checks/mo)",
-    winner: "pagepulse",
+    winner: "snaplert",
   },
   {
     feature: "Setup time",
-    pagepulse: "Under 60 seconds",
+    snaplert: "Under 60 seconds",
     visualping: "2-3 minutes",
-    winner: "pagepulse",
+    winner: "snaplert",
   },
   {
     feature: "Visual diff quality",
-    pagepulse: "Pixel-level overlays",
+    snaplert: "Pixel-level overlays",
     visualping: "Pixel-level overlays",
     winner: "tie",
   },
   {
     feature: "Zone selection",
-    pagepulse: "Point-and-click element picker",
+    snaplert: "Point-and-click element picker",
     visualping: "Draw rectangle on page",
-    winner: "pagepulse",
+    winner: "snaplert",
   },
   {
     feature: "Fastest check interval",
-    pagepulse: "Every 5 minutes",
+    snaplert: "Every 5 minutes",
     visualping: "Every 5 minutes",
     winner: "tie",
   },
   {
     feature: "Email alerts",
-    pagepulse: "Before/after screenshots included",
+    snaplert: "Before/after screenshots included",
     visualping: "Before/after screenshots included",
     winner: "tie",
   },
   {
     feature: "Change history",
-    pagepulse: "Up to 1 year (Business)",
+    snaplert: "Up to 1 year (Business)",
     visualping: "Varies by plan",
     winner: "tie",
   },
   {
     feature: "Pro plan price",
-    pagepulse: "$19/mo (50 monitors)",
+    snaplert: "$19/mo (50 monitors)",
     visualping: "$50/mo (Personal)",
-    winner: "pagepulse",
+    winner: "snaplert",
   },
   {
     feature: "Business plan price",
-    pagepulse: "$49/mo (unlimited monitors)",
+    snaplert: "$49/mo (unlimited monitors)",
     visualping: "$100/mo (Business)",
-    winner: "pagepulse",
+    winner: "snaplert",
   },
   {
     feature: "API access",
-    pagepulse: "Business plan",
+    snaplert: "Business plan",
     visualping: "Business plan",
     winner: "tie",
   },
   {
     feature: "Chrome extension",
-    pagepulse: "Coming soon",
+    snaplert: "Coming soon",
     visualping: "Available",
     winner: "visualping",
   },
   {
     feature: "AI-powered analysis",
-    pagepulse: "Coming soon",
+    snaplert: "Coming soon",
     visualping: "Available (Solutions tier)",
     winner: "visualping",
   },
   {
     feature: "Team collaboration",
-    pagepulse: "Business plan",
+    snaplert: "Business plan",
     visualping: "Business plan",
     winner: "tie",
   },
   {
     feature: "Webhook integrations",
-    pagepulse: "Pro plan and above",
+    snaplert: "Pro plan and above",
     visualping: "Business plan only",
-    winner: "pagepulse",
+    winner: "snaplert",
   },
   {
     feature: "UI / Design",
-    pagepulse: "Clean, minimal, fast",
+    snaplert: "Clean, minimal, fast",
     visualping: "Feature-rich, complex",
     winner: "tie",
   },
@@ -145,7 +145,7 @@ const whySwitchReasons = [
     icon: DollarSign,
     title: "Save 50%+ on Monitoring",
     description:
-      "PagePulse Pro starts at $19/mo for 50 monitors. Visualping charges $50/mo for their Personal plan with fewer features. Business plans are $49/mo vs $100/mo.",
+      "Snaplert Pro starts at $19/mo for 50 monitors. Visualping charges $50/mo for their Personal plan with fewer features. Business plans are $49/mo vs $100/mo.",
   },
   {
     icon: Clock,
@@ -181,19 +181,19 @@ const whySwitchReasons = [
 
 const faqs = [
   {
-    q: "Can I migrate my monitors from Visualping to PagePulse?",
-    a: "Yes. Simply set up the same URLs in PagePulse and select the same zones you were monitoring. The whole process takes about 30 seconds per monitor. We're also building a one-click import tool.",
+    q: "Can I migrate my monitors from Visualping to Snaplert?",
+    a: "Yes. Simply set up the same URLs in Snaplert and select the same zones you were monitoring. The whole process takes about 30 seconds per monitor. We're also building a one-click import tool.",
   },
   {
-    q: "Does PagePulse have the same monitoring quality as Visualping?",
-    a: "PagePulse uses pixel-level screenshot comparison, the same core technology. You get before/after visual diffs, zone selection, and flexible scheduling just like Visualping.",
+    q: "Does Snaplert have the same monitoring quality as Visualping?",
+    a: "Snaplert uses pixel-level screenshot comparison, the same core technology. You get before/after visual diffs, zone selection, and flexible scheduling just like Visualping.",
   },
   {
     q: "What about Visualping's AI features?",
     a: "Visualping offers AI-powered change analysis on their Solutions tier ($3,000+/yr). We're building AI features for our Business plan at a fraction of that cost. For most users, visual diffs are more than enough.",
   },
   {
-    q: "Is PagePulse suitable for enterprise teams?",
+    q: "Is Snaplert suitable for enterprise teams?",
     a: "Our Business plan supports unlimited monitors, team collaboration, full API access, and priority support. For enterprise needs beyond this, reach out and we'll build a custom plan.",
   },
   {
@@ -208,7 +208,7 @@ function VisualPingAlternativePage() {
       {/* Hero */}
       <section className="px-6 pt-16 pb-20 md:pt-24 md:pb-28 max-w-4xl mx-auto text-center">
         <p className="text-xs md:text-sm font-bold uppercase tracking-[0.4em] text-[#888] mb-6">
-          PagePulse vs Visualping
+          Snaplert vs Visualping
         </p>
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
           The Best
@@ -219,13 +219,13 @@ function VisualPingAlternativePage() {
         </h1>
         <p className="text-lg text-[#888] max-w-2xl mx-auto mb-10">
           Same powerful website change monitoring at half the price. Faster
-          setup, cleaner interface, and a generous free tier. See how PagePulse
+          setup, cleaner interface, and a generous free tier. See how Snaplert
           compares.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg">
             <Link to="/auth/sign-up">
-              Try PagePulse Free <ArrowRight className="ml-2 w-5 h-5" />
+              Try Snaplert Free <ArrowRight className="ml-2 w-5 h-5" />
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
@@ -261,7 +261,7 @@ function VisualPingAlternativePage() {
             Why Teams Switch
           </p>
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-16 text-center">
-            6 Reasons To Choose PagePulse
+            6 Reasons To Choose Snaplert
           </h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -302,7 +302,7 @@ function VisualPingAlternativePage() {
                 Feature
               </div>
               <div className="p-4 text-xs font-bold uppercase tracking-wider text-[#7cb87c] border-l border-[#333]">
-                PagePulse
+                Snaplert
               </div>
               <div className="p-4 text-xs font-bold uppercase tracking-wider text-[#888] border-l border-[#333]">
                 Visualping
@@ -320,12 +320,12 @@ function VisualPingAlternativePage() {
                 <div className="p-4 text-sm font-bold">{row.feature}</div>
                 <div
                   className={`p-4 text-xs leading-relaxed border-l border-[#333] ${
-                    row.winner === "pagepulse"
+                    row.winner === "snaplert"
                       ? "text-[#7cb87c]"
                       : "opacity-70"
                   }`}
                 >
-                  {row.pagepulse}
+                  {row.snaplert}
                 </div>
                 <div
                   className={`p-4 text-xs leading-relaxed border-l border-[#333] ${
@@ -359,7 +359,7 @@ function VisualPingAlternativePage() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* PagePulse */}
+            {/* Snaplert */}
             <div className="border-2 border-[#2d5a2d] p-8 shadow-[8px_8px_0px_0px_#2d5a2d]">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-[#2d5a2d] flex items-center justify-center">
@@ -367,7 +367,7 @@ function VisualPingAlternativePage() {
                 </div>
                 <div>
                   <h3 className="font-black text-xl uppercase tracking-tighter">
-                    PagePulse
+                    Snaplert
                   </h3>
                   <p className="text-xs text-[#888]">
                     Simple, transparent pricing
@@ -471,7 +471,7 @@ function VisualPingAlternativePage() {
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-lg md:text-2xl font-bold tracking-tight mb-4 leading-snug">
             "We replaced a $2,000/month competitive intelligence subscription
-            with PagePulse. Better data, and we choose exactly what to track."
+            with Snaplert. Better data, and we choose exactly what to track."
           </p>
           <p className="text-sm text-[#888]">
             Rachel Torres, VP of Strategy at a SaaS Company

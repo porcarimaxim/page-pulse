@@ -26,7 +26,7 @@ export const sendChangeNotification = internalAction({
     const resend = new Resend(apiKey);
 
     const { data, error } = await resend.emails.send({
-      from: "PagePulse <notifications@pagepulse.dev>",
+      from: "Snaplert <notifications@snaplert.com>",
       to: [args.to],
       subject: `Change detected: ${args.monitorName}`,
       html: `
@@ -85,7 +85,7 @@ export const sendChangeNotification = internalAction({
           </a>
 
           <p style="color: #888; font-size: 11px; margin-top: 24px;">
-            Sent by PagePulse &mdash; You're receiving this because you set up monitoring for this URL.
+            Sent by Snaplert &mdash; You're receiving this because you set up monitoring for this URL.
           </p>
         </div>
       `,
@@ -118,7 +118,7 @@ export const sendErrorNotification = internalAction({
     const resend = new Resend(apiKey);
 
     const { data, error } = await resend.emails.send({
-      from: "PagePulse <notifications@pagepulse.dev>",
+      from: "Snaplert <notifications@snaplert.com>",
       to: [args.to],
       subject: `Error: ${args.monitorName}`,
       html: `
@@ -153,7 +153,7 @@ export const sendErrorNotification = internalAction({
           </a>
 
           <p style="color: #888; font-size: 11px; margin-top: 24px;">
-            Sent by PagePulse &mdash; You're receiving this because you enabled error alerts for this monitor.
+            Sent by Snaplert &mdash; You're receiving this because you enabled error alerts for this monitor.
           </p>
         </div>
       `,

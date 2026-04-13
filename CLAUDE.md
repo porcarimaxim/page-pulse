@@ -1,4 +1,4 @@
-# PagePulse
+# Snaplert
 
 Web page change monitoring tool. Track any webpage for visual changes.
 

@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title: "PagePulse — #1 Free Website Change Monitoring Tool (2026)",
+        title: "Snaplert — #1 Free Website Change Monitoring Tool (2026)",
       },
       {
         name: "description",
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/")({
       },
       {
         property: "og:title",
-        content: "PagePulse — Free Website Change Monitoring Tool",
+        content: "Snaplert — Free Website Change Monitoring Tool",
       },
       {
         property: "og:description",
@@ -49,11 +49,11 @@ export const Route = createFileRoute("/")({
           "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes. Set up in 60 seconds.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://pagepulse.io" },
+      { property: "og:url", content: "https://snaplert.com" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
-        content: "PagePulse — Free Website Change Monitoring Tool",
+        content: "Snaplert — Free Website Change Monitoring Tool",
       },
     ],
   }),
@@ -571,7 +571,7 @@ function Testimonials() {
       role: "Marketing Lead, E-commerce",
     },
     {
-      text: "We replaced three manual check processes with PagePulse monitors. Saves us hours every week.",
+      text: "We replaced three manual check processes with Snaplert monitors. Saves us hours every week.",
       author: "David R.",
       role: "Operations Manager, SaaS",
       featured: true,

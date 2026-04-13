@@ -15,7 +15,7 @@ export const Route = createFileRoute("/blog/")({
     meta: [
       {
         title:
-          "Blog — Website Monitoring Guides, Tutorials & Comparisons | PagePulse",
+          "Blog — Website Monitoring Guides, Tutorials & Comparisons | Snaplert",
       },
       {
         name: "description",
@@ -24,14 +24,14 @@ export const Route = createFileRoute("/blog/")({
       },
       {
         property: "og:title",
-        content: "PagePulse Blog — Website Monitoring Guides & Tutorials",
+        content: "Snaplert Blog — Website Monitoring Guides & Tutorials",
       },
       {
         property: "og:description",
         content:
           "Tutorials, comparisons, and strategies for website change monitoring.",
       },
-      { property: "og:url", content: "https://pagepulse.io/blog" },
+      { property: "og:url", content: "https://snaplert.com/blog" },
     ],
   }),
 });

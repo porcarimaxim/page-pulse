@@ -6,7 +6,7 @@ export function DashboardHeader() {
     <header className="border-b-2 border-[#1a1a1a] px-6 py-4 flex items-center justify-between bg-[#f0f0e8]">
       <div className="flex items-center gap-6">
         <Link to="/dashboard" className="text-xl font-black tracking-tighter">
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
+          SNAP<span className="text-[#2d5a2d]">LERT</span>
         </Link>
         <nav className="flex items-center gap-4">
           <Link

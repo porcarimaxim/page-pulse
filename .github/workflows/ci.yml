@@ -76,7 +76,7 @@ jobs:
       - name: Alias to static URL
         run: |
           BRANCH=$(echo "${{ github.head_ref }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
-          ALIAS="page-pulse-${BRANCH}.vercel.app"
+          ALIAS="snaplert-${BRANCH}.vercel.app"
           vercel alias set ${{ steps.deploy.outputs.preview_url }} $ALIAS --token=${{ secrets.VERCEL_TOKEN }}
           echo "alias_url=https://$ALIAS" >> "$GITHUB_OUTPUT"
 
@@ -85,7 +85,7 @@ jobs:
         with:
           script: |
             const branch = '${{ github.head_ref }}'.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-            const alias = `https://page-pulse-${branch}.vercel.app`;
+            const alias = `https://snaplert-${branch}.vercel.app`;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -133,9 +133,9 @@ jobs:
 
       - name: Alias to static URL
         run: |
-          vercel alias set ${{ steps.deploy.outputs.preview_url }} page-pulse-staging.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
+          vercel alias set ${{ steps.deploy.outputs.preview_url }} snaplert-staging.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
           echo "### 🚀 Staging deployed" >> "$GITHUB_STEP_SUMMARY"
-          echo "**URL:** https://page-pulse-staging.vercel.app" >> "$GITHUB_STEP_SUMMARY"
+          echo "**URL:** https://snaplert-staging.vercel.app" >> "$GITHUB_STEP_SUMMARY"
 
   # ─── Production: manual trigger only ───
   deploy-production:
@@ -178,6 +178,6 @@ jobs:
 
       - name: Alias to static URL
         run: |
-          vercel alias set ${{ steps.deploy.outputs.prod_url }} page-pulse-prod.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
+          vercel alias set ${{ steps.deploy.outputs.prod_url }} snaplert-prod.vercel.app --token=${{ secrets.VERCEL_TOKEN }}
           echo "### 🚀 Production deployed" >> "$GITHUB_STEP_SUMMARY"
-          echo "**URL:** https://page-pulse-prod.vercel.app" >> "$GITHUB_STEP_SUMMARY"
+          echo "**URL:** https://snaplert-prod.vercel.app" >> "$GITHUB_STEP_SUMMARY"

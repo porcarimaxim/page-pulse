@@ -68,7 +68,7 @@ export function MarketingNav() {
     <nav ref={navRef} className="relative border-b-2 border-[#1a1a1a] bg-[#f0f0e8]">
       <div className="px-4 md:px-6 py-4 flex items-center justify-between">
         <Link to="/" className="text-2xl font-black tracking-tighter shrink-0">
-          PAGE<span className="text-[#2d5a2d]">PULSE</span>
+          SNAP<span className="text-[#2d5a2d]">LERT</span>
         </Link>
 
         {/* Desktop Nav - Left links */}

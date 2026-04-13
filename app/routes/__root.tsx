@@ -16,24 +16,24 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PagePulse — Website Change Detection & Monitoring Alerts" },
+      { title: "Snaplert — Website Change Detection & Monitoring Alerts" },
       {
         name: "description",
         content:
           "Monitor any webpage for visual changes. Get email alerts with before/after screenshots when something changes. Track competitors, prices, job postings, and more.",
       },
-      { property: "og:site_name", content: "PagePulse" },
+      { property: "og:site_name", content: "Snaplert" },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://pagepulse.io" },
-      { property: "og:image", content: "https://pagepulse.io/og-image.png" },
+      { property: "og:url", content: "https://snaplert.com" },
+      { property: "og:image", content: "https://snaplert.com/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://pagepulse.io/og-image.png" },
+      { name: "twitter:image", content: "https://snaplert.com/og-image.png" },
       { name: "robots", content: "index, follow" },
       { name: "theme-color", content: "#2d5a2d" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "canonical", href: "https://pagepulse.io" },
+      { rel: "canonical", href: "https://snaplert.com" },
     ],
     scripts: [
       {
@@ -41,13 +41,13 @@ export const Route = createRootRoute({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "PagePulse",
-          url: "https://pagepulse.io",
+          name: "Snaplert",
+          url: "https://snaplert.com",
           description:
             "Website change detection and monitoring alerts for teams and individuals.",
           potentialAction: {
             "@type": "SearchAction",
-            target: "https://pagepulse.io/use-cases?q={search_term_string}",
+            target: "https://snaplert.com/use-cases?q={search_term_string}",
             "query-input": "required name=search_term_string",
           },
         }),
@@ -57,9 +57,9 @@ export const Route = createRootRoute({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "PagePulse",
-          url: "https://pagepulse.io",
-          logo: "https://pagepulse.io/logo.png",
+          name: "Snaplert",
+          url: "https://snaplert.com",
+          logo: "https://snaplert.com/logo.png",
           sameAs: [],
         }),
       },
@@ -68,7 +68,7 @@ export const Route = createRootRoute({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "PagePulse",
+          name: "Snaplert",
           applicationCategory: "BusinessApplication",
           operatingSystem: "Web",
           offers: {

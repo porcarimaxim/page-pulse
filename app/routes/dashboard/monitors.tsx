@@ -58,7 +58,7 @@ function MonitorsListPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     try {
-      const saved = localStorage.getItem("pagepulse:monitors-view");
+      const saved = localStorage.getItem("snaplert:monitors-view");
       if (saved === "list" || saved === "cards") return saved;
     } catch {}
     return "cards";
@@ -67,7 +67,7 @@ function MonitorsListPage() {
   const setAndPersistViewMode = (mode: ViewMode) => {
     setViewMode(mode);
     try {
-      localStorage.setItem("pagepulse:monitors-view", mode);
+      localStorage.setItem("snaplert:monitors-view", mode);
     } catch {}
   };
 

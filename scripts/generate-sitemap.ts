@@ -5,7 +5,7 @@ import { resolve } from "path";
 import { USE_CASES } from "../src/data/use-cases";
 import { ALL_BLOG_POSTS } from "../src/data/blog-posts";
 
-const SITE_URL = "https://pagepulse.io";
+const SITE_URL = "https://snaplert.com";
 const TODAY = new Date().toISOString().split("T")[0];
 
 interface SitemapEntry {
