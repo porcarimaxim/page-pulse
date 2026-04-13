@@ -655,6 +655,125 @@ export const getPageElementMapInternal = internalAction({
   },
 });
 
+/**
+ * Build a JS script that extracts visible text content from elements
+ * whose bounding boxes overlap with a percentage-based zone rectangle.
+ * Text is URI-encoded and stored in document.title for extraction via metadata.
+ */
+function buildZoneTextScript(xPct: number, yPct: number, wPct: number, hPct: number): string {
+  return `(function(){
+var pH=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+var pW=document.documentElement.clientWidth;
+var zL=(${xPct}/100)*pW, zT=(${yPct}/100)*pH;
+var zR=zL+(${wPct}/100)*pW, zB=zT+(${hPct}/100)*pH;
+var skip={script:1,style:1,noscript:1,link:1,meta:1,svg:1};
+var texts=[];
+var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null);
+while(walker.nextNode()){
+  var node=walker.currentNode;
+  var text=node.textContent.trim();
+  if(!text)continue;
+  var p=node.parentElement;
+  if(!p)continue;
+  var tag=p.tagName.toLowerCase();
+  if(skip[tag])continue;
+  var st=window.getComputedStyle(p);
+  if(st.display==='none'||st.visibility==='hidden')continue;
+  var rect=p.getBoundingClientRect();
+  var absT=rect.top+window.scrollY, absL=rect.left+window.scrollX;
+  if(absL<zR&&absL+rect.width>zL&&absT<zB&&absT+rect.height>zT){
+    texts.push(text);
+  }
+}
+var result=encodeURIComponent(texts.join('\\n').substring(0,30000));
+var t='__PP_ZTEXT__'+result+'__PP_ZTEXT__';
+document.title=t;
+Object.defineProperty(document,'title',{value:t,writable:false,configurable:false});
+})()`;
+}
+
+/**
+ * Extract text content from elements within a zone rectangle on the page.
+ * Uses the screenshot API's JS injection to run a DOM walker in the real browser
+ * and filter text nodes by their visual position.
+ */
+export const extractTextForZone = internalAction({
+  args: {
+    url: v.string(),
+    zone: v.object({
+      x: v.number(),
+      y: v.number(),
+      width: v.number(),
+      height: v.number(),
+    }),
+    mobileViewport: v.optional(v.boolean()),
+    blockAds: v.optional(v.boolean()),
+    delay: v.optional(v.number()),
+  },
+  handler: async (_ctx, args): Promise<string> => {
+    const t0 = Date.now();
+    const label = `[extractTextForZone] url=${args.url}`;
+
+    const script = buildZoneTextScript(args.zone.x, args.zone.y, args.zone.width, args.zone.height);
+
+    const provider = getProvider();
+    let apiKey: string;
+    let baseUrl: string;
+
+    if (provider === "pagess") {
+      const pagessUrl = process.env.PAGESS_URL;
+      const pagessKey = process.env.PAGESS_API_KEY;
+      if (!pagessUrl) throw new Error("Missing PAGESS_URL");
+      if (!pagessKey) throw new Error("Missing PAGESS_API_KEY");
+      apiKey = pagessKey;
+      baseUrl = `${pagessUrl}/take`;
+    } else {
+      const ssKey = process.env.SCREENSHOTONE_API_KEY;
+      if (!ssKey) throw new Error("Missing SCREENSHOTONE_API_KEY");
+      apiKey = ssKey;
+      baseUrl = SCREENSHOTONE_API;
+    }
+
+    const vw = args.mobileViewport ? 375 : 1280;
+    const vh = args.mobileViewport ? 812 : 800;
+
+    const params = new URLSearchParams({
+      access_key: apiKey,
+      url: args.url,
+      full_page: "true",
+      viewport_width: String(vw),
+      viewport_height: String(vh),
+      format: "png",
+      block_ads: (args.blockAds ?? true) ? "true" : "false",
+      block_cookie_banners: "true",
+      delay: String(args.delay ?? 3),
+      scripts: script,
+      response_type: "json",
+      metadata_page_title: "true",
+    });
+
+    const response = await fetch(`${baseUrl}?${params.toString()}`);
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error(`${label} — FAILED in ${Date.now() - t0}ms: ${response.status}`);
+      throw new Error(`Zone text extraction failed: ${response.status} — ${errorBody}`);
+    }
+
+    const json = await response.json();
+    const pageTitle: string = json?.metadata?.page_title ?? "";
+
+    const match = pageTitle.match(/__PP_ZTEXT__(.+)__PP_ZTEXT__/);
+    if (!match) {
+      console.log(`${label} — no text found in zone, total: ${Date.now() - t0}ms`);
+      return "";
+    }
+
+    const text = decodeURIComponent(match[1]);
+    console.log(`${label} — extracted ${text.length} chars, total: ${Date.now() - t0}ms`);
+    return text;
+  },
+});
+
 export const captureForMonitor = internalAction({
   args: {
     monitorId: v.id("monitors"),

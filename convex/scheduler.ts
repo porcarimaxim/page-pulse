@@ -34,6 +34,7 @@ function checkKeywords(
   return false; // No keyword condition met — suppress
 }
 
+
 export const processOneMonitor = internalAction({
   args: { monitorId: v.id("monitors") },
   handler: async (ctx, args) => {
@@ -86,13 +87,26 @@ export const processOneMonitor = internalAction({
       if (compareType !== "visual") {
         const t15 = Date.now();
         try {
-          textContent = await ctx.runAction(
-            internal.textExtraction.extractTextContent,
-            {
-              url: monitor.url,
-              selector: isElementMode ? monitor.cssSelector : undefined,
-            }
-          );
+          if (isElementMode) {
+            // Element mode: use Cheerio with CSS selector (cheap HTTP fetch)
+            textContent = await ctx.runAction(
+              internal.textExtraction.extractTextContent,
+              { url: monitor.url, selector: monitor.cssSelector },
+            );
+          } else {
+            // Zone mode: use JS injection via screenshot API to extract
+            // only text from elements visually within the zone bounds
+            textContent = await ctx.runAction(
+              internal.screenshotActions.extractTextForZone,
+              {
+                url: monitor.url,
+                zone: monitor.zone,
+                mobileViewport: monitor.mobileViewport,
+                blockAds: monitor.blockAds,
+                delay: monitor.delay,
+              },
+            );
+          }
           console.log(`${label} — step 1.5 text extraction: ${Date.now() - t15}ms (${textContent?.length ?? 0} chars)`);
         } catch (e) {
           console.error(`${label} — step 1.5 text extraction FAILED in ${Date.now() - t15}ms:`, e);
@@ -112,7 +126,7 @@ export const processOneMonitor = internalAction({
       const t3 = Date.now();
       let result;
       if (compareType === "text") {
-        // Text-only mode: still need to crop/store the screenshot, but skip pixelmatch
+        // Text-only mode: crop/store screenshot but compare text, not pixels
         if (isElementMode) {
           result = {
             croppedStorageId: fullStorageId,
@@ -122,22 +136,21 @@ export const processOneMonitor = internalAction({
             diffStorageId: undefined as string | undefined,
           };
         } else {
-          // Crop the zone but don't compare
+          // Zone mode: crop the zone screenshot (no visual comparison)
           result = await ctx.runAction(
             internal.comparisonActions.cropAndCompare,
             {
               monitorId: monitor._id,
               fullStorageId,
-              previousCroppedStorageId: undefined, // no previous = no comparison, just crop
+              previousCroppedStorageId: undefined, // no comparison, just crop
               zone: monitor.zone,
               sensitivityThreshold: monitor.sensitivityThreshold ?? 0,
             }
           );
-          // Override changed to false since we only care about text
           result = { ...result, changed: false, diffPercentage: 0 };
         }
 
-        // Text-only change detection
+        // Text change detection
         if (lastSnapshot?.textContent && textContent) {
           if (lastSnapshot.textContent !== textContent) {
             result = { ...result, changed: true, diffPercentage: 0 };
