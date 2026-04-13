@@ -98,11 +98,18 @@ export function TextDiffView({ beforeText, afterText }: TextDiffViewProps) {
           color: #888;
           border-right: 2px solid #ccc;
         }
+        .pp-text-diff .d2h-code-side-linenumber {
+          background-color: #e8e8e0;
+          color: #888;
+          border-right: 2px solid #ccc;
+        }
         .pp-text-diff .d2h-code-line {
-          padding: 0 8px;
+          padding-left: 8em;
+          padding-right: 8px;
         }
         .pp-text-diff .d2h-code-side-line {
-          padding: 0 8px;
+          padding-left: 5em;
+          padding-right: 8px;
         }
         .pp-text-diff .d2h-del {
           background-color: #fecaca;
