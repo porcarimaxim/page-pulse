@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "web",
-      "runtimeExecutable": "bunx",
+      "runtimeExecutable": "npx",
       "runtimeArgs": ["vite", "dev", "--port", "5297", "--host", "127.0.0.1"],
       "port": 5297
     }
